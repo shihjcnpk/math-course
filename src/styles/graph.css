@@ -1,0 +1,44 @@
+/* ── ReactFlow overrides ── */
+.react-flow__node {
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.react-flow__edge-path {
+  cursor: pointer;
+}
+
+.react-flow__minimap {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ── Custom knowledge graph node ── */
+.graph-node-custom {
+  font-family: inherit;
+}
+
+.graph-node-custom:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+.graph-node-custom .katex {
+  font-size: 0.9em;
+}
+
+/* ── Graph page layout ── */
+.graph-page-container {
+  display: flex;
+  height: calc(100vh - 3.5rem);
+}
+
+/* ── Edge label styles ── */
+.react-flow__edge-textbg {
+  fill: #fff;
+}
+
+.react-flow__edge-text {
+  font-size: 10px;
+  font-weight: 500;
+}

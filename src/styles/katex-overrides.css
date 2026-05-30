@@ -1,0 +1,12 @@
+/* KaTeX overrides for better Chinese typesetting */
+.katex {
+  font-size: 1.1em;
+}
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+.katex-display > .katex {
+  font-size: 1.15em;
+}
