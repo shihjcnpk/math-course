@@ -5,7 +5,7 @@
 - Framework preset: Vite
 - Build command: `npm run build`
 - Build output directory: `dist`
-- Deploy command: 留空，不要填写 `npx wrangler deploy`
+- Deploy command: `npx wrangler deploy`
 - Root directory: 留空
 - Node.js version: 使用 Cloudflare 默认版本即可
 
@@ -13,7 +13,18 @@
 
 本项目是 React 单页应用。用户直接打开 `/lectures/4` 或刷新页面时，Cloudflare 需要把请求回退到 `index.html`，再由前端路由接管。
 
-Cloudflare Pages 默认会把没有顶层 `404.html` 的项目作为单页应用处理，所以本项目不再使用 `_redirects`。如果误填 Deploy command 为 `npx wrangler deploy`，Wrangler 会按 Workers Static Assets 流程部署，反而可能与 `_redirects` 冲突。
+当前 Cloudflare 新建项目会使用 Workers 静态资源流程，部署命令为 `npx wrangler deploy`。本项目通过 `wrangler.jsonc` 配置静态资源目录和 SPA 回退：
+
+```jsonc
+{
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
+```
+
+不要再使用 `_redirects`，否则 Wrangler 可能会检测到重定向循环。
 
 ## 首次部署方式
 
@@ -35,6 +46,6 @@ Cloudflare Pages 默认会把没有顶层 `404.html` 的项目作为单页应用
 3. 在 Cloudflare Pages 选择 `Connect to Git`。
 4. 选择 GitHub 仓库。
 5. 按上面的推荐配置填写构建命令和输出目录。
-6. 确认 Deploy command 留空。
+6. 确认 Deploy command 为 `npx wrangler deploy`。
 
 以后每次提交到 GitHub，Cloudflare Pages 会自动重新部署。
