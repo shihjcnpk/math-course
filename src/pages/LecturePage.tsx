@@ -24,26 +24,47 @@ import AdhdLessonClosure from '@/components/lecture/AdhdLessonClosure'
 import LearningPause from '@/components/lecture/LearningPause'
 import type { LectureStatus, Lecture } from '@/types'
 
-function useLectureContent(lectureId: number): Lecture | null {
-  const [data, setData] = useState<Lecture | null>(null)
+interface LectureContentState {
+  lectureId: number
+  content: Lecture | null
+  loadError: string | null
+}
+
+function useLectureContent(lectureId: number): LectureContentState {
+  const [state, setState] = useState<LectureContentState>({ lectureId, content: null, loadError: null })
 
   useEffect(() => {
     let cancelled = false
     const id = String(lectureId).padStart(2, '0')
     import(`@/data/lectures/lecture-${id}.ts`)
-      .then((m) => { if (!cancelled) setData(m.default as Lecture) })
-      .catch(() => { if (!cancelled) setData(null) })
+      .then((moduleOrLecture) => {
+        const loaded = moduleOrLecture as unknown
+        const lecture = typeof loaded === 'object' && loaded !== null && 'default' in loaded
+          ? (loaded as { default?: Lecture }).default
+          : loaded as Lecture
+        if (!lecture || lecture.meta.id !== lectureId) {
+          throw new Error(`第${lectureId}讲课程模块格式无效`)
+        }
+        if (!cancelled) setState({ lectureId, content: lecture, loadError: null })
+      })
+      .catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error)
+        console.error(`第${lectureId}讲课程内容加载失败`, error)
+        if (!cancelled) setState({ lectureId, content: null, loadError: message })
+      })
     return () => { cancelled = true }
   }, [lectureId])
 
-  return data
+  return state.lectureId === lectureId
+    ? state
+    : { lectureId, content: null, loadError: null }
 }
 
 export default function LecturePage() {
   const { lectureId } = useParams<{ lectureId: string }>()
   const id = parseInt(lectureId || '1')
   const meta = getLectureMeta(id)
-  const content = useLectureContent(id)
+  const { content, loadError } = useLectureContent(id)
   const module = meta ? getModuleForLecture(id) : null
   const lessonSupport = getLessonSupport(id)
   const knowledgeThreads = getKnowledgeThreadsForLecture(id)
@@ -229,7 +250,13 @@ export default function LecturePage() {
               </section>
             )}
           </>
-        ) : <div className="text-center py-4 text-gray-400">课程内容加载失败</div>}
+        ) : loadError ? (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700">
+            课程内容加载失败：{loadError}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-400">加载课程内容中...</div>
+        )}
       </Suspense>
 
       {displayAnimations.length > 0 && (
