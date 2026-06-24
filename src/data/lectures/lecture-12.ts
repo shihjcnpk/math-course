@@ -239,7 +239,7 @@ const lecture12: Lecture = {
           '**系数化1：** $x = \\dfrac{13}{4}$',
           '**检验：** 左边 $= 3(\\dfrac{26}{4} - 1) - 2(\\dfrac{13}{4} + 3) = 3 \\times \\dfrac{22}{4} - 2 \\times \\dfrac{25}{4} = \\dfrac{66-50}{4} = 4$。正确。',
         ],
-        answer: 'x = \\dfrac{13}{4}',
+        answer: '$x = \\dfrac{13}{4}$',
         commonMistake:
           '去第二个括号时忘记 $-2$ 要乘到每一项：$-2(x+3)$ 应该等于 $-2x-6$，很多学生写成 $-2x+6$。去括号时系数要乘到括号内每一项，符号也要一起看。',
       },
@@ -286,7 +286,7 @@ const lecture12: Lecture = {
         {
           problem: '解方程：$\\dfrac{x}{4} + \\dfrac{x-2}{6} = 2$',
           hint: '分母4和6的最小公倍数是12。每一项都乘12。',
-          answer: 'x = \\dfrac{28}{5}',
+          answer: '$x = \\dfrac{28}{5}$',
         },
         {
           problem: '解方程：$\\dfrac{2x-1}{3} - \\dfrac{5x+1}{2} = 1$（2020北京中考同类题型）',
@@ -440,7 +440,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-basic-8',
         question: '解方程：$5x - 2(3 - x) = 4x + 1$',
-        answer: 'x = \\dfrac{7}{3}',
+        answer: '$x = \\dfrac{7}{3}$',
         hint: '去括号：$-2(3-x) = -6+2x$。注意负号对括号内每一项的影响。',
         difficulty: 'basic',
         flaggedConceptIds: ['linear-equation', 'bracket-removal'],
@@ -466,7 +466,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-int-3',
         question: '解方程：$\\dfrac{0.1x}{0.03} - \\dfrac{0.2 - 0.1x}{0.06} = 1$',
-        answer: 'x = \\dfrac{2}{9}',
+        answer: '$x = \\dfrac{2}{9}$',
         hint: '先分子分母同乘100：$\\dfrac{10x}{3} - \\dfrac{20-10x}{6} = 1$。再通分去分母。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-equation'],
@@ -484,7 +484,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-cha-1',
         question: '已知关于 $x$ 的方程 $a(2x - 1) = 3x - 2$ 无解，求 $a$ 的值。',
-        answer: 'a = \\dfrac{3}{2}',
+        answer: '$a = \\dfrac{3}{2}$',
         hint: '先展开为一般形式，然后分析：什么时候方程会无解？当整理后 $x$ 的系数为0而常数项不为0时，方程无解。',
         difficulty: 'challenge',
         flaggedConceptIds: ['linear-equation', 'equation-concept'],

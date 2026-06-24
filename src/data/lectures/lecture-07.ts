@@ -88,7 +88,7 @@ const lecture07: Lecture = {
       title: '整式乘法：分配律的反复运用',
       everydayAnalogy: '老师给每个学生发一样的东西：给3个学生每人发2本书和1本练习册，总共发了$3 \\times (2+1) = 3 \\times 2 + 3 \\times 1 = 9$件东西。这就是单项式乘多项式——把单项式"分发"给括号里的每一项。如果是两个括号相乘，比如$(2+3) \\times (4+5)$，第一个括号里的2和3各要和第二个括号里的4和5各乘一次：$2 \\times 4 + 2 \\times 5 + 3 \\times 4 + 3 \\times 5$。',
       formalDefinition: '整式乘法的本质是乘法分配律的反复运用。单项式乘多项式：$m(a+b+c) = ma + mb + mc$。多项式乘多项式：$(a+b)(c+d) = a(c+d) + b(c+d) = ac + ad + bc + bd$——每一项都要乘到，不重不漏。展开后如果有同类项必须合并。',
-      formula: 'm(a_1 + a_2 + \\cdots + a_n) = ma_1 + ma_2 + \\cdots + ma_n',
+      formula: '$m(a_1 + a_2 + \\cdots + a_n) = ma_1 + ma_2 + \\cdots + ma_n$',
       associationReminders: [
         '关联提醒：去括号法则（lecture 6）是整式乘法的特例——当$m=-1$时，$-(a+b) = -a-b$，这就是"括号前是负号，里面每一项变号"。',
         '易错提醒：漏乘是最常见的错误！$(x+1)(x+2)$中，$x$要和$x$、$2$各乘一次，$1$也要和$x$、$2$各乘一次——共4次乘法，一个都不能少。',
