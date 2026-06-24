@@ -171,7 +171,7 @@ const lecture47: Lecture = {
           '【第4题·数与式·3分】计算：$$\\sqrt{27} - \\sqrt{12} + \\sqrt{\\frac{1}{3}} =$$ ______。（结果化为最简二次根式）',
         answer:
           '$$\\sqrt{27}=3\\sqrt{3}$$，$$\\sqrt{12}=2\\sqrt{3}$$，$$\\sqrt{\\frac{1}{3}}=\\frac{\\sqrt{3}}{3}$$。$$3\\sqrt{3}-2\\sqrt{3}+\\frac{\\sqrt{3}}{3}=\\sqrt{3}+\\frac{\\sqrt{3}}{3}=\\frac{4\\sqrt{3}}{3}$$。模块：数与式，参考：第11讲二次根式。',
-        hint: '知识链：最简二次根式化简 + 同类二次根式合并 + 分母有理化。',
+        hint: '知识链：把每个根式化为最简二次根式，再合并同类二次根式。',
         difficulty: 'basic',
         flaggedConceptIds: ['quadratic-radicals', 'quadratic-radical-operations'],
       },

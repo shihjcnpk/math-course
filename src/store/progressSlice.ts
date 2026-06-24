@@ -6,6 +6,7 @@ export interface ProgressSlice {
   progress: UserProgress
   markLectureStatus: (lectureId: number, status: LectureStatus) => void
   markConceptMastery: (conceptId: string, level: MasteryLevel) => void
+  setLessonCompletionItem: (lectureId: number, itemIndex: number, completed: boolean) => void
   setLastStudied: (lectureId: number) => void
   addStudyTime: (minutes: number) => void
   resetProgress: () => void
@@ -31,6 +32,22 @@ export const createProgressSlice: StateCreator<ProgressSlice, [], [], ProgressSl
         lastActivityAt: Date.now(),
       },
     })),
+
+  setLessonCompletionItem: (lectureId, itemIndex, completed) =>
+    set((state) => {
+      const items = [...(state.progress.lessonCompletion[lectureId] || [])]
+      items[itemIndex] = completed
+      return {
+        progress: {
+          ...state.progress,
+          lessonCompletion: {
+            ...state.progress.lessonCompletion,
+            [lectureId]: items,
+          },
+          lastActivityAt: Date.now(),
+        },
+      }
+    }),
 
   setLastStudied: (lectureId) =>
     set((state) => ({

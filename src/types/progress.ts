@@ -7,6 +7,8 @@ export interface UserProgress {
   lectureStatuses: Record<number, LectureStatus>
   /** Concept ID → mastery level */
   conceptMastery: Record<string, MasteryLevel>
+  /** Lecture ID → completion-standard checkbox states */
+  lessonCompletion: Record<number, boolean[]>
   /** Last lecture the student was studying */
   lastStudiedLectureId: number | null
   /** Total accumulated study time in minutes */
@@ -19,6 +21,7 @@ export interface UserProgress {
 export const DEFAULT_PROGRESS: UserProgress = {
   lectureStatuses: {},
   conceptMastery: {},
+  lessonCompletion: {},
   lastStudiedLectureId: null,
   totalStudyTimeMinutes: 0,
   lastActivityAt: null,

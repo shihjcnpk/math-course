@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom'
 import { getLectureMeta, getPrevLectureId, getNextLectureId } from '@/data/lectures'
 import { getModuleForLecture } from '@/data/modules'
 import { getNodeById } from '@/data/knowledge-nodes'
-import { getAnimationsForLecture } from '@/data/animation-registry'
+import { getAnimationById, getAnimationsForLecture } from '@/data/animation-registry'
+import { getLessonSupport } from '@/data/adhd-support'
+import { getKnowledgeThreadsForLecture } from '@/data/knowledge-threads'
 import { hasAnimationComponent } from '@/components/animation/animation-components'
 import { useStore } from '@/store'
 import AnimationPlayer from '@/components/animation/AnimationPlayer'
@@ -17,6 +19,9 @@ import ExampleSection from '@/components/lecture/ExampleSection'
 import ExerciseSection from '@/components/lecture/ExerciseSection'
 import ErrorAnalysisSection from '@/components/lecture/ErrorAnalysisSection'
 import OralTaskSection from '@/components/lecture/OralTaskSection'
+import AdhdLessonStart from '@/components/lecture/AdhdLessonStart'
+import AdhdLessonClosure from '@/components/lecture/AdhdLessonClosure'
+import LearningPause from '@/components/lecture/LearningPause'
 import type { LectureStatus, Lecture } from '@/types'
 
 function useLectureContent(lectureId: number): Lecture | null {
@@ -40,19 +45,35 @@ export default function LecturePage() {
   const meta = getLectureMeta(id)
   const content = useLectureContent(id)
   const module = meta ? getModuleForLecture(id) : null
+  const lessonSupport = getLessonSupport(id)
+  const knowledgeThreads = getKnowledgeThreadsForLecture(id)
   const status = useStore((s) => s.progress.lectureStatuses[id] || 'not-started')
   const markLectureStatus = useStore((s) => s.markLectureStatus)
   const setLastStudied = useStore((s) => s.setLastStudied)
+  const addStudyTime = useStore((s) => s.addStudyTime)
+
+  useEffect(() => {
+    setLastStudied(id)
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') addStudyTime(1)
+    }, 60_000)
+    return () => window.clearInterval(timer)
+  }, [id, setLastStudied, addStudyTime])
 
   if (!meta) {
     return <div className="text-center py-12 text-gray-500">课程未找到</div>
   }
+  const displayMeta = content?.meta ?? meta
 
   const prevId = getPrevLectureId(id)
   const nextId = getNextLectureId(id)
   const prevLecture = prevId ? getLectureMeta(prevId) : null
   const nextLecture = nextId ? getLectureMeta(nextId) : null
-  const animations = getAnimationsForLecture(id)
+  const contentAnimations = (content?.animationIds ?? [])
+    .map((animationId) => getAnimationById(animationId))
+    .filter((animation): animation is NonNullable<typeof animation> => Boolean(animation))
+  const animations = [...getAnimationsForLecture(id), ...contentAnimations]
+    .filter((animation, index, all) => all.findIndex((item) => item.id === animation.id) === index)
   const displayAnimations = animations.filter((anim) => hasAnimationComponent(anim.id))
 
   const handleStatusChange = (newStatus: LectureStatus) => {
@@ -72,9 +93,9 @@ export default function LecturePage() {
           <StatusBadge status={status} size="md" />
         </div>
         <h1 className="text-2xl font-bold text-gray-900">
-          第{id}讲：{meta.title}
+          第{id}讲：{displayMeta.title}
         </h1>
-        <p className="text-gray-500 mt-1 text-lg leading-relaxed"><MathText>{meta.oneLineMainIdea}</MathText></p>
+        <p className="text-gray-500 mt-1 text-lg leading-relaxed"><MathText>{displayMeta.oneLineMainIdea}</MathText></p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-8">
@@ -93,13 +114,15 @@ export default function LecturePage() {
         ))}
       </div>
 
+      {lessonSupport && <AdhdLessonStart support={lessonSupport} threads={knowledgeThreads} network={content?.knowledgeNetwork} />}
+
       <section className="mb-8 p-4 bg-white rounded-lg border border-gray-200">
         <h2 className="font-semibold text-gray-800 mb-3">讲次链路</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
             <h3 className="font-medium text-amber-600 mb-1">前置讲次</h3>
             <ul className="space-y-1">
-              {meta.prerequisiteLectureIds.map((pid) => {
+              {displayMeta.prerequisiteLectureIds.map((pid) => {
                 const pl = getLectureMeta(pid)
                 return pl ? (
                   <li key={pid}>
@@ -109,7 +132,7 @@ export default function LecturePage() {
                   </li>
                 ) : null
               })}
-              {meta.prerequisiteLectureIds.length === 0 && (
+              {displayMeta.prerequisiteLectureIds.length === 0 && (
                 <li className="text-gray-400">本讲是这条知识链的起点</li>
               )}
             </ul>
@@ -117,7 +140,7 @@ export default function LecturePage() {
           <div>
             <h3 className="font-medium text-blue-600 mb-1">本讲概念</h3>
             <ul className="space-y-1">
-              {meta.conceptIds.map((cid) => {
+              {displayMeta.conceptIds.map((cid) => {
                 const node = getNodeById(cid)
                 return node ? (
                   <li key={cid} className="flex items-center gap-1">
@@ -130,7 +153,7 @@ export default function LecturePage() {
           <div>
             <h3 className="font-medium text-green-600 mb-1">后续讲次</h3>
             <ul className="space-y-1">
-              {meta.followupLectureIds.map((fid) => {
+              {displayMeta.followupLectureIds.map((fid) => {
                 const fl = getLectureMeta(fid)
                 return fl ? (
                   <li key={fid}>
@@ -140,7 +163,7 @@ export default function LecturePage() {
                   </li>
                 ) : null
               })}
-              {meta.followupLectureIds.length === 0 && (
+              {displayMeta.followupLectureIds.length === 0 && (
                 <li className="text-gray-400">本讲当前是这条知识链的终点</li>
               )}
             </ul>
@@ -148,19 +171,19 @@ export default function LecturePage() {
         </div>
       </section>
 
-      {meta.objectives.length > 0 && (
+      {displayMeta.objectives.length > 0 && (
         <section className="mb-8">
           <h2 className="font-semibold text-gray-800 mb-2">学习目标</h2>
           <ul className="list-disc list-inside space-y-1 text-gray-600">
-            {meta.objectives.map((obj, i) => <li key={i}><MathText>{obj}</MathText></li>)}
+            {displayMeta.objectives.map((obj, i) => <li key={i}><MathText>{obj}</MathText></li>)}
           </ul>
         </section>
       )}
 
-      {meta.overview && (
+      {displayMeta.overview && (
         <section className="mb-8 lecture-content">
           <h2 className="font-semibold text-gray-800 mb-2">本讲概述</h2>
-          <p className="text-gray-600 leading-relaxed"><MathText>{meta.overview}</MathText></p>
+          <p className="text-gray-600 leading-relaxed"><MathText>{displayMeta.overview}</MathText></p>
         </section>
       )}
 
@@ -169,17 +192,21 @@ export default function LecturePage() {
           <>
             <ConnectionSection network={content.knowledgeNetwork} />
             <ConceptSection concepts={content.concepts} />
+            <LearningPause title="暂停一下" prompt="先用一句话说出本讲最重要的概念，再继续学习解题方法。" />
             <MethodSection methods={content.coreMethods} />
-            <ExampleSection questions={content.typicalQuestions} />
+            <LearningPause title="想一想" prompt="接下来每道题先说出所属知识主线、题型和第一步，再展开计算或证明。" />
+            <ExampleSection questions={content.typicalQuestions} threads={knowledgeThreads} />
             <ErrorAnalysisSection mistakes={content.commonMistakes} />
+            <LearningPause title="检查一下" prompt="回看刚才的例题：关键词圈了吗？题型和第一步说清楚了吗？休息3分钟后再做变式训练。" />
             <ExerciseSection
               basic={content.exercises.basic}
               intermediate={content.exercises.intermediate}
               challenge={content.exercises.challenge}
               knowledgeTransfer={content.exercises.knowledgeTransfer}
               lectureId={id}
-              lectureTitle={meta.title}
+              lectureTitle={displayMeta.title}
             />
+            <LearningPause title="说一说" prompt="请用一句话说出本节核心知识，再说出它从哪里来、下一步会用到哪里。" />
             <OralTaskSection task={content.oralTask} />
 
             {content.errorCard.fields.errorNumber && (
@@ -202,13 +229,7 @@ export default function LecturePage() {
               </section>
             )}
           </>
-        ) : meta.isFullContent ? (
-          <div className="text-center py-4 text-gray-400">课程内容加载失败</div>
-        ) : (
-          <div className="mb-8 p-4 bg-amber-50 rounded-lg border border-amber-200 text-sm text-amber-700">
-            本讲详细内容正在编写中。知识框架和关联关系已就绪，可以先浏览知识网络导航了解本讲在体系中的位置。
-          </div>
-        )}
+        ) : <div className="text-center py-4 text-gray-400">课程内容加载失败</div>}
       </Suspense>
 
       {displayAnimations.length > 0 && (
@@ -221,6 +242,8 @@ export default function LecturePage() {
           </div>
         </section>
       )}
+
+      {lessonSupport && <AdhdLessonClosure support={lessonSupport} lectureId={id} />}
 
       <div className="flex justify-between mt-8 pt-4 border-t border-gray-200">
         {prevLecture ? (

@@ -22,7 +22,7 @@ const MODULE_BORDERS: Record<number, string> = {
 
 export default function HomePage() {
   const statuses = useStore((s) => s.progress.lectureStatuses)
-  const { total, completed, mastered, percentage } = computeProgress(statuses)
+  const { total, started, mastered, percentage } = computeProgress(statuses)
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -36,7 +36,7 @@ export default function HomePage() {
       <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-800">总体学习进度</h2>
-          <span className="text-sm text-gray-500">{completed}/{total} 讲完成 · {mastered} 讲已掌握</span>
+          <span className="text-sm text-gray-500">{started}/{total} 讲已开始 · {mastered} 讲已掌握</span>
         </div>
         <ProgressBar value={percentage} size="lg" color="bg-primary-500" showLabel />
         <div className="flex gap-2 mt-3">
@@ -82,7 +82,11 @@ export default function HomePage() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link to="/textbook-chapters" className="p-4 bg-white rounded-xl border border-gray-200 hover:border-primary-300 hover:shadow-sm transition-all">
+          <h3 className="font-semibold text-gray-800">📚 教材24章</h3>
+          <p className="text-sm text-gray-500 mt-1">按2024—2026新版人教教材顺序查找对应复习课</p>
+        </Link>
         <Link to="/knowledge-graph" className="p-4 bg-white rounded-xl border border-gray-200 hover:border-primary-300 hover:shadow-sm transition-all">
           <h3 className="font-semibold text-gray-800">🔗 知识图谱</h3>
           <p className="text-sm text-gray-500 mt-1">查看知识点之间的关联，理解数学的整体结构</p>

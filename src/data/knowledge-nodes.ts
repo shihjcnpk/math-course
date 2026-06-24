@@ -1,7 +1,8 @@
 import type { KnowledgeNode } from '@/types'
 
 /**
- * Complete knowledge node database for 7-8 grade mathematics (人教版2022新课标).
+ * Knowledge node database for grades 7-8 mathematics, aligned to the
+ * 2022 curriculum standard and the 2024-2026 PEP six-three-system textbooks.
  * ~140 concept nodes, each with full prerequisite/related/leadsTo relationships.
  *
  * Node ID naming convention: kebab-case, English semantic name.
@@ -24,7 +25,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '正数和负数是描述相反意义的量。温度零上与零下、海拔以上与以下、收入与支出——生活中大量存在相反意义的量，数学用正负号来统一表示。这是数的第一次大扩展。',
     prerequisites: [],
     related: ['number-line', 'opposite-numbers'],
-    leadsTo: ['rational-numbers', 'absolute-value', 'integer-operations'],
+    leadsTo: ['rational-numbers', 'absolute-value', 'integer-addition-subtraction'],
     commonUses: ['表示相反意义的量', '基准线以上/以下的距离', '财务盈亏'],
     typicalQuestionTypes: ['正负数判断', '相反意义的量识别'],
     commonMistakes: [
@@ -47,7 +48,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '有理数是整数和分数的统称——任何一个有理数都可以写成p/q（p、q为整数，q≠0）的形式。正有理数、0、负有理数构成了从小学到初中的"数世界"。以后还会遇到写不成分数形式的数（无理数）。',
     prerequisites: ['positive-negative-numbers'],
     related: ['number-line', 'fraction-concept'],
-    leadsTo: ['real-numbers', 'rational-operations', 'irrational-numbers'],
+    leadsTo: ['real-numbers', 'rational-mixed-operations', 'irrational-numbers'],
     commonUses: ['数的分类', '判断一个数属于哪个数集', '为实数扩展做铺垫'],
     typicalQuestionTypes: ['有理数分类', '判断一个数是否为有理数'],
     commonMistakes: [
@@ -70,7 +71,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '数轴把抽象的数变成看得见的位置。原点（0）、正方向（通常向右）、单位长度——三要素缺一不可。数轴上右边的点总比左边的点表示的数大。这是数形结合的第一个入口。',
     prerequisites: ['positive-negative-numbers'],
     related: ['absolute-value', 'opposite-numbers'],
-    leadsTo: ['coordinate-plane', 'real-numbers', 'inequality-comparison'],
+    leadsTo: ['coordinate-plane', 'real-numbers', 'inequality-concept'],
     commonUses: ['比较有理数大小', '理解绝对值的几何意义', '为坐标系做铺垫'],
     typicalQuestionTypes: ['在数轴上标点', '利用数轴比较大小', '数轴三要素判断'],
     commonMistakes: [
@@ -93,7 +94,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: 'a的相反数是-a。数轴上，互为相反数的两个点位于原点两侧且到原点的距离相等。0的相反数还是0。注意：相反数不等于负数——正数也有相反数！',
     prerequisites: ['positive-negative-numbers', 'number-line'],
     related: ['absolute-value'],
-    leadsTo: ['rational-operations', 'integer-addition-subtraction'],
+    leadsTo: ['rational-mixed-operations', 'integer-addition-subtraction'],
     commonUses: ['化简双重符号', '解方程中的移项', '理解减法=加相反数'],
     typicalQuestionTypes: ['求一个数的相反数', '化简多重符号'],
     commonMistakes: [
@@ -114,8 +115,8 @@ export const knowledgeNodes: KnowledgeNode[] = [
     oneLineMeaning: '绝对值就是数轴上一个点到原点的距离——距离不可能是负数，所以绝对值一定≥0。',
     description: '|a|表示数轴上表示a的点到原点的距离。一个正数的绝对值是它本身，一个负数的绝对值是它的相反数，0的绝对值是0。绝对值的本质是"距离"——这会在坐标系、函数图像、最短路径问题中反复出现。',
     prerequisites: ['number-line', 'opposite-numbers'],
-    related: ['inequality-comparison', 'distance-formula'],
-    leadsTo: ['rational-operations', 'coordinate-distance', 'function-absolute-value', 'shortest-path'],
+    related: ['inequality-concept', 'coordinate-plane'],
+    leadsTo: ['rational-mixed-operations', 'coordinate-plane', 'shortest-path'],
     commonUses: ['比较有理数大小', '求数轴上两点距离', '|a-b|表示a和b的距离', '坐标中点到原点距离'],
     typicalQuestionTypes: ['求绝对值', '利用绝对值比较大小', '绝对值方程', '绝对值与数轴距离'],
     commonMistakes: [
@@ -142,7 +143,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '有理数加法：同号两数相加取相同的符号并把绝对值相加，异号两数相加取绝对值较大的符号并用大绝对值减小绝对值。减法法则：减去一个数等于加上它的相反数——这统一了加减法。',
     prerequisites: ['absolute-value', 'opposite-numbers', 'number-line'],
     related: ['integer-multiplication-division'],
-    leadsTo: ['rational-mixed-operations', 'algebraic-expression-operations', 'equation-solving'],
+    leadsTo: ['rational-mixed-operations', 'integer-expressions', 'linear-equation'],
     commonUses: ['所有运算的基础', '方程移项', '代数式化简'],
     typicalQuestionTypes: ['有理数加减计算', '加减混合运算', '利用运算律简化'],
     commonMistakes: [
@@ -165,7 +166,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '两数相乘，同号得正，异号得负，并把绝对值相乘。多个有理数相乘，负因数的个数决定符号：奇负得负，偶负得正。除法法则：除以一个不等于0的数等于乘它的倒数。',
     prerequisites: ['absolute-value', 'integer-addition-subtraction'],
     related: ['rational-exponentiation', 'fraction-operations'],
-    leadsTo: ['rational-mixed-operations', 'algebraic-expression-multiplication', 'solving-proportion'],
+    leadsTo: ['rational-mixed-operations', 'polynomial-multiplication', 'fraction-operations'],
     commonUses: ['所有乘除运算', '解方程中的系数化1', '比例问题'],
     typicalQuestionTypes: ['有理数乘除计算', '符号判断', '乘除混合运算'],
     commonMistakes: [
@@ -188,7 +189,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: 'aⁿ表示n个a相乘。a叫底数，n叫指数，结果叫幂。关键区分：(-2)²=4，-2²=-4——括号决定底数是谁。正数的任何次幂都是正数；负数的奇次幂是负数，偶次幂是正数。',
     prerequisites: ['integer-multiplication-division'],
     related: ['scientific-notation'],
-    leadsTo: ['rational-mixed-operations', 'power-operations', 'quadratic-roots'],
+    leadsTo: ['rational-mixed-operations', 'power-operations', 'square-root'],
     commonUses: ['科学记数法', '幂的运算', '勾股定理计算', '面积和体积'],
     typicalQuestionTypes: ['乘方计算', '(-a)ⁿ与-aⁿ的区别', '乘方与四则混合'],
     commonMistakes: [
@@ -211,7 +212,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     oneLineMeaning: '用a×10ⁿ表示很大或很小的数，其中1≤|a|<10。',
     description: '科学记数法把大数写成a×10ⁿ的形式。n的确定方法：原数的小数点移动的位数。这是处理极大数和极小数的高效表达方式。',
     prerequisites: ['rational-exponentiation', 'absolute-value'],
-    related: ['approximate-numbers'],
+    related: ['rational-exponentiation'],
     leadsTo: ['quadratic-radical-operations'],
     commonUses: ['表示极大数（天文距离）', '表示极小数（微观尺寸）', '物理和化学计算'],
     typicalQuestionTypes: ['科学记数法表示', '还原科学记数法', '单位换算中的科学记数法'],
@@ -234,8 +235,8 @@ export const knowledgeNodes: KnowledgeNode[] = [
     oneLineMeaning: '先乘方，再乘除，最后加减，有括号的先算括号里的。',
     description: '有理数混合运算综合了加减、乘除、乘方，遵循"三级运算优先级"：第一级括号，第二级乘方，第三级乘除，第四级加减。同级运算从左到右。这是所有后续代数运算的基础——后面整式、分式、根式的运算顺序完全一致。',
     prerequisites: ['integer-addition-subtraction', 'integer-multiplication-division', 'rational-exponentiation'],
-    related: ['operation-laws'],
-    leadsTo: ['algebraic-expression-operations', 'fraction-operations', 'quadratic-radical-operations'],
+    related: ['algebraic-expressions'],
+    leadsTo: ['integer-expressions', 'fraction-operations', 'quadratic-radical-operations'],
     commonUses: ['所有计算的基础', '实际问题中的数值计算', '方程求解'],
     typicalQuestionTypes: ['混合运算', '简便运算', '运算律的应用'],
     commonMistakes: [
@@ -304,7 +305,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '同类项的两个条件：所含字母相同，并且相同字母的指数也相同。合并同类项：系数相加，字母及指数不变——这本质上是乘法分配律的逆用。这是整式加减的核心操作。',
     prerequisites: ['monomials-polynomials'],
     related: ['bracket-removal'],
-    leadsTo: ['integer-expressions', 'equation-solving', 'factoring'],
+    leadsTo: ['integer-expressions', 'linear-equation', 'factoring'],
     commonUses: ['整式化简', '解方程', '因式分解中的分组'],
     typicalQuestionTypes: ['判断同类项', '合并同类项', '化简求值'],
     commonMistakes: [
@@ -325,8 +326,8 @@ export const knowledgeNodes: KnowledgeNode[] = [
     oneLineMeaning: '括号前是"+"直接去，括号前是"—"里面每一项都要变号。',
     description: '去括号本质是乘法分配律：a(b+c)=ab+ac，-(b+c)=-b-c。括号前是正号，里面项不变；括号前是负号，里面每一项都要变号（负号"分发"到每一项）。这个规则会贯穿后续所有代数学习——方程、不等式、分式、函数化简。',
     prerequisites: ['like-terms', 'integer-multiplication-division'],
-    related: ['integer-expressions', 'equation-solving'],
-    leadsTo: ['polynomial-multiplication', 'factoring', 'fraction-operations', 'function-simplification'],
+    related: ['integer-expressions', 'linear-equation'],
+    leadsTo: ['polynomial-multiplication', 'factoring', 'fraction-operations'],
     commonUses: ['整式化简', '解方程', '因式分解', '分式化简', '函数解析式整理'],
     typicalQuestionTypes: ['去括号化简', '添括号', '去括号与合并同类项综合'],
     commonMistakes: [
@@ -349,7 +350,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '整式加减是代数运算的第一个综合技能：先去括号（注意变号），再找同类项合并，最后如果需要求值再代入数字。这是所有后续代数化简的起点——后面因式分解、分式化简本质上是这个技能的升级版。',
     prerequisites: ['like-terms', 'bracket-removal'],
     related: ['polynomial-multiplication'],
-    leadsTo: ['factoring', 'fraction-operations', 'equation-solving', 'function-simplification'],
+    leadsTo: ['factoring', 'fraction-operations', 'linear-equation'],
     commonUses: ['代数式化简', '解方程前的整理', '函数解析式化简', '求代数式的值'],
     typicalQuestionTypes: ['整式加减化简', '化简求值', '整式加减应用题'],
     commonMistakes: [
@@ -397,7 +398,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '单项式×多项式：用单项式去乘多项式中的每一项。(a+b)(c+d)：用第一个括号的每一项去乘第二个括号的每一项，共4次乘法。这是乘法公式的来源——乘法公式不过是特殊形式的整式乘法。',
     prerequisites: ['power-operations', 'like-terms', 'bracket-removal'],
     related: ['square-difference', 'perfect-square'],
-    leadsTo: ['factoring', 'fraction-simplification'],
+    leadsTo: ['factoring', 'fraction-operations'],
     commonUses: ['代数式乘法', '因式分解的逆过程', '分式化简', '解二次方程'],
     typicalQuestionTypes: ['单项式乘多项式', '多项式乘多项式', '整式乘法化简'],
     commonMistakes: [
@@ -419,8 +420,8 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '平方差公式(a+b)(a-b)=a²-b²是整式乘法的特殊情况。用面积解释：边长为a的正方形挖掉边长为b的小正方形，剩余面积可以拼成一个(a+b)×(a-b)的矩形。正用是整式乘法，逆用是因式分解。',
     prerequisites: ['polynomial-multiplication'],
     related: ['perfect-square'],
-    leadsTo: ['factoring', 'fraction-simplification', 'rationalization'],
-    commonUses: ['快速计算（如101×99=100²-1²）', '因式分解', '分母有理化', '二次函数配方法'],
+    leadsTo: ['factoring', 'fraction-operations', 'quadratic-radical-operations'],
+    commonUses: ['快速计算（如101×99=100²-1²）', '因式分解', '二次根式混合运算'],
     typicalQuestionTypes: ['直接套用公式', '识别公式形式', '平方差公式简便计算'],
     commonMistakes: [
       { description: '混淆平方差和完全平方', wrongExample: '(a+b)(a-b) = a²+2ab+b²', correctApproach: '(a+b)(a-b)=a²-b²，没有中间项', likelyBreakpointCandidates: ['polynomial-multiplication'] },
@@ -439,12 +440,12 @@ export const knowledgeNodes: KnowledgeNode[] = [
     grade: 8,
     difficulty: 'intermediate',
     oneLineMeaning: '(a±b)²=a²±2ab+b²——和/差的平方等于平方和加/减两倍乘积。',
-    description: '完全平方公式用正方形面积理解最直观：边长为a+b的正方形可以切成4块——两个正方形a²和b²，加上两个长方形ab。注意中间项2ab的符号：和平方是+2ab，差平方是-2ab。正用是整式乘法，逆用是因式分解（配方法）。',
+    description: '完全平方公式可用正方形面积理解：边长为a+b的正方形可分成a²、b²和两个ab。注意中间项必须是±2ab；正用是整式乘法，逆用可作因式分解。',
     prerequisites: ['polynomial-multiplication'],
     related: ['square-difference'],
-    leadsTo: ['factoring', 'completing-square', 'quadratic-function', 'pythagorean-theorem'],
-    commonUses: ['整式乘法', '配方法因式分解', '二次函数配方', '勾股定理'],
-    typicalQuestionTypes: ['直接套用公式', '补全完全平方', '配方法', '完全平方与平方差混用'],
+    leadsTo: ['factoring', 'pythagorean-theorem', 'quadratic-radical-operations'],
+    commonUses: ['整式乘法', '公式法因式分解', '代数式化简', '勾股定理'],
+    typicalQuestionTypes: ['直接套用公式', '补全完全平方', '公式法因式分解', '完全平方与平方差混用'],
     commonMistakes: [
       { description: '忘记2ab', wrongExample: '(x+3)² = x²+9', correctApproach: '(x+3)² = x²+2·x·3+3² = x²+6x+9', likelyBreakpointCandidates: ['polynomial-multiplication'] },
       { description: '符号搞错', wrongExample: '(x-3)² = x²+6x+9', correctApproach: '(x-3)² = x²-2·x·3+9 = x²-6x+9', likelyBreakpointCandidates: [] },
@@ -467,9 +468,9 @@ export const knowledgeNodes: KnowledgeNode[] = [
     oneLineMeaning: '因式分解是整式乘法的逆过程——把一个多项式变回几个整式的乘积。',
     description: '因式分解=逆乘法。两种基本方法：提公因式法（找各项系数的最大公约数和相同字母的最低次幂）、公式法（逆用平方差和完全平方公式）。口诀：先提公因式，再看公式，能分继续分，直到分不了。',
     prerequisites: ['polynomial-multiplication', 'square-difference', 'perfect-square', 'like-terms'],
-    related: ['fraction-simplification'],
-    leadsTo: ['equation-solving', 'fraction-operations', 'quadratic-function'],
-    commonUses: ['化简分式', '解二次方程', '二次函数配方', '证明代数恒等式'],
+    related: ['fraction-operations'],
+    leadsTo: ['linear-equation', 'fraction-operations'],
+    commonUses: ['化简分式', '公式法因式分解', '证明代数恒等式'],
     typicalQuestionTypes: ['提公因式法', '平方差公式因式分解', '完全平方公式因式分解', '综合因式分解'],
     commonMistakes: [
       { description: '先套公式忘提公因式', wrongExample: '2x²-8 = (2x+4)(2x-4)', correctApproach: '先提公因式2，得2(x²-4)，再用平方差得2(x+2)(x-2)', likelyBreakpointCandidates: [] },
@@ -515,7 +516,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '分式加减：先通分（找最简公分母），再分子相加减。分式乘除：分子乘分子，分母乘分母，除法变乘倒数。最后一定要化简——约去分子分母的公因式。这完全对应分数运算的升级版。',
     prerequisites: ['fraction-concept', 'factoring', 'integer-expressions'],
     related: ['fraction-equations'],
-    leadsTo: ['quadratic-radical-operations', 'function-simplification'],
+    leadsTo: ['quadratic-radical-operations', 'function-concept'],
     commonUses: ['分式化简求值', '分式方程求解', '函数解析式化简'],
     typicalQuestionTypes: ['分式乘除', '分式加减', '分式混合运算', '分式化简求值'],
     commonMistakes: [
@@ -541,7 +542,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     prerequisites: ['rational-exponentiation', 'opposite-numbers'],
     related: ['cube-root'],
     leadsTo: ['irrational-numbers', 'real-numbers', 'quadratic-radicals', 'pythagorean-theorem'],
-    commonUses: ['解二次方程', '勾股定理', '距离公式', '二次函数'],
+    commonUses: ['二次根式', '勾股定理', '距离公式'],
     typicalQuestionTypes: ['求平方根', '算术平方根与平方根的区别', '√(a²)的讨论'],
     commonMistakes: [
       { description: '平方根和算术平方根混淆', wrongExample: '√16 = ±4', correctApproach: '√16 = 4（算术平方根），而16的平方根是±4', likelyBreakpointCandidates: [] },
@@ -629,7 +630,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '二次根式√a：a≥0时有意义。核心性质：(√a)²=a（a≥0），√(ab)=√a·√b（a,b≥0），√(a/b)=√a/√b（a≥0,b>0）。最简二次根式要求：被开方数不含分母，不含能开得尽方的因数。',
     prerequisites: ['square-root', 'real-numbers'],
     related: ['quadratic-radical-operations'],
-    leadsTo: ['pythagorean-theorem', 'distance-formula', 'quadratic-equation'],
+    leadsTo: ['pythagorean-theorem', 'coordinate-plane'],
     commonUses: ['勾股定理计算', '两点距离公式', '二次方程求根公式'],
     typicalQuestionTypes: ['二次根式有意义的条件', '化为最简二次根式', '同类二次根式判断'],
     commonMistakes: [
@@ -644,24 +645,24 @@ export const knowledgeNodes: KnowledgeNode[] = [
   {
     id: 'quadratic-radical-operations',
     name: '二次根式运算',
-    aliases: ['二次根式乘除', '二次根式加减', '分母有理化'],
+    aliases: ['二次根式乘除', '二次根式加减', '最简二次根式'],
     category: 'number-and-expression',
     grade: 8,
     difficulty: 'intermediate',
-    oneLineMeaning: '乘除用性质化简，加减先化同类再合并，分母有根号要分母有理化。',
-    description: '二次根式乘除：√a·√b=√(ab)，√a/√b=√(a/b)。加减：先化简每个二次根式，同类二次根式（被开方数相同）可以直接合并。分母有理化：分母含√a时分子分母同乘√a消除分母根号。',
+    oneLineMeaning: '乘除按性质计算，加减先化为最简二次根式，再合并同类。',
+    description: '二次根式乘除：√a·√b=√(ab)，√a/√b=√(a/b)。加减时先把每个根式化为最简二次根式，只有被开方数相同的同类二次根式可以合并。',
     prerequisites: ['quadratic-radicals', 'square-difference'],
     related: ['fraction-operations'],
-    leadsTo: ['pythagorean-theorem', 'quadratic-equation'],
+    leadsTo: ['pythagorean-theorem'],
     commonUses: ['勾股定理中的边长计算', '二次方程求根公式', '距离公式'],
-    typicalQuestionTypes: ['二次根式乘除', '二次根式加减', '分母有理化', '二次根式混合运算'],
+    typicalQuestionTypes: ['二次根式乘除', '二次根式加减', '最简二次根式', '二次根式混合运算'],
     commonMistakes: [
       { description: '直接把根号内的数相加', wrongExample: '√2+√3=√5', correctApproach: '被开方数不同的不能合并，√2和√3不是同类二次根式', likelyBreakpointCandidates: ['quadratic-radicals'] },
     ],
     lectureIds: [11],
     visualDemo: false,
     importanceLevel: 'high',
-    masteryCheck: '能正确进行二次根式四则运算和分母有理化。',
+    masteryCheck: '能正确进行二次根式四则运算，并把结果化为最简二次根式。',
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -724,7 +725,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '所有应用题共享一套流程：读题→找已知量和未知量→找等量关系→设未知数→列方程→解方程→检验是否符合实际→作答。题型虽多，本质都是建立等量关系。行程问题（s=vt）、工程问题（工作量=效率×时间）、销售问题（利润=售价-成本）都离不开这个框架。',
     prerequisites: ['linear-equation', 'algebraic-expressions'],
     related: ['linear-systems-word-problems'],
-    leadsTo: ['linear-systems-word-problems', 'inequality-applications', 'linear-function-applications'],
+    leadsTo: ['linear-systems-word-problems', 'inequality-solving', 'linear-function-applications'],
     commonUses: ['用数学解决实际问题', '培养建模能力'],
     typicalQuestionTypes: ['和差倍分', '行程问题', '工程问题', '销售利润', '配套问题'],
     commonMistakes: [
@@ -746,7 +747,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     oneLineMeaning: '两个未知数需要两个方程——消去一个未知数，变成一元一次方程来解。',
     description: '两个二元一次方程组成方程组。解法核心是消元：代入消元——从一个方程解出一个未知数代入另一个；加减消元——让两个方程中某个未知数的系数互为相反数或相等，相加或相减消去。消元后变成一元一次方程。',
     prerequisites: ['linear-equation', 'integer-expressions'],
-    related: ['linear-systems-word-problems', 'linear-function-intersection'],
+    related: ['linear-systems-word-problems', 'linear-function-graph'],
     leadsTo: ['function-equation-connection', 'linear-function-applications'],
     commonUses: ['两个未知量的实际问题', '函数图像交点', '方案选择问题'],
     typicalQuestionTypes: ['代入消元', '加减消元', '选择合适消元方法'],
@@ -792,7 +793,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '不等式性质：1)两边同加/减同一个数不等号不变；2)两边同乘/除同一个正数不等号不变；3)两边同乘/除同一个负数时不等号反向。性质3是最容易错的——因为数轴上的大小关系被负数"翻转"了。',
     prerequisites: ['equation-concept', 'number-line'],
     related: ['inequality-solving'],
-    leadsTo: ['inequality-applications', 'function-equation-connection'],
+    leadsTo: ['inequality-solving', 'function-equation-connection'],
     commonUses: ['表示范围', '建立不等关系', '函数值范围'],
     typicalQuestionTypes: ['判断不等式变形是否正确', '利用不等式性质变形'],
     commonMistakes: [
@@ -814,7 +815,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '一元一次不等式解法与一元一次方程几乎相同：去分母→去括号→移项→合并同类项→系数化1（注意：系数为负时不等号反向）。不等式组的解集是每个不等式解集的公共部分，画数轴最直观。',
     prerequisites: ['inequality-concept', 'linear-equation'],
     related: ['linear-equation'],
-    leadsTo: ['inequality-applications', 'function-inequality'],
+    leadsTo: ['function-equation-connection', 'linear-function-applications'],
     commonUses: ['确定取值范围', '方案可行性分析', '函数不等式的图像解法'],
     typicalQuestionTypes: ['解一元一次不等式', '解不等式组', '在数轴上表示解集', '求整数解'],
     commonMistakes: [
@@ -857,9 +858,9 @@ export const knowledgeNodes: KnowledgeNode[] = [
     difficulty: 'advanced',
     oneLineMeaning: '方程的解=函数图像的交点横坐标；不等式的解集=函数图像某一段对应的x范围。',
     description: '这是代数三大支柱的统一视角：ax+b=0的解→y=ax+b与x轴的交点横坐标；ax+b>0的解→y=ax+b在x轴上方的x范围；ax+b₁=ax+b₂的解→两条直线的交点横坐标。三者本质上都是研究数量关系——方程解决"等于"，不等式解决"范围"，函数解决"变化"。',
-    prerequisites: ['linear-equation', 'linear-systems', 'inequality-solving', 'linear-function'],
+    prerequisites: ['linear-equation', 'linear-systems', 'inequality-solving', 'linear-function-concept'],
     related: ['linear-function-graph'],
-    leadsTo: ['quadratic-function', 'comprehensive-problems'],
+    leadsTo: ['linear-function-applications'],
     commonUses: ['综合题', '方案选择', '图像法解方程'],
     typicalQuestionTypes: ['函数图像与方程解', '函数图像与不等式解集', '两函数交点'],
     commonMistakes: [
@@ -930,7 +931,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '一条直线（截线）穿过两条平行线，产生8个角。三组关键关系：同位角（同一方向）相等；内错角（内部交错）相等；同旁内角（内部同侧）互补（和为180°）。这是几何证明的"第一批工具"——几乎所有几何证明题都会用到它们。',
     prerequisites: ['basic-geometry', 'intersecting-lines'],
     related: ['parallel-lines-proof'],
-    leadsTo: ['triangle-angle-sum', 'congruent-triangles', 'quadrilateral-properties'],
+    leadsTo: ['triangle-basics', 'congruent-triangles', 'quadrilateral-properties'],
     commonUses: ['角度计算', '证明两直线平行', '三角形内角和证明', '四边形性质推导'],
     typicalQuestionTypes: ['识别同位角内错角同旁内角', '利用平行线角关系求角度', '判断两直线是否平行'],
     commonMistakes: [
@@ -952,7 +953,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '平行线有三个判定定理（由角推平行）和三个性质定理（由平行推角）——它们互为逆定理。证明的格式是"因为……所以……理由是……"。这是学生第一次接触正规的几何证明，格式规范很重要。',
     prerequisites: ['parallel-lines-angles'],
     related: ['congruent-triangles'],
-    leadsTo: ['triangle-angle-sum', 'quadrilateral-properties', 'geometric-proof-reasoning'],
+    leadsTo: ['triangle-basics', 'quadrilateral-properties', 'congruent-triangles'],
     commonUses: ['证明两条直线平行', '角度计算', '三角形内角和证明', '四边形是平行四边形的判定'],
     typicalQuestionTypes: ['平行线判定', '平行线性质', '平行线判定与性质综合证明'],
     commonMistakes: [
@@ -974,7 +975,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '平移不改变图形的形状和大小，只改变位置。对应点的连线平行且相等。平移是图形变换中最简单的一种，也是用坐标描述图形运动的基础——后面会学到坐标平移：点(a,b)向右移3个单位变成(a+3,b)。',
     prerequisites: ['basic-geometry'],
     related: ['axis-symmetry'],
-    leadsTo: ['coordinate-translation', 'function-translation'],
+    leadsTo: ['coordinate-translation', 'linear-function-graph'],
     commonUses: ['图形变换', '坐标平移', '函数图像平移'],
     typicalQuestionTypes: ['平移作图', '平移性质', '平移与坐标变化'],
     commonMistakes: [
@@ -988,7 +989,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
   {
     id: 'triangle-basics',
     name: '三角形基础',
-    aliases: ['三角形三边关系', '三角形的高中线角平分线', '三角形内角和', '三角形外角', '多边形内角和'],
+    aliases: ['三角形三边关系', '三角形的高、中线、角平分线', '三角形内角和', '三角形外角', '多边形内角和'],
     category: 'geometry-and-proof',
     grade: 7,
     difficulty: 'intermediate',
@@ -996,7 +997,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '三角形是最简单的多边形，也是几何证明的基本训练场。三边关系：任意两边之和>第三边。三线：高（顶点到对边的垂线段）、中线（顶点到对边中点连线）、角平分线。内角和=180°（可以用平行线证明）。外角=不相邻两内角之和。多边形内角和=(n-2)×180°。',
     prerequisites: ['parallel-lines-angles', 'basic-geometry'],
     related: ['congruent-triangles', 'isosceles-triangle'],
-    leadsTo: ['pythagorean-theorem', 'quadrilateral-properties', 'trigonometry'],
+    leadsTo: ['pythagorean-theorem', 'quadrilateral-properties'],
     commonUses: ['角度计算', '边长范围判断', '全等三角形的证明基础'],
     typicalQuestionTypes: ['三边关系判断', '三角形内角和外角计算', '多边形内角和', '三线的识别'],
     commonMistakes: [
@@ -1019,7 +1020,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '全等三角形：能完全重合的两个三角形。5种判定方法：SSS（三边）、SAS（两边和夹角）、ASA（两角和夹边）、AAS（两角和一边）、HL（直角三角形的斜边和直角边）。没有SSA！因为已知两边和一个非夹角不能唯一确定三角形。全等三角形对应边相等、对应角相等——这是证明边等和角等的主要工具。',
     prerequisites: ['triangle-basics'],
     related: ['angle-bisector-properties', 'isosceles-triangle'],
-    leadsTo: ['congruent-proof', 'quadrilateral-properties', 'pythagorean-theorem'],
+    leadsTo: ['angle-bisector-properties', 'quadrilateral-properties', 'pythagorean-theorem'],
     commonUses: ['证明线段相等', '证明角相等', '推导线段和角的数量关系'],
     typicalQuestionTypes: ['选择合适判定方法', '证明两个三角形全等', '利用全等证边等或角等'],
     commonMistakes: [
@@ -1086,7 +1087,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '轴对称的两个关键性质：对称轴是任何一对对应点连线的垂直平分线；对应线段相等。轴对称是图形变换的一种（和平移、旋转并列）。它不仅能用于几何证明，更是"最短路径"问题的核心工具——反射法本质上是轴对称的应用。',
     prerequisites: ['isosceles-triangle', 'angle-bisector-properties'],
     related: ['translation'],
-    leadsTo: ['shortest-path', 'coordinate-symmetry', 'function-symmetry'],
+    leadsTo: ['shortest-path', 'coordinate-plane'],
     commonUses: ['最短路径问题', '图形对称性分析', '坐标系中的对称点'],
     typicalQuestionTypes: ['轴对称作图', '对称点坐标', '利用对称求最短路径'],
     commonMistakes: [
@@ -1108,7 +1109,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '将军饮马问题：从A出发经过河边（直线l）到B，怎样走路程最短？解法：作A（或B）关于l的对称点A\'，连接A\'B交l于P，P就是最佳位置。原理：AP=A\'P（对称），A\'P+PB最短→AP+PB最短。这个思想会延伸到勾股定理中的最短路径和坐标系中的距离问题。',
     prerequisites: ['axis-symmetry', 'triangle-basics'],
     related: ['pythagorean-theorem', 'angle-bisector-properties'],
-    leadsTo: ['pythagorean-applications', 'coordinate-distance'],
+    leadsTo: ['pythagorean-theorem', 'coordinate-plane'],
     commonUses: ['最短路径', '最小值问题', '选址问题'],
     typicalQuestionTypes: ['将军饮马经典题', '两定一动最短路径', '坐标系中最短路径'],
     commonMistakes: [
@@ -1130,7 +1131,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '勾股定理：a²+b²=c²（a、b为直角边，c为斜边）。面积证法最直观——四个相同的直角三角形可以拼成一个大正方形。逆定理：如果三角形三边满足a²+b²=c²，则它是直角三角形。核心应用：求边长、证明直角、网格中的距离、最短路径。',
     prerequisites: ['triangle-basics', 'square-root', 'perfect-square'],
     related: ['quadratic-radicals'],
-    leadsTo: ['coordinate-distance', 'quadratic-equation'],
+    leadsTo: ['coordinate-plane', 'quadratic-radical-operations'],
     commonUses: ['直角三角形边长计算', '坐标系中两点距离', '网格最短路径', '实际测量'],
     typicalQuestionTypes: ['利用勾股定理求边长', '判断三角形是否为直角三角形', '勾股定理在网格中的应用', '最短路径'],
     commonMistakes: [
@@ -1154,7 +1155,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '平行四边形（对边平行且相等，对角线互相平分）→矩形（+对角线相等，四个角是直角）→菱形（+四边相等，对角线互相垂直）→正方形（同时具备矩形和菱形的所有性质）。三角形中位线：连接两边中点的线段平行于第三边且等于第三边的一半。',
     prerequisites: ['congruent-triangles', 'parallel-lines-proof', 'triangle-basics'],
     related: ['isosceles-triangle'],
-    leadsTo: ['pythagorean-applications'],
+    leadsTo: ['pythagorean-theorem', 'shortest-path'],
     commonUses: ['证明线段平行', '证明线段相等', '角度计算', '中点问题'],
     typicalQuestionTypes: ['平行四边形判定', '矩形菱形正方形性质', '中位线应用', '四边形综合证明'],
     commonMistakes: [
@@ -1181,7 +1182,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '平面直角坐标系是"数形结合"的桥梁——代数中的数变成了几何中的点。两条互相垂直且有公共原点的数轴（x轴和y轴），把一个平面分成4个象限。点P(x,y)到x轴的距离=|y|，到y轴的距离=|x|——绝对值在这里以距离的形式再次出现。',
     prerequisites: ['number-line', 'absolute-value'],
     related: ['coordinate-translation'],
-    leadsTo: ['function-concept', 'linear-function-graph', 'coordinate-distance', 'coordinate-symmetry'],
+    leadsTo: ['function-concept', 'linear-function-graph', 'coordinate-translation'],
     commonUses: ['点位置描述', '函数图像', '几何问题的代数化'],
     typicalQuestionTypes: ['确定点坐标', '判断点所在象限', '求点到坐标轴距离', '坐标中点的对称'],
     commonMistakes: [
@@ -1204,7 +1205,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '坐标方法的核心思想：用坐标（代数）描述几何问题，用代数运算解决几何问题。点平移(x,y)→(x+a,y+b)。图形的面积可以通过坐标计算——用割补法把不规则图形变成能用坐标数值计算的规则图形。',
     prerequisites: ['coordinate-plane', 'translation', 'absolute-value'],
     related: ['axis-symmetry'],
-    leadsTo: ['function-translation', 'linear-function-graph', 'coordinate-distance'],
+    leadsTo: ['function-concept', 'linear-function-graph'],
     commonUses: ['图形平移的代数表示', '坐标中的面积计算', '函数图像平移'],
     typicalQuestionTypes: ['点平移后的坐标', '图形平移后的坐标', '坐标系中面积计算'],
     commonMistakes: [
@@ -1226,7 +1227,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '函数：在一个变化过程中，有两个变量x和y，对于x的每一个值，y都有唯一确定的值与之对应。x叫自变量，y叫x的函数。三种表示方法：解析式法（y=2x+1）、列表法、图像法。函数概念是初中数学最重要的抽象之一，是从"静态"到"动态"的飞跃。',
     prerequisites: ['algebraic-expressions', 'coordinate-plane'],
     related: ['linear-function-concept'],
-    leadsTo: ['linear-function-graph', 'linear-function-applications', 'quadratic-function'],
+    leadsTo: ['linear-function-graph', 'linear-function-applications'],
     commonUses: ['描述变化规律', '预测和决策', '实际问题建模'],
     typicalQuestionTypes: ['判断是否为函数关系', '求自变量取值范围', '求函数值', '画函数图像'],
     commonMistakes: [
@@ -1248,7 +1249,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '形如y=kx+b（k、b是常数，k≠0）的函数叫一次函数。当b=0时就是正比例函数y=kx——它是一次函数的特殊情况。k叫斜率（表示y随x变化的快慢和方向），b叫截距（表示直线与y轴的交点）。一次函数是最简单的"非线性"（直线是线性）变化模型。',
     prerequisites: ['function-concept', 'linear-equation', 'coordinate-plane'],
     related: ['linear-function-graph'],
-    leadsTo: ['linear-function-applications', 'function-equation-connection', 'quadratic-function'],
+    leadsTo: ['linear-function-applications', 'function-equation-connection'],
     commonUses: ['线性变化的建模', '方案比较', '预测'],
     typicalQuestionTypes: ['一次函数定义判断', '求k和b的意义', '正比例与一次函数的关系'],
     commonMistakes: [
@@ -1271,7 +1272,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '一次函数y=kx+b的图像是一条直线。k的符号决定直线的倾斜方向（k>0↗递增，k<0↘递减）；|k|的大小决定倾斜程度（|k|越大越陡）。b是直线与y轴的交点纵坐标（截距）。画一次函数图像只需两点（通常取与坐标轴的交点）连成直线。',
     prerequisites: ['linear-function-concept', 'coordinate-plane'],
     related: ['linear-function-applications', 'linear-systems'],
-    leadsTo: ['function-equation-connection', 'function-inequality'],
+    leadsTo: ['function-equation-connection', 'linear-function-applications'],
     commonUses: ['画函数图像', '判断函数增减性', '图像法解方程和不等式'],
     typicalQuestionTypes: ['画一次函数图像', '根据图像判断k和b的符号', '利用增减性比大小', '求图像与坐标轴交点'],
     commonMistakes: [
@@ -1294,7 +1295,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '待定系数法：已知两点求一次函数解析式，设y=kx+b，代入两点坐标解出k和b。应用场景：方案选择（比较不同收费方案哪个更合算）、图像交点（交点的实际意义是一个决策临界点）、线性增长（蓄水、行程、费用等）。',
     prerequisites: ['linear-function-graph', 'linear-systems', 'function-concept'],
     related: ['function-equation-connection'],
-    leadsTo: ['function-equation-connection', 'quadratic-function'],
+    leadsTo: ['function-equation-connection'],
     commonUses: ['方案选择', '费用分析', '行程预测'],
     typicalQuestionTypes: ['待定系数法求解析式', '方案选择', '图像交点含义', '一次函数建模'],
     commonMistakes: [
@@ -1365,7 +1366,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '平均数（算术平均、加权平均）反映整体一般水平但受极端值影响大；中位数是排序后中间那个数，不受极端值影响；众数是出现次数最多的数。选择哪个指标取决于你想说明什么问题——这是统计学中最重要的判断之一。',
     prerequisites: ['statistical-survey', 'statistical-charts'],
     related: ['data-dispersion'],
-    leadsTo: ['data-decision-making'],
+    leadsTo: ['data-dispersion'],
     commonUses: ['成绩分析', '收入水平评估', '选型决策'],
     typicalQuestionTypes: ['计算平均数中位数众数', '选择合适的数据代表', '加权平均数', '根据统计图求统计量'],
     commonMistakes: [
@@ -1388,7 +1389,7 @@ export const knowledgeNodes: KnowledgeNode[] = [
     description: '极差=最大值-最小值（粗略衡量波动范围）。方差s²：每个数据与平均数之差的平方的均值。方差越大→数据越分散→稳定性越差。比如两个选手平均分相同，但一个方差小（稳定），一个方差大（发挥波动大）——方差不只看"平均"，更看"稳定性"。',
     prerequisites: ['data-central-tendency'],
     related: [],
-    leadsTo: ['data-decision-making', 'probability'],
+    leadsTo: [],
     commonUses: ['比较数据稳定性', '质量评估', '风险分析'],
     typicalQuestionTypes: ['计算方差', '根据方差判断稳定性', '方差的意义', '比较两组数据的稳定性'],
     commonMistakes: [

@@ -332,9 +332,9 @@ const lecture25: Lecture = {
       },
       variations: [
         {
-          problem: '如图，在△ABC中，AD平分∠BAC，BD=CD。求证：AB=AC。',
-          hint: '利用角平分线得到∠BAD=∠CAD，BD=CD（已知），AD=AD公共边→SAS→△ABD≅△ACD→AB=AC。注意SAS中AD是公共边，∠BAD=∠CAD是夹角，BD=CD是另一组边——检查：∠BAD和∠CAD之间的公共边是AD，两三角形共用→SAS。等等——题目条件BD=CD，不是AB=AC！再检查：在△ABD和△ACD中，AD=AD（公共边），∠BAD=∠CAD（角平分线），BD=CD（已知）。BD和CD是否是SAS的第二组边？是的——AD和BD的夹角是∠ADB，但角条件是∠BAD不是∠ADB→这不是SAS！这是SSA——不能判定！\n\n正确的做法需要证明∠B=∠C然后用AAS或其他方法。这道题不简单——提醒我们SSA陷阱无处不在。',
-          answer: '此题不能直接用SAS。需要用其他思路（如作辅助线或利用角平分线性质）。这是一个警示——不要被"看起来像是SAS"迷惑，务必检查角的位置。',
+          problem: '如图，在△ABC中，AD平分∠BAC，AB=AC。求证：BD=CD。',
+          hint: '在△ABD和△ACD中，AB=AC，AD=AD，∠BAD=∠CAD。这两边及其夹角对应相等，可用SAS。',
+          answer: '∵ AD平分∠BAC，∴ ∠BAD=∠CAD。又AB=AC，AD=AD，所以△ABD≅△ACD（SAS），从而BD=CD。',
         },
       ],
       summary: '综合推理的技巧——将每个已知条件"翻译"成等边或等角，然后对号入座判定方法。条件不够→考虑辅助线。',
@@ -447,16 +447,9 @@ const lecture25: Lecture = {
     intermediate: [
       {
         id: 'ex-25-inter-1',
-        question: '如图，AB∥DE，BC∥EF，D是AB的中点。求证：△BCD≅△EFD。',
-        answer:
-          '证明：\n' +
-          '∵ D是AB的中点（已知）\n' +
-          '∴ AD = BD\n\n' +
-          '在△BCD和△EFD中——等等，需先利用平行条件获得角相等：\n' +
-          '∵ AB∥DE → ∠B=∠EDF（内错角或同位角，依图而定）\n' +
-          '∵ BC∥EF → ∠BCD=∠EFD（同理）\n\n' +
-          '但还缺一组边条件……具体图形决定具体解法。这是考察综合运用的典型题。',
-        hint: '平行→等角，中点→等边。关键在于找到这两组条件和目标三角形的对应关系。',
+        question: '在△ABC和△DEF中，AB∥DE，BC∥EF，AC∥DF，且AB=DE。求证：△ABC≅△DEF。',
+        answer: '由AB∥DE、BC∥EF可得∠ABC=∠DEF；由AB∥DE、AC∥DF可得∠BAC=∠EDF。又AB=DE，所以△ABC≅△DEF（ASA）。',
+        hint: '平行线提供两组对应角相等，AB=DE是这两组角的夹边，使用ASA。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['congruent-triangles', 'parallel-lines-angles'],
       },

@@ -1,21 +1,24 @@
-import type { LectureStatus } from '@/types'
+import type { LectureMeta, LectureStatus } from '@/types'
 import { lectureRegistry } from '@/data/lectures'
 
 /** Compute overall course progress percentage */
-export function computeProgress(statuses: Record<number, LectureStatus>): {
+export function computeProgress(
+  statuses: Record<number, LectureStatus>,
+  lectures: LectureMeta[] = lectureRegistry,
+): {
   total: number
-  completed: number
+  started: number
   mastered: number
   percentage: number
 } {
-  const total = lectureRegistry.length
-  let completed = 0
+  const total = lectures.length
+  let started = 0
   let mastered = 0
 
-  for (const lecture of lectureRegistry) {
+  for (const lecture of lectures) {
     const status = statuses[lecture.id]
-    if (status === 'mastered' || status === 'in-progress' || status === 'needs-review') {
-      completed++
+    if (status && status !== 'not-started') {
+      started++
     }
     if (status === 'mastered') {
       mastered++
@@ -24,9 +27,9 @@ export function computeProgress(statuses: Record<number, LectureStatus>): {
 
   return {
     total,
-    completed,
+    started,
     mastered,
-    percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+    percentage: total > 0 ? Math.round((mastered / total) * 100) : 0,
   }
 }
 

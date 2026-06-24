@@ -254,7 +254,7 @@ const lecture31: Lecture = {
       {
         id: 'ex31-basic-4',
         question: '（北京2022·改编）线段 $AB$ 的端点 $A(1,2)$、$B(3,5)$。平移使 $A$ 到 $A\'(4,3)$，求 $B\'$ 的坐标。',
-        answer: '平移向量：$(4-1, 3-2) = (3, 1)$。$B\' = (3+3, 5+1) = (6, 6)$。',
+        answer: '平移量：$(4-1, 3-2) = (3, 1)$。$B\' = (3+3, 5+1) = (6, 6)$。',
         hint: '每个点的平移量都一样！先求 $A \\to A\'$ 的变化量，再用于 $B$。',
         difficulty: 'basic',
         flaggedConceptIds: ['coordinate-plane', 'translation'],

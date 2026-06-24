@@ -135,7 +135,11 @@ function buildTree(
   }
 
   // For each identified breakpoint, create a child node
-  const breakpointIds = new Set(diagnosis.identifiedBreakpoints.map((bp) => bp.conceptId))
+  const breakpointIds = new Set(
+    diagnosis.identifiedBreakpoints
+      .filter((bp) => bp.confidence !== 'low')
+      .map((bp) => bp.conceptId),
+  )
 
   for (const bp of diagnosis.identifiedBreakpoints) {
     const bpNode = getNodeById(bp.conceptId)
@@ -147,7 +151,7 @@ function buildTree(
       depth: 1,
       lectureIds: bpNode.lectureIds,
       mastery: conceptMastery[bp.conceptId] || 'unstudied',
-      isBreakpoint: true,
+      isBreakpoint: bp.confidence !== 'low',
       children: [],
     }
 

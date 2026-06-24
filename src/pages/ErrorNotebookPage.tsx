@@ -7,6 +7,7 @@ import { getNodeById } from '@/data/knowledge-nodes'
 import { CATEGORY_LABELS, type ConceptCategory } from '@/types'
 import type { ErrorEntry } from '@/types'
 import ErrorDetail from '@/components/error/ErrorDetail'
+import ReviewQueue from '@/components/error/ReviewQueue'
 import MathText from '@/components/shared/MathText'
 
 type FilterMode = 'all' | 'unresolved' | 'resolved'
@@ -78,6 +79,8 @@ export default function ErrorNotebookPage() {
           {diagnoseMessage}
         </div>
       )}
+
+      <ReviewQueue errors={errors} />
 
       {/* Filter bar: status + module + category */}
       <div className="flex flex-wrap items-center gap-2 mb-4">

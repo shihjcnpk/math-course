@@ -5,7 +5,7 @@ export const modules: ModuleInfo[] = [
     id: 1,
     title: '总知识地图',
     subtitle: '模块一',
-    description: '七八年级数学知识全景：数、式、方程、图形、函数、统计——六条主线的脉络与联系。建立"数学是一张网"的整体认知。',
+    description: '七八年级数学知识全景：数与式、方程与不等式、函数、几何推理、数据统计——五条主线的脉络与联系。建立“数学是一张网”的整体认知。',
     lectureRange: [1, 1],
     color: 'slate',
     gradeLevel: 'both',

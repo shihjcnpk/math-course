@@ -1,3 +1,10 @@
+import type { ReviewStage } from './adhd'
+
+export interface ErrorReviewRecord {
+  completedAt: number
+  outcome: 'correct' | 'needs-work'
+}
+
 /** Diagnosis result for an error — which prerequisite concepts are the real breakpoints */
 export interface BreakpointDiagnosis {
   /** The surface-level concept where the error occurred */
@@ -32,12 +39,22 @@ export interface ErrorEntry {
   conceptName: string
   /** User-selected error type */
   errorType: string
+  /** Stable error type ID from data/error-types.json */
+  errorTypeId?: string
+  /** Optional secondary error type ID */
+  secondaryErrorTypeId?: string
   /** User's self-identified error reason */
   userNote: string
+  /** Short action sentence for the next similar problem */
+  reminderSentence?: string
+  /** Exercise source for traceability */
+  sourceExerciseId?: string
   /** System-generated breakpoint diagnosis */
   diagnosis?: BreakpointDiagnosis
   /** Has the user marked this as resolved? */
   resolved: boolean
   /** User-tagged: have they re-practiced and confirmed mastery? */
   reMastered: boolean
+  /** Spaced review evidence by stage */
+  reviewRecords?: Partial<Record<ReviewStage, ErrorReviewRecord>>
 }

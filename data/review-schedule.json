@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "textbook_scope": "人教版新课标六三制七、八年级数学",
+  "D0": {
+    "name": "当天重做",
+    "task": "当天重做原题，确认不是抄答案",
+    "purpose": "完成即时纠错",
+    "offset_days": 0,
+    "output_slot": "今日新学"
+  },
+  "D1": {
+    "name": "第二天快测",
+    "task": "第二天做同类型基础题",
+    "purpose": "防止短期遗忘",
+    "offset_days": 1,
+    "output_slot": "昨日回顾"
+  },
+  "D3": {
+    "name": "第三天变式",
+    "task": "第三天做变式题",
+    "purpose": "检查是否真正理解题型",
+    "offset_days": 3,
+    "output_slot": "三日前错题"
+  },
+  "D7": {
+    "name": "一周混合",
+    "task": "一周后混入其他题型复习",
+    "purpose": "训练题型识别",
+    "offset_days": 7,
+    "output_slot": "七日前混合题"
+  },
+  "D14": {
+    "name": "两周综合",
+    "task": "两周后放入综合检测",
+    "purpose": "检查长期保持和迁移能力",
+    "offset_days": 14,
+    "output_slot": "十四日前综合题"
+  }
+}

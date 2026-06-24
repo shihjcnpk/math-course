@@ -3,6 +3,7 @@ import type { LectureExercise } from '@/types'
 import { useStore } from '@/store'
 import { useBreakpointDiagnosis } from '@/hooks/useBreakpointDiagnosis'
 import { getNodeById } from '@/data/knowledge-nodes'
+import { ERROR_TYPES } from '@/data/adhd-support'
 import MathText from '@/components/shared/MathText'
 
 interface Props {
@@ -15,6 +16,13 @@ interface Props {
 }
 
 type Tier = 'basic' | 'intermediate' | 'challenge' | 'transfer'
+
+interface ErrorReportPayload {
+  wrongAnswer: string
+  errorTypeId: string
+  secondaryErrorTypeId?: string
+  userNote: string
+}
 
 const TIER_CONFIG: Record<Tier, { label: string; pct: string; color: string; bg: string }> = {
   basic: { label: '基础巩固', pct: '60%', color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200' },
@@ -36,21 +44,26 @@ export default function ExerciseSection({ basic, intermediate, challenge, knowle
   const current = tiers[activeTier]
 
   const handleReportError = useCallback(
-    (ex: LectureExercise) => {
+    (ex: LectureExercise, report: ErrorReportPayload) => {
       const conceptId = ex.flaggedConceptIds[0] || ''
       const conceptNode = conceptId ? getNodeById(conceptId) : null
       const conceptName = conceptNode?.name || ''
+      const selectedErrorType = ERROR_TYPES.find((item) => item.id === report.errorTypeId)
 
       addError({
         lectureId,
         lectureTitle,
         problemDescription: ex.question,
-        wrongAnswer: '',
+        wrongAnswer: report.wrongAnswer,
         correctAnswer: ex.answer,
         conceptId,
         conceptName,
-        errorType: '练习错题',
-        userNote: '',
+        errorType: selectedErrorType?.name || '未分类',
+        errorTypeId: selectedErrorType?.id,
+        secondaryErrorTypeId: report.secondaryErrorTypeId || undefined,
+        userNote: report.userNote,
+        reminderSentence: selectedErrorType?.reminder_sentence,
+        sourceExerciseId: ex.id,
       })
 
       if (conceptId) {
@@ -62,7 +75,9 @@ export default function ExerciseSection({ basic, intermediate, challenge, knowle
           if (diagnosis.identifiedBreakpoints.length > 0) {
             const topBp = diagnosis.identifiedBreakpoints[0]
             setReportFeedback(
-              `已记录错题。真正需要回补的是：第${topBp.reviewLectureId}讲 ${topBp.conceptName}`,
+              topBp.confidence === 'low'
+                ? `已记录错题。尚无已确认断点，建议先自测：第${topBp.reviewLectureId}讲 ${topBp.conceptName}`
+                : `已记录错题。已发现薄弱前置：第${topBp.reviewLectureId}讲 ${topBp.conceptName}`,
             )
           } else {
             setReportFeedback('已记录错题。未检测到明显知识断点，建议复习本题涉及的知识点。')
@@ -108,16 +123,39 @@ export default function ExerciseSection({ basic, intermediate, challenge, knowle
 
       <div className="space-y-3">
         {current.map((ex, i) => (
-          <ExerciseCard key={ex.id || i} exercise={ex} index={i} onReportError={() => handleReportError(ex)} />
+          <ExerciseCard key={ex.id || i} exercise={ex} index={i} onReportError={(report) => handleReportError(ex, report)} />
         ))}
       </div>
     </section>
   )
 }
 
-function ExerciseCard({ exercise: ex, index, onReportError }: { exercise: LectureExercise; index: number; onReportError: () => void }) {
+function ExerciseCard({
+  exercise: ex,
+  index,
+  onReportError,
+}: {
+  exercise: LectureExercise
+  index: number
+  onReportError: (report: ErrorReportPayload) => void
+}) {
   const [showHint, setShowHint] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
+  const [showReportForm, setShowReportForm] = useState(false)
+  const [wrongAnswer, setWrongAnswer] = useState('')
+  const [errorTypeId, setErrorTypeId] = useState(ERROR_TYPES[0]?.id || '')
+  const [secondaryErrorTypeId, setSecondaryErrorTypeId] = useState('')
+  const [userNote, setUserNote] = useState('')
+  const selectedErrorType = ERROR_TYPES.find((item) => item.id === errorTypeId)
+
+  const submitReport = () => {
+    if (!wrongAnswer.trim() || !errorTypeId || !userNote.trim()) return
+    onReportError({ wrongAnswer: wrongAnswer.trim(), errorTypeId, secondaryErrorTypeId, userNote: userNote.trim() })
+    setShowReportForm(false)
+    setWrongAnswer('')
+    setUserNote('')
+    setSecondaryErrorTypeId('')
+  }
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4">
@@ -145,8 +183,8 @@ function ExerciseCard({ exercise: ex, index, onReportError }: { exercise: Lectur
             <button onClick={() => setShowAnswer(!showAnswer)} className="text-xs text-green-600 hover:text-green-700">
               {showAnswer ? '隐藏答案' : '查看答案'}
             </button>
-            <button onClick={onReportError} className="text-xs text-red-500 hover:text-red-600 ml-auto">
-              记录错题
+            <button type="button" onClick={() => setShowReportForm(!showReportForm)} className="text-xs text-red-500 hover:text-red-600 ml-auto">
+              {showReportForm ? '取消记录' : '记录错题'}
             </button>
           </div>
           {showHint && ex.hint && (
@@ -154,6 +192,64 @@ function ExerciseCard({ exercise: ex, index, onReportError }: { exercise: Lectur
           )}
           {showAnswer && (
             <p className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded leading-relaxed"><MathText>{ex.answer}</MathText></p>
+          )}
+          {showReportForm && (
+            <div className="mt-3 space-y-3 rounded-lg border border-red-200 bg-red-50 p-3">
+              <p className="text-xs font-semibold text-red-800">保留原错误，再做具体分类</p>
+              <label className="block text-xs text-gray-700">
+                我的错误答案或错误过程
+                <textarea
+                  value={wrongAnswer}
+                  onChange={(event) => setWrongAnswer(event.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded border border-red-200 bg-white px-2 py-1.5 text-sm focus:border-red-300 focus:outline-none"
+                  placeholder="不要抄正确答案，写下当时真实的错误过程"
+                />
+              </label>
+              <label className="block text-xs text-gray-700">
+                次要错因（可选）
+                <select
+                  value={secondaryErrorTypeId}
+                  onChange={(event) => setSecondaryErrorTypeId(event.target.value)}
+                  className="mt-1 w-full rounded border border-red-200 bg-white px-2 py-1.5 text-sm"
+                >
+                  <option value="">无</option>
+                  {ERROR_TYPES.filter((item) => item.id !== errorTypeId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                </select>
+              </label>
+              <label className="block text-xs text-gray-700">
+                主要错因
+                <select
+                  value={errorTypeId}
+                  onChange={(event) => setErrorTypeId(event.target.value)}
+                  className="mt-1 w-full rounded border border-red-200 bg-white px-2 py-1.5 text-sm"
+                >
+                  {ERROR_TYPES.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                </select>
+              </label>
+              <label className="block text-xs text-gray-700">
+                我为什么会错（一句具体原因）
+                <input
+                  value={userNote}
+                  onChange={(event) => setUserNote(event.target.value)}
+                  className="mt-1 w-full rounded border border-red-200 bg-white px-2 py-1.5 text-sm focus:border-red-300 focus:outline-none"
+                  placeholder="例如：去括号时只改了第一项符号"
+                />
+              </label>
+              {selectedErrorType && (
+                <p className="rounded bg-white px-2 py-1.5 text-xs text-blue-700">
+                  下次提醒：{selectedErrorType.reminder_sentence}
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={submitReport}
+                disabled={!wrongAnswer.trim() || !errorTypeId || !userNote.trim()}
+                className="rounded bg-red-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                保存错题并自动诊断
+              </button>
+            </div>
           )}
         </div>
       </div>

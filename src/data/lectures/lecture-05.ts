@@ -412,7 +412,7 @@ const lecture05: Lecture = {
         id: 'ex5-challenge-1',
         question:
           '已知单项式 $(m-2)x^{|m|+1}y$ 是关于x、y的三次单项式，且系数为正数。求m的值。',
-        answer: '次数=|m|+1+1=|m|+2=3→|m|=1→m=±1。系数=m-2>0→m>2。但m=±1都≤2，无解？不对——检查：x的次数是|m|+1，y的次数是1，总次数=|m|+1+1=|m|+2。三次→|m|+2=3→|m|=1→m=±1。系数=m-2，m=1时系数=-1<0（不合），m=-1时系数=-3<0（也不合）。所以不存在满足条件的m。',
+        answer: '总次数为$|m|+1+1=|m|+2$。由$|m|+2=3$得$m=±1$；但系数为正要求$m-2>0$，即$m>2$。两个条件没有公共解，因此不存在满足条件的$m$。',
         hint: '总次数=|m|+1+1=|m|+2=3→|m|=1→m=±1。分别代入系数检验。',
         difficulty: 'challenge',
         flaggedConceptIds: ['monomials-polynomials', 'absolute-value'],

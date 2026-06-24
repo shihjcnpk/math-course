@@ -7,21 +7,20 @@ import type { KnowledgeNode } from '@/types'
  */
 export function getAllPrerequisites(nodeId: string, maxDepth = 5): string[] {
   const result = new Set<string>()
-  const queue = [nodeId]
-  let depth = 0
+  const queue: Array<{ id: string; depth: number }> = [{ id: nodeId, depth: 0 }]
 
-  while (queue.length > 0 && depth < maxDepth) {
+  while (queue.length > 0) {
     const current = queue.shift()!
-    const node = getNodeById(current)
+    if (current.depth >= maxDepth) continue
+    const node = getNodeById(current.id)
     if (!node) continue
 
     for (const prereqId of node.prerequisites) {
       if (!result.has(prereqId)) {
         result.add(prereqId)
-        queue.push(prereqId)
+        queue.push({ id: prereqId, depth: current.depth + 1 })
       }
     }
-    depth++
   }
 
   return Array.from(result)
