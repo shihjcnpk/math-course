@@ -74,7 +74,7 @@ const lecture39: Lecture = {
       formalDefinition:
         '不论运算对象是数字、整式、分式还是根式，运算顺序恒为：(1)先算括号内（多层括号从内到外）；(2)再算乘方；(3)再算乘除（同级从左到右）；(4)最后算加减（同级从左到右）。此规则在数和式两类运算中完全一致，差异仅在于"运算对象"的复杂度不同。',
       formula:
-        '$$\\forall \\ \\text{代数表达式},\\quad \\text{计算顺序：}\\ \\boxed{()} \\rightarrow \\boxed{a^n} \\rightarrow \\boxed{\\times \\div} \\rightarrow \\boxed{+ -}$$',
+        '$$\\text{代数式的计算顺序：}\\quad \\boxed{()} \\rightarrow \\boxed{a^n} \\rightarrow \\boxed{\\times \\div} \\rightarrow \\boxed{+ -}$$',
       associationReminders: [
         '关联提醒（知识链：算术→代数）：小学算术的"先乘除后加减"是这条规则的起点——初中所有运算都只是在这条规则上叠加了"括号""乘方""字母""根号"等新元素，核心逻辑从未改变。',
         '关联提醒（知识链：整式→分式→根式）：整式运算中有理数运算法则全部保留（符号规则、优先级），分式运算中分数运算法则全部保留（通分约分），根式运算中新增的只是"化简根号内"这一步——每一步都是在前一步基础上"加一层"，不是"换一套"。',

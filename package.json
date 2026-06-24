@@ -10,6 +10,8 @@
     "audit:quality": "python scripts/audit_course_quality.py --strict",
     "audit:formulas": "node scripts/audit_math_formulas.mjs",
     "audit:geometry": "node scripts/audit_geometry_diagrams.mjs",
+    "audit:visual": "node scripts/audit_visual_support.mjs",
+    "audit:visual-runtime": "node scripts/audit_visual_runtime.mjs",
     "export:samples": "python scripts/export_sample_lessons.py",
     "lint": "eslint .",
     "preview": "vite preview"

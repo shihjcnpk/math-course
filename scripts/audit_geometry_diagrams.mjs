@@ -8,7 +8,11 @@ const require = createRequire(import.meta.url)
 const geometryLectureIds = [...Array.from({ length: 12 }, (_, index) => index + 19), 42, 43, 44]
 const componentPath = path.join(root, 'src', 'components', 'lecture', 'GeometryExampleDiagram.tsx')
 const componentSource = fs.readFileSync(componentPath, 'utf8')
-const diagramKeys = new Set([...componentSource.matchAll(/case '([0-9]+-[0-9]+)'/g)].map(match => match[1]))
+const diagramKeys = new Set(
+  [...componentSource.matchAll(/case '([0-9]+-[0-9]+)'/g)]
+    .map(match => match[1])
+    .filter(key => geometryLectureIds.includes(Number(key.split('-')[0]))),
+)
 
 function loadLecture(id) {
   const filename = path.join(root, 'src', 'data', 'lectures', `lecture-${String(id).padStart(2, '0')}.ts`)
