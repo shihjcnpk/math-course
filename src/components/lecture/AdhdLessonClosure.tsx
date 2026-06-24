@@ -9,7 +9,8 @@ interface Props {
 }
 
 export default function AdhdLessonClosure({ support, lectureId }: Props) {
-  const completedItems = useStore((state) => state.progress.lessonCompletion[lectureId] || [])
+  const savedCompletedItems = useStore((state) => state.progress.lessonCompletion[lectureId])
+  const completedItems = savedCompletedItems ?? []
   const setLessonCompletionItem = useStore((state) => state.setLessonCompletionItem)
   const completedCount = support.completion_standard.filter((_, index) => completedItems[index]).length
   return (
