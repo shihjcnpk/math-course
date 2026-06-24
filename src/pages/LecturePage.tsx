@@ -216,7 +216,7 @@ export default function LecturePage() {
             <LearningPause title="暂停一下" prompt="先用一句话说出本讲最重要的概念，再继续学习解题方法。" />
             <MethodSection methods={content.coreMethods} />
             <LearningPause title="想一想" prompt="接下来每道题先说出所属知识主线、题型和第一步，再展开计算或证明。" />
-            <ExampleSection questions={content.typicalQuestions} threads={knowledgeThreads} />
+            <ExampleSection questions={content.typicalQuestions} threads={knowledgeThreads} lectureId={id} />
             <ErrorAnalysisSection mistakes={content.commonMistakes} />
             <LearningPause title="检查一下" prompt="回看刚才的例题：关键词圈了吗？题型和第一步说清楚了吗？休息3分钟后再做变式训练。" />
             <ExerciseSection
