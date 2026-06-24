@@ -5,6 +5,8 @@ import { useStore } from '@/store'
 import LectureCard from '@/components/shared/LectureCard'
 import ProgressBar from '@/components/shared/ProgressBar'
 import { computeProgress } from '@/utils/progress'
+import { getKnowledgeThreadsForLectures } from '@/data/knowledge-threads'
+import KnowledgeThreadSummary from '@/components/lecture/KnowledgeThreadSummary'
 
 export default function ModulePage() {
   const { moduleId } = useParams<{ moduleId: string }>()
@@ -16,7 +18,8 @@ export default function ModulePage() {
   }
 
   const lectures = getLecturesForModule(module.id)
-  const { percentage, mastered } = computeProgress(statuses)
+  const { percentage, mastered } = computeProgress(statuses, lectures)
+  const knowledgeThreads = getKnowledgeThreadsForLectures(lectures.map((lecture) => lecture.id))
 
   return (
     <div>
@@ -36,6 +39,8 @@ export default function ModulePage() {
           <span className="text-sm text-gray-500">{lectures.length} 讲 · 已掌握 {mastered} 讲</span>
         </div>
       </div>
+
+      <KnowledgeThreadSummary threads={knowledgeThreads} />
 
       <div className="space-y-2">
         {lectures.map((lecture) => (

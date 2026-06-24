@@ -19,8 +19,8 @@ export default function SearchPage() {
 
   const results = useMemo(() => {
     if (!query.trim()) return []
-    return search(query)
-  }, [query])
+    return search(query, 20, activeFilter)
+  }, [query, activeFilter])
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -80,6 +80,7 @@ function SearchResultCard({ result }: { result: SearchResult }) {
         <h3 className="font-medium text-gray-900"><MathText>{result.title}</MathText></h3>
       </div>
       <p className="text-sm text-gray-500"><MathText>{result.snippet}</MathText></p>
+      {result.context && <p className="mt-1 text-xs text-gray-400">{result.context}</p>}
     </Link>
   )
 }

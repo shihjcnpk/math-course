@@ -35,10 +35,7 @@ const lecture01: Lecture = {
       '【桥梁】坐标系的建立 + 一次函数 = 数形结合——代数表达式能画成几何图像，几何问题能用代数计算解决',
     ],
     toWhere: [
-      '九年级一元二次方程：建立在因式分解（第8讲）、二次根式（第11讲）和完全平方公式（第7讲）之上',
-      '九年级二次函数：建立在一元二次方程和一次函数（第34-35讲）之上',
-      '九年级相似三角形与三角函数：建立在全等三角形（第24-25讲）和勾股定理（第29讲）之上',
-      '高中数学的函数概念深化、解析几何等：是整个初中数学体系的自然延伸',
+      '七、八年级综合复习：把数与式、方程、几何、函数和统计放回同一张知识网络',
     ],
     relationDiagram: `
                  ┌───────────────────────────────────────┐
@@ -313,7 +310,12 @@ const lecture01: Lecture = {
           '有理数运算（第4讲）→ 整式加减（第6讲，字母运算基于数的运算规则）→ 一元一次方程（第12讲，解方程需要整式运算）→ 一次函数（第34讲，函数是方程的动态推广）。',
         hint: '想想"要学B必须先会A吗？"',
         difficulty: 'basic',
-        flaggedConceptIds: [],
+        flaggedConceptIds: [
+          'rational-mixed-operations',
+          'integer-expressions',
+          'linear-equation',
+          'linear-function-concept',
+        ],
       },
       {
         id: 'ex1-basic-2',
@@ -323,17 +325,17 @@ const lecture01: Lecture = {
           '(C)几何→统计。几何和统计是两条基本独立的知识线，不需要先学几何才能学统计。其他三对都有明确的依赖关系。',
         hint: '两条独立的线可以并行学习。',
         difficulty: 'basic',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['function-concept', 'coordinate-plane', 'statistical-survey'],
       },
       {
         id: 'ex1-basic-3',
         question:
           '小明说："我只喜欢代数，几何太难了，我放弃几何只攻代数，能得高分吗？"请结合知识网络结构分析为什么不可行。',
         answer:
-          '不可行。(1)坐标系是几何概念，但用它表示代数关系——只学代数不学几何，坐标系和函数图像无法理解；(2)勾股定理（几何）依赖平方根（代数），而九年级二次函数又会用到勾股定理；(3)北京中考综合题通常是代数几何结合题；(4)七八年级考试中几何约占40%分值。',
+          '不可行。(1)坐标系是几何概念，但用它表示代数关系——只学代数不学几何，坐标系和函数图像无法理解；(2)勾股定理（几何）依赖平方根（代数）；(3)七、八年级综合题常把代数与几何结合；(4)只有把两条主线互相连接，知识网络才完整。',
         hint: '想想代数线和几何线在哪些地方"汇合"了。',
         difficulty: 'basic',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['coordinate-plane', 'linear-function-graph', 'pythagorean-theorem'],
       },
       {
         id: 'ex1-basic-4',
@@ -343,7 +345,7 @@ const lecture01: Lecture = {
           '错误。数轴是一维坐标系，坐标系是数轴的二维推广——两条互相垂直且原点重合的数轴就构成了坐标系。第31讲"坐标系"直接建立在第3讲"数轴"的基础上。',
         hint: '坐标系是由几条数轴组成的？',
         difficulty: 'basic',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['number-line', 'coordinate-plane'],
       },
       {
         id: 'ex1-basic-5',
@@ -353,7 +355,12 @@ const lecture01: Lecture = {
           '(1)分式运算（第9讲）；(2)坐标系（第31讲）；(3)平方根（第10讲）或三角形基础（第23讲）；(4)平均数（第37讲）。',
         hint: '不需要精确到讲，只需说出前置知识的概念名称。',
         difficulty: 'basic',
-        flaggedConceptIds: [],
+        flaggedConceptIds: [
+          'fraction-equations',
+          'linear-function-graph',
+          'pythagorean-theorem',
+          'data-dispersion',
+        ],
       },
       {
         id: 'ex1-basic-6',
@@ -363,7 +370,12 @@ const lecture01: Lecture = {
           '数：有理数运算（第4讲）；式：因式分解（第8讲）；方程：一元一次方程（第12讲）；函数：一次函数图像（第34讲）。以上为示例，学生需填写自己的答案。',
         hint: '翻课本或回想学过的内容。',
         difficulty: 'basic',
-        flaggedConceptIds: [],
+        flaggedConceptIds: [
+          'rational-mixed-operations',
+          'integer-expressions',
+          'linear-equation',
+          'function-concept',
+        ],
       },
     ],
     intermediate: [
@@ -375,7 +387,7 @@ const lecture01: Lecture = {
           '知识链：(1)两点之间线段最短（基本事实）→ (2)轴对称性质（第27讲）→ (3)垂直平分线性质（第26讲）→ (4)反射法"化折为直"（第28讲）→ (5)若涉及距离计算，需要勾股定理（第29讲）。',
         hint: '不要跳过中间步骤——每一步的原因是上一步的哪个定理？',
         difficulty: 'intermediate',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['shortest-path', 'axis-symmetry', 'pythagorean-theorem'],
       },
       {
         id: 'ex1-inter-2',
@@ -385,7 +397,7 @@ const lecture01: Lecture = {
           '反驳要点：(1)八年级分式运算本质上是七年级有理数运算的字母版——加减通分、乘除直接算、最后约分，规则完全一样；(2)二次根式加减合并同类二次根式用的就是合并同类项的方法；(3)一次函数依赖坐标系和方程——解方程和画函数图像是一体两面；(4)因式分解是整式乘法的逆过程。结论：不是学新的东西，而是用七年级的工具解决更复杂的问题。',
         hint: '找八年级内容中哪些地方"看起来像"七年级内容的升级版。',
         difficulty: 'intermediate',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['fraction-operations', 'quadratic-radical-operations', 'function-concept'],
       },
       {
         id: 'ex1-inter-3',
@@ -395,7 +407,7 @@ const lecture01: Lecture = {
           'BC长度知识链：坐标系（第31讲，写出两点坐标）→ 两点距离公式或勾股定理（第29讲，BC²=4²+3²=25，BC=5）。若用距离公式√[(x₁-x₂)²+(y₁-y₂)²]，还需要平方根（第10讲）。',
         hint: 'B(4,0)和C(0,3)的距离怎么算？',
         difficulty: 'intermediate',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['coordinate-plane', 'pythagorean-theorem', 'square-root'],
       },
     ],
     challenge: [
@@ -407,7 +419,7 @@ const lecture01: Lecture = {
           '（开放题，评判标准：题目合理、涉及至少两个模块、知识链完整。示例：已知一次函数y=2x-1与y=-x+5相交于点P。求(1)点P坐标；(2)两条直线与x轴围成的三角形面积。涉及模块：函数（求交点→联立方程组）→ 几何（求面积）。知识链：一次函数→二元一次方程组→交点坐标→三角形面积公式。）',
         hint: '一个好的跨模块题目通常问两个小问——第一个单模块，第二个需要组合两个小问的结果。',
         difficulty: 'challenge',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['function-equation-connection'],
       },
     ],
     knowledgeTransfer: [
@@ -419,7 +431,7 @@ const lecture01: Lecture = {
           '(1)涉及：代数式（v=s/t是三个量的关系式）、有理数运算、方程（已知两个量求第三个量）、函数（s是t的函数，v是常数k）；(2)对应求代数式的值（第5讲）；(3)s=vt是正比例函数（v是常数），图像是过原点的直线，斜率k=v——"速度越快"对应|k|越大越陡。',
         hint: 'v=s/t变形为s=vt后，v相当于一次函数中的哪个参数？',
         difficulty: 'transfer',
-        flaggedConceptIds: [],
+        flaggedConceptIds: ['algebraic-expressions', 'linear-equation', 'linear-function-concept'],
         knowledgeChain: [
           '代数式表示数量关系（第5讲）',
           '有理数运算（第4讲）',

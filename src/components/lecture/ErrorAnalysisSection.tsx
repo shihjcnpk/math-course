@@ -1,5 +1,6 @@
 import type { LectureMistake } from '@/types'
 import MathText from '@/components/shared/MathText'
+import { ERROR_FOUR_QUESTIONS } from '@/data/adhd-support'
 
 interface Props { mistakes: LectureMistake[] }
 
@@ -23,6 +24,12 @@ export default function ErrorAnalysisSection({ mistakes }: Props) {
               </div>
             </div>
             <p className="text-xs text-gray-500 mt-2 leading-relaxed"><MathText>{m.relatedReminder}</MathText></p>
+            <details className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <summary className="cursor-pointer text-xs font-semibold text-amber-800">错题四问：订正后再回答</summary>
+              <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-gray-700">
+                {ERROR_FOUR_QUESTIONS.map((question) => <li key={question}>{question}</li>)}
+              </ol>
+            </details>
           </div>
         ))}
       </div>

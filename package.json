@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "audit:course": "python scripts/audit_adhd_support.py --strict",
+    "audit:quality": "python scripts/audit_course_quality.py --strict",
+    "audit:formulas": "node scripts/audit_math_formulas.mjs",
+    "export:samples": "python scripts/export_sample_lessons.py",
     "lint": "eslint .",
     "preview": "vite preview"
   },

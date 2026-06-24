@@ -55,6 +55,7 @@ export default function ErrorDetail({ entry, onToggleResolved, onToggleReMastere
       <div className="grid grid-cols-1 gap-3 mb-4">
         {/* Error reason */}
         <DetailRow label="错误原因" value={entry.userNote || '未记录'} />
+        {entry.reminderSentence && <DetailRow label="下次提醒语" value={entry.reminderSentence} />}
 
         {/* Wrong answer */}
         <div className="bg-red-50 rounded-lg p-3 border border-red-100">

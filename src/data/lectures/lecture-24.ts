@@ -295,12 +295,12 @@ const lecture24: Lecture = {
         stepByStepAnalysis: [
           '已有条件：一组边（AB=DE）和一组角（∠B=∠E）',
           '方案一：再加一组边→看已有边和后加边的关系。加BC=EF→AB和BC的夹角是∠B→SAS',
-          '方案二：再加一组角→已有∠B=∠E。加∠A=∠D→两角一边→AAS（边AB是∠C的对边）或加∠C=∠F→两角一边→AAS（边AB是∠C的对边）',
+          '方案二：再加一组角。加∠A=∠D时，已知边AB是两已知角的夹边，可用ASA；加∠C=∠F时，已知边AB不是两已知角的夹边，可用AAS。',
           '方案三：加AC=DF→此时AB=DE, AC=DF, ∠B=∠E。注意∠B不是AB和AC的夹角（AB和AC的夹角是∠A→未知）→SSA→不行！',
         ],
         answer:
           '答案一：添加BC=EF（→SAS）。\n' +
-          '答案二：添加∠A=∠D（→AAS，因为AB是∠C的对边……不对。实际上是ASA还是AAS？AB已知=DE，添加∠A=∠D后：∠A对应∠D，∠B对应∠E，边AB对应DE。AB是∠C的对边→AAS）。\n' +
+          '答案二：添加∠A=∠D（→ASA）。也可以添加∠C=∠F（→AAS）。\n' +
           '（开放题可能有多种正确答案，根据具体图形判断。）',
         commonMistake: '随便加一个条件，不检查是否凑成有效的判定方法。特别是加了AC=DF变成SSA——要验证"角的位置是否在两边之间"。',
       },
@@ -319,7 +319,7 @@ const lecture24: Lecture = {
     {
       wrongExample: '看到AB=DE, BC=EF, ∠A=∠D，直接写SAS——"两边一个角，肯定是SAS"',
       wrongReason: 'SAS要求角在两边的"中间"（夹角）。这里的∠A是A处的角——AB和BC的夹角是∠B（在B点处），∠A是AB和AC的夹角。AB、BC、∠A三者无法组成SAS——这是SSA（已知两边AB和BC，角∠A不和这两边构成夹角）。',
-      correctApproach: '画图确认：已知的两条边（AB和BC）共用的是什么角的顶点？AB和BC共用B点→夹边？！不对，AB和BC的公共端点是B→所以夹角是∠B。∠A不是AB和BC的夹角→不能用SAS。',
+      correctApproach: '画图确认：已知边AB和BC的公共端点是B，所以它们的夹角是∠B。∠A不是这两条边的夹角，不能据此使用SAS。',
       relatedReminder: 'SAS = 边-角-边（S-A-S），三个字母表示"第一条边→夹角→第二条边"。注意看字母是否对应到图形中的位置。',
     },
     {
@@ -410,16 +410,16 @@ const lecture24: Lecture = {
       {
         id: 'ex-24-challenge-1',
         question: '如图，在△ABC中，AB=AC。D在△ABC内部，且DB=DC。(1)求证：△ABD≅△ACD。(2)由此得出什么结论？',
-        answer: '(1)在△ABD和△ACD中\n∵ AB = AC（已知）\nDB = DC（已知）\nAD = AD（公共边）\n∴ △ABD ≅ △ACD（SSS）\n\n(2)由全等得∠BAD=∠CAD→AD是∠BAC的平分线。\n由全等得∠BDA=∠CDA→这两个角互补（因为B、D共……不，D在内部，A、D不共线）→不是邻补角关系。但可以推出AD⊥BC（需额外条件）。\n\n这个图形在学习角平分线和垂直平分线的性质时会再次出现。',
+        answer: '(1)在△ABD和△ACD中\n∵ AB = AC（已知）\nDB = DC（已知）\nAD = AD（公共边）\n∴ △ABD ≅ △ACD（SSS）。\n\n(2)由全等得∠BAD=∠CAD，所以AD平分∠BAC；还可得∠BDA=∠ADC，所以AD平分∠BDC。又因为A、D都到B、C两点距离相等，所以A、D都在线段BC的垂直平分线上，即直线AD垂直平分BC。',
         hint: '公共边AD+两组已知边→SSS。全等后对应角相等——其中的结论（AD平分∠BAC）实际上是"到线段两端距离相等的点在这条线段的垂直平分线上"的特例。',
         difficulty: 'challenge',
         flaggedConceptIds: ['congruent-triangles'],
       },
       {
         id: 'ex-24-challenge-2',
-        question: '小亮说："如果一个三角形的两边和其中一边的中线分别与另一个三角形的两边和其中一边的中线对应相等，那么这两个三角形全等。"这个说法正确吗？请证明或举反例。',
-        answer: '正确。证明如下：\n\n设△ABC中AB=c, AC=b, BC=a, AD是BC边的中线（D是BC的中点）。\n△DEF中对应地DE=c\', DF=b\', EF=a\', DG是EF边的中线。\n\n已知：AB=DE（c=c\'），AC=DF（b=b\'），AD=DG（中线相等）。\n\n由中线性质：BD=DC=½a, EG=GF=½a\'。\n\n但a和a\'未知……通过AB=DE, BD=½a, AD=m（中线长）→△ABD中有三条边AB, BD, AD。\n同理DE, EG, DG也对应△DEG。\n\n若BD≠EG则无法直接比较。实际上需要证明△ABC≅△DEF需要a=a\'或某个角相等。\n\n深入：已知△ABD中有AB, AD, 和BD=½BC。对应△DEG中有DE, DG, EG=½EF。两组对应边AB=DE, AD=DG→"两边一角（中线）"——SSA！不能判定△ABD≅△DEG。所以原命题可能不成立。\n\n反例：构造两组满足条件的非全等三角形。结论：这个说法不正确。SSA的陷阱再次出现——即使加了"中线"条件仍可能有反例。',
-        hint: '关键分析点：两个三角形（△ABD和△DEG）的条件是"两边（AB, AD, BD）—"但BD和EG的关系不确定。尝试用余弦定理分析中线长度与三边的关系。',
+        question: '已知△ABC与△DEF中，AB=DE，AC=DF，BC边上的中线AM等于EF边上的中线DN。求证：△ABC≅△DEF。',
+        answer: '延长AM到P，使MP=AM；延长DN到Q，使NQ=DN。因为M、N分别是BC、EF的中点，所以四边形ABPC与DEQF的对角线分别互相平分，它们都是平行四边形。于是BP=AC，EQ=DF，且AP=2AM，DQ=2DN。\n\n在△ABP和△DEQ中，AB=DE，BP=EQ，AP=DQ，所以△ABP≅△DEQ（SSS），从而∠BAM=∠EDN。\n\n在△ABM和△DEN中，AB=DE，AM=DN，∠BAM=∠EDN，所以△ABM≅△DEN（SAS），得BM=EN，即BC=EF。最后由AB=DE、AC=DF、BC=EF，得△ABC≅△DEF（SSS）。',
+        hint: '把中线延长一倍，利用“对角线互相平分的四边形是平行四边形”，把已知两边转化为构造三角形的边，再连续使用SSS和SAS。',
         difficulty: 'challenge',
         flaggedConceptIds: ['congruent-triangles'],
       },
@@ -428,7 +428,7 @@ const lecture24: Lecture = {
       {
         id: 'ex-24-transfer-1',
         question: '（连接Lecture 25——全等三角形的应用）\n如图，在△ABC中，D是BC的中点。过C作CE∥AB交AD的延长线于E。\n(1)求证：△ABD ≅ △ECD。\n(2)由全等能推出AB=CE吗？为什么？\n(3)这个图形在全等证明中有什么特殊意义？',
-        answer: '(1)在△ABD和△ECD中\nD是BC中点→BD=CD\n∠ADB=∠CDE（对顶角）\n∠ABD=∠ECD（内错角，AB∥CE）\n→ ASA（两角夹边？不对——BD=CD是边，∠ADB=∠CDE是角，∠ABD=∠ECD是角→AAS）→△ABD≅△ECD（AAS）\n\n(2)由全等对应边相等：AB=CE。\n\n(3)这个图形是"倍长中线"辅助线的典型应用——通过作平行线构造全等，把AB"搬运"到CE处。这在Lecture 25中会深入学习。',
+        answer: '(1)在△ABD和△ECD中，D是BC中点，所以BD=CD；∠ADB=∠CDE（对顶角）；∠ABD=∠ECD（两直线平行，内错角相等）。边BD、CD分别是这两组已知角的夹边，所以△ABD≅△ECD（ASA）。\n\n(2)由全等三角形对应边相等，得AB=CE。\n\n(3)这个图形通过平行线、对顶角和中点构造全等，把线段AB的长度关系“搬运”到CE。',
         hint: '利用平行线提供等角条件、对顶角提供等角条件、中点提供等边条件→AAS。',
         difficulty: 'transfer',
         flaggedConceptIds: ['congruent-triangles', 'parallel-lines-angles'],

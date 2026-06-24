@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand'
-import type { ErrorEntry } from '@/types'
+import type { ErrorEntry, ReviewStage } from '@/types'
 
 export interface ErrorSlice {
   errors: ErrorEntry[]
@@ -7,6 +7,7 @@ export interface ErrorSlice {
   updateDiagnosis: (errorId: string, diagnosis: ErrorEntry['diagnosis']) => void
   toggleResolved: (errorId: string) => void
   toggleReMastered: (errorId: string) => void
+  markReviewStage: (errorId: string, stage: ReviewStage, outcome: 'correct' | 'needs-work') => void
   deleteError: (errorId: string) => void
   clearAllErrors: () => void
 }
@@ -48,6 +49,22 @@ export const createErrorSlice: StateCreator<ErrorSlice, [], [], ErrorSlice> = (s
     set((state) => ({
       errors: state.errors.map((e) =>
         e.id === errorId ? { ...e, reMastered: !e.reMastered } : e,
+      ),
+    })),
+
+  markReviewStage: (errorId, stage, outcome) =>
+    set((state) => ({
+      errors: state.errors.map((e) =>
+        e.id === errorId
+          ? {
+              ...e,
+              reviewRecords: {
+                ...e.reviewRecords,
+                [stage]: { completedAt: Date.now(), outcome },
+              },
+              reMastered: stage === 'D14' && outcome === 'correct' ? true : e.reMastered,
+            }
+          : e,
       ),
     })),
 

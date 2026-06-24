@@ -33,12 +33,16 @@ const KaTeXRenderer = memo(function KaTeXRenderer({
         displayMode,
         throwOnError: false,
         strict: false,
-        trust: true,
+        trust: false,
       })
     } catch {
-      return `<span class="text-red-500">[公式错误: ${normalizedFormula}]</span>`
+      return null
     }
   }, [normalizedFormula, displayMode])
+
+  if (html === null) {
+    return <span className={`text-red-500 ${className}`}>[公式错误: {normalizedFormula}]</span>
+  }
 
   if (displayMode) {
     return (

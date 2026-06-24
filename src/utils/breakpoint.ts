@@ -1,5 +1,5 @@
 import { getNodeById } from '@/data/knowledge-nodes'
-import { getAllPrerequisites, getBreakpointCandidates } from '@/data/knowledge-relationships'
+import { getBreakpointCandidates } from '@/data/knowledge-relationships'
 import type { BreakpointDiagnosis } from '@/types'
 
 /**
@@ -25,17 +25,17 @@ export function diagnoseBreakpoint(
   }
 
   const candidates = getBreakpointCandidates(errorConceptId, weakConceptIds)
+  const hasWeakEvidence = candidates.length > 0
 
-  // If no weak prerequisites found, check all prerequisites
+  // No weak evidence means "candidate for a quick self-test", not a confirmed breakpoint.
   if (candidates.length === 0) {
-    const allPrereqs = getAllPrerequisites(errorConceptId)
-    for (const prereqId of allPrereqs) {
+    for (const prereqId of node.prerequisites) {
       const prereqNode = getNodeById(prereqId)
       if (prereqNode) {
         candidates.push({
           conceptId: prereqId,
           conceptName: prereqNode.name,
-          reason: `"${prereqNode.name}"是"${node.name}"的前置知识，建议检查掌握情况`,
+          reason: `尚无薄弱证据；“${prereqNode.name}”是“${node.name}”的直接前置知识，建议先做1道基础题自测`,
         })
       }
     }
@@ -48,7 +48,7 @@ export function diagnoseBreakpoint(
       conceptId: c.conceptId,
       conceptName: c.conceptName,
       reason: c.reason,
-      confidence: 'medium' as const,
+      confidence: hasWeakEvidence ? ('high' as const) : ('low' as const),
       reviewLectureId: bpNode?.lectureIds[0] || 1,
     }
   })
