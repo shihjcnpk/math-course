@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 type Point = [number, number]
 type Tone = 'base' | 'primary' | 'accent' | 'proof' | 'muted'
@@ -31,6 +31,8 @@ interface PointSpec {
 interface Scene {
   title: string
   description: string
+  motionPath?: string
+  motionLabel?: string
   segments?: SegmentSpec[]
   polygons?: { points: Point[]; tone?: Tone; fill?: string; dashed?: boolean }[]
   paths?: { d: string; tone?: Tone; dashed?: boolean; fill?: string; width?: number }[]
@@ -87,6 +89,8 @@ const twoTriangles = (mode: 'sss' | 'add-condition' | 'choice' = 'sss'): Scene =
 const reflectionLine = (detailed = false): Scene => ({
   title: '反射法：把折线展成直线',
   description: '紫色虚线表示A关于河岸l的对称位置A′，橙色路线在P处取得最短值。',
+  motionPath: 'M 110 75 L 270 200 L 495 55',
+  motionLabel: '演示沿最短路线移动',
   segments: [S([55, 200], [550, 200], 'primary'), S([110, 75], [270, 200], 'accent'), S([270, 200], [495, 55], 'accent'), S([110, 75], [110, 275], 'proof', true), S([110, 275], [495, 55], 'proof', true)],
   points: [P([110, 75], 'A', -12, -14), P([495, 55], 'B', 12, -14), P([270, 200], 'P', 0, 23), P([110, 275], 'A′', -15, 20, 'proof')],
   labels: [L([525, 190], '河岸 l', 'primary', 16), ...(detailed ? [L([90, 137], '3 km', 'accent', 15), L([502, 128], '5 km', 'accent', 15), L([300, 45], '投影距离 8 km', 'muted', 15)] : [])],
@@ -95,6 +99,8 @@ const reflectionLine = (detailed = false): Scene => ({
 const doubleReflection = (): Scene => ({
   title: '角内最短周长：两次对称',
   description: 'P分别关于OA、OB对称到P₁、P₂，紫色直线把三段周长展平。',
+  motionPath: 'M 300 115 L 145 148 L 455 148 L 300 115',
+  motionLabel: '演示周长路径',
   segments: [S([300, 260], [65, 90], 'primary'), S([300, 260], [535, 90], 'primary'), S([300, 260], [300, 115], 'muted'), S([300, 115], [145, 148], 'accent'), S([145, 148], [455, 148], 'accent'), S([455, 148], [300, 115], 'accent'), S([85, 225], [515, 225], 'proof', true)],
   points: [P([300, 260], 'O', 0, 23), P([300, 115], 'P', 0, -14), P([145, 148], 'M', -12, -12), P([455, 148], 'N', 12, -12), P([85, 225], 'P₁', -15, 20, 'proof'), P([515, 225], 'P₂', 15, 20, 'proof')],
   labels: [L([132, 84], 'OA', 'primary', 16), L([470, 84], 'OB', 'primary', 16), L([300, 285], '60°', 'accent', 17)],
@@ -103,6 +109,8 @@ const doubleReflection = (): Scene => ({
 const rectangleFold = (): Scene => ({
   title: '长方形折叠',
   description: '紫色虚线AE是折痕，D折到F；同色线段表示折叠前后的对应关系。',
+  motionPath: 'M 120 255 Q 250 105 480 188',
+  motionLabel: '演示D折到F',
   segments: [S([120, 55], [480, 55], 'base'), S([480, 55], [480, 255], 'base'), S([480, 255], [120, 255], 'base'), S([120, 255], [120, 55], 'base'), S([120, 55], [355, 255], 'proof', true), S([120, 55], [480, 188], 'accent'), S([355, 255], [480, 188], 'accent')],
   points: [P([120, 55], 'A', -14, -12), P([480, 55], 'B', 14, -12), P([480, 255], 'C', 14, 20), P([120, 255], 'D', -14, 20), P([355, 255], 'E', 0, 23), P([480, 188], 'F', 16, 5)],
   ticks: [{ a: [120, 55], b: [120, 255], tone: 'accent' }, { a: [120, 55], b: [480, 188], tone: 'accent' }, { a: [120, 255], b: [355, 255], count: 2, tone: 'primary' }, { a: [355, 255], b: [480, 188], count: 2, tone: 'primary' }],
@@ -176,7 +184,7 @@ function sceneFor(key: string): Scene | null {
       labels: [L([235, 102], '∠1', 'accent'), L([295, 155], '∠2', 'proof'), L([350, 216], '∠3', 'accent'), L([85, 58], 'a', 'primary'), L([85, 258], 'b', 'primary')],
     }
     case '22-2': return {
-      title: '坐标网格中的平移', description: '蓝色是原三角形，橙色是向右4格、向上2格后的图形；箭头表示同一平移向量。',
+      title: '坐标网格中的平移', description: '蓝色是原三角形，橙色是向右4格、向上2格后的图形；箭头表示同一平移向量。', motionPath: 'M 160 210 L 340 160', motionLabel: '演示对应点平移',
       extra: <CoordinateTranslation />,
     }
     case '22-3': return {
@@ -234,11 +242,47 @@ function sceneFor(key: string): Scene | null {
       title: '尺规作角平分线', description: '蓝色圆弧截得C、D；以C、D为圆心的等半径弧交于P，连接OP。',
       segments: [S([90, 245], [500, 245], 'primary'), S([90, 245], [400, 45], 'primary'), S([90, 245], [355, 145], 'proof', true, 5)],
       paths: [{ d: 'M 210 245 A 120 120 0 0 0 191 180', tone: 'accent', dashed: true }, { d: 'M 230 210 A 135 135 0 0 1 355 145', tone: 'proof', dashed: true }, { d: 'M 280 125 A 135 135 0 0 0 355 145', tone: 'proof', dashed: true }],
-      points: [P([90, 245], 'O', -14, 20), P([210, 245], 'C', 0, 22), P([1…1056 tokens truncated…15²。',
+      points: [P([90, 245], 'O', -14, 20), P([210, 245], 'C', 0, 22), P([191, 180], 'D', -15, -4), P([355, 145], 'P', 15, -5)],
+    }
+    case '26-4': return {
+      title: '角平分线与垂直平分线', description: 'AD平分∠A；紫色DE垂直平分AB，E是AB中点。',
+      segments: [S([300, 35], [85, 245], 'primary'), S([300, 35], [515, 245], 'primary'), S([85, 245], [515, 245], 'base'), S([300, 35], [295, 245], 'accent'), S([192, 140], [295, 245], 'proof', true)],
+      points: [P([300, 35], 'A'), P([85, 245], 'B', -12, 19), P([515, 245], 'C', 12, 19), P([295, 245], 'D', 0, 22), P([192, 140], 'E', -15, 0)], ticks: [{ a: [300, 35], b: [192, 140], tone: 'proof' }, { a: [192, 140], b: [85, 245], tone: 'proof' }], labels: [L([215, 158], '⊥', 'proof', 18)],
+    }
+    case '27-1': return {
+      title: '等腰三角形中的高', description: 'AB=AC；从B向AC作高BD，红色直角标记是关键。',
+      segments: [S([300, 35], [100, 245], 'primary'), S([300, 35], [510, 245], 'primary'), S([100, 245], [510, 245], 'base'), S([100, 245], [310, 45], 'accent')],
+      points: [P([300, 35], 'A', -14, -11), P([100, 245], 'B', -12, 20), P([510, 245], 'C', 12, 20), P([310, 45], 'D', 16, -3)], ticks: [{ a: [300, 35], b: [100, 245], tone: 'primary' }, { a: [300, 35], b: [510, 245], tone: 'primary' }], labels: [L([300, 82], '40°', 'accent', 17), L([337, 63], '90°', 'accent', 13)],
+    }
+    case '27-2': return isoscelesMedian(false)
+    case '27-3': return {
+      title: '两个底角的角平分线', description: 'BD、CE分别平分∠B、∠C，在小三角形DBC中比较底角。',
+      segments: [S([300, 35], [80, 250], 'primary'), S([300, 35], [520, 250], 'primary'), S([80, 250], [520, 250], 'base'), S([80, 250], [405, 138], 'accent'), S([520, 250], [195, 138], 'proof')],
+      points: [P([300, 35], 'A'), P([80, 250], 'B', -12, 20), P([520, 250], 'C', 12, 20), P([405, 138], 'D', 15, 0), P([195, 138], 'E', -15, 0)], labels: [L([135, 218], '½∠B', 'accent', 15), L([465, 218], '½∠C', 'proof', 15)],
+    }
+    case '27-4': return {
+      title: '等边三角形的中位线', description: 'D、E是两边中点；DE连接两个中点。',
+      segments: [S([300, 35], [85, 250], 'primary'), S([300, 35], [515, 250], 'primary'), S([85, 250], [515, 250], 'primary'), S([193, 143], [408, 143], 'accent', false, 5)],
+      points: [P([300, 35], 'A'), P([85, 250], 'B', -12, 20), P([515, 250], 'C', 12, 20), P([193, 143], 'D', -12, -8), P([408, 143], 'E', 12, -8)], ticks: [{ a: [300, 35], b: [193, 143], tone: 'proof' }, { a: [193, 143], b: [85, 250], tone: 'proof' }, { a: [300, 35], b: [408, 143], count: 2, tone: 'accent' }, { a: [408, 143], b: [515, 250], count: 2, tone: 'accent' }], labels: [L([300, 270], '60°  ·  60°  ·  60°', 'primary', 16)],
+    }
+    case '28-1': return reflectionLine(false)
+    case '28-2': return doubleReflection()
+    case '28-3': return {
+      title: '距离差最大：反向三角不等式', description: '把A、B与直线l上的P连接；紫色虚线帮助比较|PA-PB|与AB。',
+      segments: [S([55, 245], [545, 245], 'primary'), S([155, 70], [410, 100], 'accent', false, 6), S([155, 70], [300, 245], 'base'), S([410, 100], [300, 245], 'proof')], points: [P([155, 70], 'A'), P([410, 100], 'B'), P([300, 245], 'P', 0, 22)], labels: [L([515, 230], 'l', 'primary'), L([285, 65], 'AB', 'accent', 15)],
+    }
+    case '28-4': return { title: '长方体表面最短路径', description: '紫色虚线表示把相邻表面展开后，蚂蚁路径变成平面直线。', motionPath: 'M 140 205 L 500 145', motionLabel: '演示蚂蚁最短路径', extra: <CuboidPath /> }
+    case '29-1': return {
+      title: '勾股定理基本图', description: '红色直角先确认适用条件；两条直角边为6和8，斜边AB待求。',
+      segments: [S([105, 245], [105, 65], 'primary', false, 6), S([105, 245], [505, 245], 'accent', false, 6), S([105, 65], [505, 245], 'proof', false, 6)],
+      points: [P([105, 65], 'A', -13, -10), P([505, 245], 'B', 13, 20), P([105, 245], 'C', -13, 20)], rightAngles: [{ at: [105, 245], x: 1, y: -1, tone: 'accent' }], labels: [L([78, 155], '6', 'primary'), L([300, 270], '8', 'accent'), L([325, 135], 'AB = ?', 'proof', 17)],
+    }
+    case '29-2': return {
+      title: '勾股逆定理', description: '把最长边15放在对面，比较9²+12²与15²。',
       segments: [S([100, 245], [100, 75], 'primary', false, 6), S([100, 245], [505, 245], 'accent', false, 6), S([100, 75], [505, 245], 'proof', false, 6)], rightAngles: [{ at: [100, 245], x: 1, y: -1, tone: 'muted' }], labels: [L([72, 160], '9', 'primary'), L([300, 270], '12', 'accent'), L([330, 130], '15', 'proof')],
     }
     case '29-3': return { title: '网格中的勾股定理', description: '蓝色、橙色直角边分别跨3格、4格；紫色AC是斜边。', extra: <GridTriangle /> }
-    case '29-4': return { title: '梯子滑动模型', description: '同一根梯子长度不变；实线为原位置，虚线为梯脚外移2米后的位置。', extra: <Ladder /> }
+    case '29-4': return { title: '梯子滑动模型', description: '同一根梯子长度不变；实线为原位置，虚线为梯脚外移2米后的位置。', motionPath: 'M 365 275 L 455 275', motionLabel: '演示梯脚外移', extra: <Ladder /> }
     case '30-1': return {
       title: '对角线互相平分', description: 'OA=OC、OB=OD；两条对角线在O处互相平分。',
       segments: [S([160, 55], [500, 105], 'primary'), S([500, 105], [430, 260], 'primary'), S([430, 260], [90, 210], 'primary'), S([90, 210], [160, 55], 'primary'), S([160, 55], [430, 260], 'accent'), S([90, 210], [500, 105], 'proof')],
@@ -256,6 +300,22 @@ function sceneFor(key: string): Scene | null {
       title: '四边中点组成的四边形', description: 'E、F、G、H分别是四边中点；橙色四边形EFGH是研究目标。',
       segments: [S([165, 45], [500, 100], 'base'), S([500, 100], [405, 270], 'base'), S([405, 270], [75, 215], 'base'), S([75, 215], [165, 45], 'base'), S([333, 73], [453, 185], 'accent', false, 5), S([453, 185], [240, 243], 'accent', false, 5), S([240, 243], [120, 130], 'accent', false, 5), S([120, 130], [333, 73], 'accent', false, 5)], points: [P([165, 45], 'A'), P([500, 100], 'B', 13, -5), P([405, 270], 'C', 10, 20), P([75, 215], 'D', -13, 10), P([333, 73], 'E'), P([453, 185], 'F', 15, 4), P([240, 243], 'G', 0, 22), P([120, 130], 'H', -15, 0)],
     }
+    case '31-1': return { title: '坐标平面中的点与象限', description: '先看横坐标决定左右，再看纵坐标决定上下；轴上的点不属于任何象限。', extra: <CoordinateLessonPlot variant="quadrants" /> }
+    case '31-2': return { title: '点到坐标轴和原点的距离', description: '横、纵虚线分别表示到y轴和x轴的距离；到原点的距离构成直角三角形。', extra: <CoordinateLessonPlot variant="distances" /> }
+    case '31-3': return { title: '坐标系中的三种对称', description: '同色虚线连接原点P与它关于x轴、y轴、原点的对称点。', extra: <CoordinateLessonPlot variant="symmetry" /> }
+    case '32-1': return { title: '点的连续平移', description: '先水平移动，再竖直移动；坐标变化顺序与路径箭头一致。', motionPath: 'M 165 70 L 390 70 L 390 205', motionLabel: '演示先横后竖', extra: <CoordinateLessonPlot variant="point-translation" /> }
+    case '32-2': return { title: '三角形整体平移', description: '每个顶点沿同一个方向移动相同距离，形状和面积保持不变。', motionPath: 'M 160 210 L 340 160', motionLabel: '演示对应点平移', extra: <CoordinateTranslation /> }
+    case '32-3': return { title: '坐标三角形的割补法', description: '先用虚线包围成矩形，再减去周围三个直角三角形。', extra: <CoordinateLessonPlot variant="area" /> }
+    case '33-1': return { title: '函数的“输入—唯一输出”', description: '每个输入x只能沿一条箭头到达一个输出y；同一个x连向两个y就不是函数。', extra: <FunctionMapping /> }
+    case '33-2': return { title: '自变量取值范围', description: '分母不能为0、偶次根号内不能为负；数轴上排除不允许的点或区间。', extra: <DomainRestrictions /> }
+    case '33-3': return { title: '列表描点画y=x²', description: '先列表得到成对坐标，再描点并用平滑曲线连接；图像关于y轴对称。', motionPath: 'M 120 20 Q 300 300 480 20', motionLabel: '演示点随x变化', extra: <FunctionPlot variant="parabola" /> }
+    case '34-1': return { title: '两点法画一次函数', description: '取两个容易计算的点，描点后用直线连接并向两端延长。', motionPath: 'M 120 20 L 480 300', motionLabel: '演示点沿直线变化', extra: <FunctionPlot variant="decreasing" /> }
+    case '34-2': return { title: '由图像经过的象限判断k、b', description: '直线从左上向右下降说明k<0，与y轴交在负半轴说明b<0。', extra: <FunctionPlot variant="negative-intercept" /> }
+    case '34-3': return { title: '用图像比较函数值', description: 'k<0时直线从左上向右下；x越大，对应点越低，y越小。', extra: <FunctionPlot variant="compare" /> }
+    case '34-4': return { title: '直线与坐标轴围成的三角形', description: '先求直线与x轴、y轴的截距，再把两段截距看作直角三角形的底和高。', extra: <FunctionPlot variant="intercept-triangle" /> }
+    case '35-1': return { title: '两点确定一次函数', description: 'A、B两点确定唯一一条直线；把坐标代入y=kx+b求k、b。', extra: <FunctionPlot variant="through-points" /> }
+    case '35-2': return { title: '两条直线的交点', description: '交点P同时在两条直线上，因此它的坐标就是对应方程组的解。', motionPath: 'M 120 300 L 480 20', motionLabel: '演示x变化时交会位置', extra: <FunctionPlot variant="intersection" /> }
+    case '35-3': return { title: '套餐费用图像与分界点', description: '两条费用直线的交点表示费用相同；交点两侧比较哪条直线更低。', motionPath: 'M 120 260 L 480 50', motionLabel: '演示用量变化', extra: <FunctionPlot variant="plans" /> }
     case '42-1': return {
       title: '“之”字形中的平行线角关系', description: 'AB∥CD；过E作紫色辅助线，与两条已知平行线平行。',
       segments: [S([65, 60], [535, 60], 'primary'), S([65, 250], [535, 250], 'primary'), S([155, 60], [320, 155], 'accent', false, 5), S([320, 155], [455, 250], 'accent', false, 5), S([120, 155], [500, 155], 'proof', true)],
@@ -290,39 +350,237 @@ function sceneFor(key: string): Scene | null {
   }
 }
 
-interface Props {
-  lectureId: number
-  questionIndex: number
-  problem: string
+function supportingSceneFor(lectureId: number, problem: string, context: 'example' | 'exercise' | 'oral' | 'answer'): Scene | null {
+  const explicitlyReferencesFigure = problem.includes('如图') || problem.includes('下图')
+  const oralNeedsVisual = context === 'oral' && /(画图|图像|拼图|统计图|知识地图)/.test(problem)
+  const answerNeedsVisual = context === 'answer' && /(画|作图|描点|补全|图像|数轴|统计图|直方图|箱线图|扇形图|折线图|条形图|坐标系中表示)/.test(problem)
+  const exampleNeedsVisual = context === 'example' && /(画|作图|描点|补全|图像|数轴|统计图|直方图|箱线图|扇形图|折线图|条形图)/.test(problem)
+  if (!explicitlyReferencesFigure && !oralNeedsVisual && !answerNeedsVisual && !exampleNeedsVisual) return null
+
+  const degreeValues = [...problem.matchAll(/(\d+)\s*°/g)].map(match => match[1])
+  const firstAngle = degreeValues[0] ? `${degreeValues[0]}°` : '已知角'
+
+  if (lectureId === 1) return { title: '坐标—三角形—勾股知识链', description: '先从坐标读出两条互相垂直的边，再用勾股定理求斜边。', extra: <CoordinateRightTriangle /> }
+  if (lectureId === 3) return { title: '数轴上的a、b', description: 'b位于-2与-1之间，a位于0与1之间；先据位置判断符号和绝对值。', extra: <NumberLineAB /> }
+  if (lectureId === 8) return { title: '正方形割补与因式分解', description: '大正方形边长a，角上切去边长b的小正方形；剩余面积可用整体相减或分块相加表示。', extra: <SquareCutout /> }
+  if (lectureId === 11) return rightTriangleScene('二次根式与勾股定理', '√2', '√6')
+  if (lectureId === 18 || (lectureId >= 33 && lectureId <= 35) || lectureId === 45) return functionAnswerScene(problem)
+  if (lectureId >= 36 && lectureId <= 38) return statisticsAnswerScene(problem)
+
+  if (lectureId === 19) {
+    if (problem.includes('直线AB与CD') || problem.includes('直线AB和CD')) return intersectingScene(firstAngle)
+    if (problem.includes('平角')) return straightAngleBisectors(firstAngle)
+    if (context === 'oral' && problem.includes('向下方')) return oppositeRayAngles(degreeValues)
+    return angleBisectorScene(firstAngle)
+  }
+
+  if (lectureId === 20) {
+    if (problem.includes('三条直线')) return { title: '三线交于一点', description: '三条不同颜色的直线形成6个角；先找对顶角，再用平角关系。', extra: <ThreeIntersectingLines values={degreeValues} /> }
+    if (problem.includes('PO⊥') || problem.includes('垂线段')) return pointToLineScene()
+    if (problem.includes('三角形ABC')) return triangleParallelScene()
+    if ((problem.includes('∠B') && problem.includes('∠D')) || problem.includes('∠BED')) return zigzagParallelScene(degreeValues)
+    if (problem.includes('c⊥a')) return parallelPerpendicularTriangleScene()
+    if (problem.includes('直线AB和CD') || problem.includes('直线AB与CD')) return intersectingScene(firstAngle)
+    return parallelLines(firstAngle, true)
+  }
+
+  if (lectureId === 21) {
+    if (problem.includes('△ABC') && problem.includes('△DEF')) return twoTriangles('add-condition')
+    return parallelLines(firstAngle, problem.includes('∥'))
+  }
+
+  if (lectureId === 22) {
+    if (problem.includes('方格纸') && problem.includes('L')) return { title: '方格中的L形平移', description: '蓝色为原图形，红色为目标位置；每个顶点使用同一个平移向量。', extra: <LShapeTranslation /> }
+    if (problem.includes('直角坐标系') || problem.includes('原点')) return { title: '坐标系中的整体平移', description: '所有顶点的横、纵坐标分别作相同改变。', extra: <CoordinateTranslation /> }
+    return sceneFor('22-3')
+  }
+
+  if (lectureId === 23) {
+    if (problem.includes('五边形') || problem.includes('n边形')) return { title: '多边形外角', description: '沿同一方向依次取外角，转完一周的总转角为360°。', extra: <PolygonExteriorAngles /> }
+    if (problem.includes('中线')) return sceneFor('23-4')
+    return triangleConditionScene(problem, degreeValues)
+  }
+
+  if (lectureId === 24) {
+    if (problem.includes('Rt△')) return { title: '直角三角形HL判定', description: '红色直角、同色斜边和直角边是HL判定的三项关键信息。', extra: <RightTrianglePair /> }
+    if (problem.includes('同一直线上')) return sceneFor('43-1')
+    if (problem.includes('D是BC的中点') || problem.includes('D在△ABC内部')) return isoscelesMedian(false)
+    if (problem.includes('CE∥AB')) return sceneFor('25-4')
+    return twoTriangles(problem.includes('添加') ? 'add-condition' : 'sss')
+  }
+
+  if (lectureId === 25) {
+    if (problem.includes('OP平分')) return sceneFor('26-1')
+    if (problem.includes('C是AB的中点')) return sceneFor('25-1')
+    if (problem.includes('四边形')) return quadrilateralConditionScene(problem)
+    if (problem.includes('等边三角形ADE')) return triangleConditionScene(problem, degreeValues, true)
+    if (problem.includes('E是AD的中点')) return sceneFor('25-4')
+    if (problem.includes('AD平分')) return isoscelesMedian(false)
+    return problem.includes('△DEF') ? twoTriangles('add-condition') : triangleConditionScene(problem, degreeValues)
+  }
+
+  if (lectureId === 26) {
+    if (problem.includes('垂直平分线')) return { title: '垂直平分线上的点', description: '紫色直线垂直且平分AB；线上点P到A、B距离相等。', extra: <PerpendicularBisector /> }
+    if (problem.includes('AC⊥BD')) return sceneFor('30-1')
+    if (problem.includes('DE⊥AB') || problem.includes('DF⊥AC')) return sceneFor('26-1')
+    if (problem.includes('AB=AC')) return isoscelesMedian(false)
+    return triangleConditionScene(problem, degreeValues)
+  }
+
+  if (lectureId === 27) {
+    if (problem.includes('等边△')) return sceneFor('27-4')
+    if (problem.includes('内部') && problem.includes('DB=DC')) return sceneFor('25-2')
+    if (problem.includes('周长最小')) return doubleReflection()
+    return isoscelesMedian(false)
+  }
+
+  if (lectureId === 28) {
+    if (problem.includes('∠AOB')) return doubleReflection()
+    if (problem.includes('x=8')) return { title: '两条约束直线上的最短路径', description: '分别关于两条动点所在直线作对称，把三段折线展成直线。', extra: <CoordinateDoubleReflection /> }
+    if (problem.includes('y=x')) return { title: '关于直线y=x的反射', description: '点(a,b)关于y=x对称为(b,a)，再连接定点确定最优位置。', extra: <DiagonalReflection /> }
+    return reflectionLine(problem.includes('A(0,3)'))
+  }
+
+  if (lectureId === 29) {
+    if (problem.includes('梯子')) return { title: '墙—地面—梯子直角模型', description: '墙与地面垂直，梯子是斜边；先确认斜边再代入勾股定理。', extra: <Ladder /> }
+    if (problem.includes('网格')) return { title: '网格中的距离', description: '横向格数和纵向格数构成直角边，连接两点得到斜边。', extra: <GridTriangle /> }
+    if (problem.includes('以AB为边向外作正方形')) return { title: '斜边上的正方形', description: '先求斜边AB，再用AB²直接得到正方形面积。', extra: <SquareOnHypotenuse /> }
+    if (problem.includes('AB=AC')) return { title: '等腰三角形作高', description: '底边上的高同时平分底边，把问题分成两个直角三角形。', extra: <IsoscelesHeight /> }
+    return rightTriangleScene('勾股定理与三角形的高', degreeValues[0] ?? 'a', degreeValues[1] ?? 'b')
+  }
+
+  if (lectureId === 30) return problem.includes('正方形')
+    ? { title: '正方形中的新正方形', description: '蓝色为原正方形，红色为以AE为边构造的新正方形，紫色DG为证明目标相关线段。', extra: <NestedSquares /> }
+    : quadrilateralConditionScene(problem)
+
+  if (lectureId === 42) {
+    if (problem.includes('折叠')) return rectangleFold()
+    if (problem.includes('∠BED')) return zigzagParallelScene(degreeValues)
+    return parallelLines(firstAngle, true)
+  }
+
+  if (lectureId === 43) {
+    if (problem.includes('DE⊥AB') && problem.includes('DF⊥AC')) return sceneFor('26-1')
+    if (problem.includes('AB//CD') && problem.includes('E是BC中点')) return sceneFor('25-4')
+    if (problem.includes('平行四边形ABCD')) return sceneFor('30-1')
+    if (problem.includes('Rt△')) return triangleConditionScene(problem, degreeValues)
+    if (problem.includes('四边形')) return quadrilateralConditionScene(problem)
+    return twoTriangles('add-condition')
+  }
+
+  if (lectureId === 44) return { title: '动点最短路径', description: '先把需要经过的折线路径用对称展开，再用两点之间线段最短。', extra: <TriangleShortestPath /> }
+  if (lectureId === 47) return { title: '垂足等距证明等腰三角形', description: 'D是BC中点，DE、DF分别垂直两腰且相等；从全等或角平分线判定入手。', extra: <EqualPerpendiculars /> }
+
+  if (context === 'oral' && lectureId === 23) return triangleParallelScene()
+  if (context === 'oral' && lectureId === 24) return { title: 'SSA不能唯一确定三角形', description: '固定两边和一个非夹角时，第三个顶点可能有两个位置，得到两个不同三角形。', extra: <SsaAmbiguity /> }
+  if (context === 'oral' && lectureId === 29) return { title: '勾股定理面积拼图', description: '边长(a+b)的大正方形由4个直角三角形和中间边长c的小正方形组成。', extra: <PythagoreanArea /> }
+  if (context === 'oral' && (lectureId === 34 || lectureId === 45)) return { title: '一次函数的斜率、截距与交点', description: 'k决定直线升降，b决定起点；两图像交点表示两个方案相等。', extra: <FunctionLines /> }
+  if (context === 'oral' && lectureId === 36) return { title: '同一数据的三种图表', description: '条形图比大小、折线图看变化、扇形图看占比。', extra: <ChartComparison /> }
+
+  return { title: '题目条件结构图', description: '图中只标出题干给出的对象和关系；请结合文字逐项核对已知条件。', extra: <GenericGeometry /> }
 }
 
-export default function GeometryExampleDiagram({ lectureId, questionIndex, problem }: Props) {
-  const scene = sceneFor(`${lectureId}-${questionIndex + 1}`)
+function intersectingScene(angle: string): Scene {
+  return { title: '相交线中的对顶角与邻补角', description: '两条不同颜色的直线交于O；先锁定已知角，再找对顶角和邻补角。', segments: [S([70, 245], [530, 65], 'primary', false, 5), S([75, 55], [525, 255], 'accent', false, 5)], points: [P([75, 55], 'A'), P([525, 255], 'B', 12, 18), P([530, 65], 'C'), P([70, 245], 'D', -12, 18), P([300, 155], 'O', 0, 23)], labels: [L([300, 95], angle, 'accent')] }
+}
+
+function angleBisectorScene(angle: string): Scene {
+  return { title: '角平分线', description: 'OC把∠AOB分成两个相等的小角；红色刻痕表示“平分”。', segments: [S([90, 250], [520, 250], 'base'), S([90, 250], [390, 45], 'base'), S([90, 250], [465, 115], 'primary', false, 5)], points: [P([90, 250], 'O', -14, 20), P([390, 45], 'A'), P([520, 250], 'B', 13, 20), P([465, 115], 'C', 14, -5)], labels: [L([280, 150], angle, 'accent'), L([395, 190], '½', 'primary')] }
+}
+
+function straightAngleBisectors(angle: string): Scene {
+  return { title: '平角内部的两条角平分线', description: 'A、O、B共线；OD、OE分别平分相邻的两个角。', segments: [S([55, 245], [545, 245], 'base', false, 5), S([300, 245], [185, 55], 'primary'), S([300, 245], [245, 75], 'proof'), S([300, 245], [425, 70], 'proof')], points: [P([55, 245], 'A', 0, 22), P([545, 245], 'B', 0, 22), P([300, 245], 'O', 0, 23), P([185, 55], 'C'), P([245, 75], 'D'), P([425, 70], 'E')], labels: [L([220, 170], angle, 'accent')] }
+}
+
+function oppositeRayAngles(values: string[]): Scene {
+  return { title: '直线两侧的射线角', description: 'A、O、B共线；OC在上方、OD在下方，先用平角分割关系求∠COD。', segments: [S([55, 160], [545, 160], 'base', false, 5), S([300, 160], [180, 45], 'primary'), S([300, 160], [430, 275], 'accent')], points: [P([55, 160], 'A', 0, 22), P([545, 160], 'B', 0, 22), P([300, 160], 'O', -15, 20), P([180, 45], 'C'), P([430, 275], 'D', 14, 18)], labels: [L([215, 125], `${values[0] ?? 70}°`, 'primary'), L([390, 195], `${values[1] ?? 55}°`, 'accent')] }
+}
+
+function pointToLineScene(): Scene {
+  return { title: '点到直线的垂线段', description: 'PO垂直于l，PQ、PR为斜线段；垂线段是所有连接线段中最短的。', segments: [S([60, 245], [545, 245], 'primary'), S([255, 50], [255, 245], 'accent', false, 6), S([255, 50], [455, 245], 'base')], points: [P([255, 50], 'P'), P([255, 245], 'O', 0, 22), P([455, 245], 'Q', 0, 22)], rightAngles: [{ at: [255, 245], x: 1, y: -1, tone: 'accent' }], labels: [L([515, 230], 'l', 'primary')] }
+}
+
+function zigzagParallelScene(values: string[]): Scene {
+  return { title: '平行线之间的“之”字形', description: '过E作辅助平行线，把上下两个已知角传到点E后相加。', segments: [S([65, 60], [535, 60], 'primary'), S([65, 250], [535, 250], 'primary'), S([155, 60], [320, 155], 'accent'), S([320, 155], [455, 250], 'accent'), S([110, 155], [505, 155], 'proof', true)], points: [P([155, 60], 'B'), P([455, 250], 'D', 0, 22), P([320, 155], 'E', 15, 2)], labels: [L([210, 105], `${values[0] ?? '?'}°`, 'accent'), L([410, 205], `${values[1] ?? '?'}°`, 'accent'), L([465, 145], '辅助线', 'proof', 14)] }
+}
+
+function triangleParallelScene(): Scene {
+  return { title: '用平行线说明三角形内角和', description: '过顶点A作DE∥BC，底角可传到A点两侧，三个角组成平角。', segments: [S([65, 65], [535, 65], 'proof', true), S([300, 65], [110, 245], 'primary'), S([300, 65], [500, 245], 'primary'), S([110, 245], [500, 245], 'base')], points: [P([65, 65], 'D'), P([535, 65], 'E'), P([300, 65], 'A', 0, -14), P([110, 245], 'B', -12, 20), P([500, 245], 'C', 12, 20)], labels: [L([455, 57], '∥', 'proof', 22), L([455, 237], '∥', 'proof', 22)] }
+}
+
+function parallelPerpendicularTriangleScene(): Scene {
+  return { title: '平行线中的垂直与等腰条件', description: 'a∥b且c⊥a，因此c也垂直b；AC=BC形成等腰直角三角形。', segments: [S([70, 65], [530, 65], 'primary'), S([70, 245], [530, 245], 'primary'), S([250, 35], [250, 275], 'accent'), S([250, 65], [430, 245], 'proof')], points: [P([250, 65], 'A'), P([250, 245], 'B', -14, 22), P([430, 245], 'C', 0, 22)], rightAngles: [{ at: [250, 65], x: 1, y: 1, tone: 'accent' }, { at: [250, 245], x: 1, y: -1, tone: 'accent' }], ticks: [{ a: [250, 65], b: [430, 245], tone: 'proof' }, { a: [250, 245], b: [430, 245], tone: 'proof' }] }
+}
+
+function triangleConditionScene(problem: string, values: string[] = [], equilateral = false): Scene {
+  const dInside = /D在.*内部/.test(problem)
+  const d: Point = dInside ? [300, 160] : [300, 245]
+  const hasD = /(?:点D|D是|D在|AD|BD|CD)/.test(problem)
+  const hasE = /(?:点E|E是|AE|BE|CE|DE)/.test(problem)
+  const hasF = /(?:点F|F是|AF|BF|CF|DF)/.test(problem)
+  const segments = [S([300, 35], [90, 245], 'primary'), S([300, 35], [510, 245], 'primary'), S([90, 245], [510, 245], 'base')]
+  if (hasD) segments.push(S([300, 35], d, 'accent'))
+  if (hasE) segments.push(S([90, 245], [405, 140], 'proof'))
+  if (hasF) segments.push(S([510, 245], [195, 140], 'proof', true))
+  return { title: equilateral ? '等边三角形的构造' : '三角形条件结构图', description: '按题干标出顶点和辅助线；同色线段表示同一组条件，图形不按比例。', segments, points: [P([300, 35], 'A'), P([90, 245], 'B', -12, 20), P([510, 245], 'C', 12, 20), ...(hasD ? [P(d, 'D', dInside ? 15 : 0, dInside ? 0 : 22)] : []), ...(hasE ? [P([405, 140], 'E', 14, 0)] : []), ...(hasF ? [P([195, 140], 'F', -14, 0)] : [])], labels: values.slice(0, 3).map((value, index) => L([[210, 105], [390, 105], [300, 225]][index] as Point, `${value}°`, index === 0 ? 'accent' : 'proof', 15)) }
+}
+
+function quadrilateralConditionScene(problem: string): Scene {
+  const diagonals = /对角线|连接AC|AC⊥BD/.test(problem)
+  return { title: '四边形条件结构图', description: '先标出平行、等边或对角线条件，再选择平行四边形的判定路径。', segments: [S([155, 55], [500, 95], 'primary'), S([500, 95], [430, 260], 'primary'), S([430, 260], [85, 220], 'primary'), S([85, 220], [155, 55], 'primary'), ...(diagonals ? [S([155, 55], [430, 260], 'accent'), S([500, 95], [85, 220], 'proof')] : [])], points: [P([155, 55], 'A'), P([500, 95], 'B', 13, -5), P([430, 260], 'C', 12, 20), P([85, 220], 'D', -13, 10)], labels: problem.includes('∥') || problem.includes('//') ? [L([325, 67], '∥', 'primary', 22), L([255, 248], '∥', 'primary', 22)] : [] }
+}
+
+function rightTriangleScene(title: string, legA: string, legB: string): Scene {
+  return { title, description: '红色直角是使用勾股定理的前提；先区分直角边和斜边。', segments: [S([105, 245], [105, 60], 'primary', false, 6), S([105, 245], [505, 245], 'accent', false, 6), S([105, 60], [505, 245], 'proof', false, 6)], points: [P([105, 60], 'A'), P([505, 245], 'B', 13, 20), P([105, 245], 'C', -13, 20)], rightAngles: [{ at: [105, 245], x: 1, y: -1, tone: 'accent' }], labels: [L([75, 150], legA, 'primary'), L([300, 270], legB, 'accent'), L([330, 135], 'c', 'proof')] }
+}
+
+interface Props {
+  lectureId: number
+  questionIndex?: number
+  problem: string
+  context?: 'example' | 'exercise' | 'oral' | 'answer'
+  diagramId?: string
+}
+
+export default function GeometryExampleDiagram({ lectureId, questionIndex, problem, context = 'example', diagramId }: Props) {
+  const [motionPlaying, setMotionPlaying] = useState(false)
+  const configuredExampleScene = context === 'example' && questionIndex !== undefined
+    ? sceneFor(`${lectureId}-${questionIndex + 1}`)
+    : null
+  const scene = configuredExampleScene ?? supportingSceneFor(lectureId, problem, context)
   if (!scene) return null
 
-  const titleId = `geometry-diagram-${lectureId}-${questionIndex + 1}`
+  const instanceId = `${lectureId}-${diagramId ?? `${context}-${questionIndex ?? 0}`}`.replace(/[^a-zA-Z0-9_-]/g, '-')
+  const titleId = `geometry-diagram-${instanceId}`
   return (
-    <figure className="my-4 overflow-hidden rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 via-white to-violet-50 shadow-sm" data-geometry-example-diagram>
+    <figure className="my-4 overflow-hidden rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 via-white to-violet-50 shadow-sm" data-geometry-example-diagram={context === 'example' || undefined} data-problem-diagram={context}>
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-100 bg-white/80 px-4 py-2">
         <div>
-          <p className="text-xs font-semibold tracking-wide text-blue-700">题意示意图</p>
+          <p className="text-xs font-semibold tracking-wide text-blue-700">{context === 'answer' ? '答案图示' : '题意示意图'}</p>
           <p className="text-sm font-bold text-slate-800">{scene.title}</p>
         </div>
-        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">先看图，再审题</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {scene.motionPath && (
+            <button type="button" onClick={() => setMotionPlaying(value => !value)} aria-pressed={motionPlaying} className="rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700 hover:bg-violet-100">
+              {motionPlaying ? '停止演示' : (scene.motionLabel ?? '演示变化')}
+            </button>
+          )}
+          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">{context === 'answer' ? '对照步骤核查' : '先看图，再审题'}</span>
+        </div>
       </div>
       <svg viewBox="0 0 600 320" className="block h-auto w-full" role="img" aria-labelledby={titleId} preserveAspectRatio="xMidYMid meet">
         <title id={titleId}>{`${scene.title}：${problem.replace(/[$\\]/g, '')}`}</title>
         <defs>
-          <pattern id={`grid-${lectureId}-${questionIndex}`} width="20" height="20" patternUnits="userSpaceOnUse">
+          <pattern id={`grid-${instanceId}`} width="20" height="20" patternUnits="userSpaceOnUse">
             <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#dbeafe" strokeWidth="0.7" />
           </pattern>
-          <filter id={`shadow-${lectureId}-${questionIndex}`} x="-20%" y="-20%" width="140%" height="140%">
+          <filter id={`shadow-${instanceId}`} x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="1" stdDeviation="1.2" floodColor="#0f172a" floodOpacity="0.18" />
           </filter>
         </defs>
         <rect width="600" height="320" fill="#ffffff" />
-        <rect width="600" height="320" fill={`url(#grid-${lectureId}-${questionIndex})`} opacity="0.48" />
-        <g filter={`url(#shadow-${lectureId}-${questionIndex})`}>
+        <rect width="600" height="320" fill={`url(#grid-${instanceId})`} opacity="0.48" />
+        <g filter={`url(#shadow-${instanceId})`}>
           {scene.polygons?.map((polygon, index) => <polygon key={`polygon-${index}`} points={polygon.points.map(p => p.join(',')).join(' ')} fill={polygon.fill ?? 'none'} stroke={COLORS[polygon.tone ?? 'base']} strokeWidth="4" strokeDasharray={polygon.dashed ? '10 8' : undefined} strokeLinejoin="round" />)}
           {scene.circles?.map((circle, index) => <circle key={`circle-${index}`} cx={circle.at[0]} cy={circle.at[1]} r={circle.r} fill={circle.fill ?? 'none'} stroke={COLORS[circle.tone ?? 'base']} strokeWidth="4" strokeDasharray={circle.dashed ? '10 8' : undefined} />)}
           {scene.paths?.map((path, index) => <path key={`path-${index}`} d={path.d} fill={path.fill ?? 'none'} stroke={COLORS[path.tone ?? 'base']} strokeWidth={path.width ?? 4} strokeDasharray={path.dashed ? '10 8' : undefined} strokeLinecap="round" strokeLinejoin="round" />)}
@@ -330,6 +588,11 @@ export default function GeometryExampleDiagram({ lectureId, questionIndex, probl
           {scene.ticks?.map((tick, index) => <Tick key={`tick-${index}`} {...tick} />)}
           {scene.rightAngles?.map((mark, index) => <RightAngle key={`right-${index}`} {...mark} />)}
           {scene.extra}
+          {scene.motionPath && motionPlaying && (
+            <circle r="9" fill="#f59e0b" stroke="#ffffff" strokeWidth="3">
+              <animateMotion path={scene.motionPath} dur="3.2s" repeatCount="indefinite" />
+            </circle>
+          )}
           {scene.points?.map((point, index) => <DiagramPoint key={`point-${index}`} {...point} />)}
           {scene.labels?.map((label, index) => <DiagramLabel key={`label-${index}`} {...label} />)}
         </g>
@@ -421,3 +684,136 @@ function PentagonBisector() {
 function CoordinateDoubleReflection() {
   return <g><line x1="55" y1="250" x2="550" y2="250" stroke="#2563eb" strokeWidth="4" /><line x1="55" y1="105" x2="550" y2="105" stroke="#2563eb" strokeWidth="4" /><DiagramLabel at={[520, 92]} text="y=4" tone="primary" size={15} /><DiagramLabel at={[520, 238]} text="x轴" tone="primary" size={15} /><line x1="130" y1="70" x2="130" y2="300" stroke="#7c3aed" strokeWidth="3" strokeDasharray="10 7" /><line x1="465" y1="142" x2="465" y2="70" stroke="#7c3aed" strokeWidth="3" strokeDasharray="10 7" /><line x1="130" y1="300" x2="465" y2="70" stroke="#e11d48" strokeWidth="5" /><DiagramPoint at={[130, 70]} label="A" dx={-14} dy={-10} /><DiagramPoint at={[130, 300]} label="A′" dx={-16} dy={14} tone="proof" /><DiagramPoint at={[465, 142]} label="B" dx={15} dy={0} /><DiagramPoint at={[465, 70]} label="B′" dx={17} dy={-9} tone="proof" /><DiagramPoint at={[203, 250]} label="P" dx={0} dy={21} tone="accent" /><DiagramPoint at={[414, 105]} label="Q" dx={0} dy={-15} tone="accent" /></g>
 }
+
+function CoordinateAxes({ children }: { children?: ReactNode }) {
+  const grid: ReactNode[] = []
+  for (let x = 75; x <= 525; x += 45) grid.push(<line key={`gx-${x}`} x1={x} y1="25" x2={x} y2="295" stroke="#dbeafe" strokeWidth="1" />)
+  for (let y = 25; y <= 295; y += 45) grid.push(<line key={`gy-${y}`} x1="75" y1={y} x2="525" y2={y} stroke="#dbeafe" strokeWidth="1" />)
+  return <g>{grid}<line x1="60" y1="160" x2="545" y2="160" stroke="#334155" strokeWidth="3" /><line x1="300" y1="300" x2="300" y2="20" stroke="#334155" strokeWidth="3" /><path d="M545 160 l-13 -7 v14z" fill="#334155" /><path d="M300 20 l-7 13 h14z" fill="#334155" /><DiagramLabel at={[535, 145]} text="x" size={16} /><DiagramLabel at={[316, 30]} text="y" size={16} /><DiagramLabel at={[285, 177]} text="O" size={14} />{children}</g>
+}
+
+function CoordinateLessonPlot({ variant }: { variant: 'quadrants' | 'distances' | 'symmetry' | 'point-translation' | 'area' }) {
+  if (variant === 'quadrants') return <CoordinateAxes><DiagramPoint at={[390, 230]} label="A(π,-2)" dx={35} dy={20} tone="accent" /><DiagramPoint at={[165, 90]} label="B(-3,√5)" dx={-40} dy={-13} tone="primary" /><DiagramPoint at={[300, 265]} label="C(0,-4)" dx={45} dy={6} tone="proof" /><DiagramPoint at={[255, 205]} label="D(-1,-1)" dx={-40} dy={18} /></CoordinateAxes>
+  if (variant === 'distances') return <CoordinateAxes><line x1="165" y1="25" x2="165" y2="160" stroke="#e11d48" strokeWidth="4" strokeDasharray="9 7" /><line x1="165" y1="25" x2="300" y2="25" stroke="#2563eb" strokeWidth="4" strokeDasharray="9 7" /><line x1="165" y1="25" x2="300" y2="160" stroke="#7c3aed" strokeWidth="5" /><DiagramPoint at={[165, 25]} label="P(-3,4)" dx={0} dy={18} tone="accent" /><DiagramLabel at={[146, 92]} text="4" tone="accent" /><DiagramLabel at={[232, 12]} text="3" tone="primary" /><DiagramLabel at={[245, 85]} text="5" tone="proof" /></CoordinateAxes>
+  if (variant === 'symmetry') return <CoordinateAxes><DiagramPoint at={[390, 250]} label="P(2,-3)" dx={35} dy={18} tone="base" /><DiagramPoint at={[390, 70]} label="关于x轴" dx={52} dy={-12} tone="primary" /><DiagramPoint at={[210, 250]} label="关于y轴" dx={-48} dy={18} tone="accent" /><DiagramPoint at={[210, 70]} label="关于原点" dx={-52} dy={-12} tone="proof" /><line x1="390" y1="70" x2="390" y2="250" stroke="#2563eb" strokeWidth="3" strokeDasharray="8 6" /><line x1="210" y1="250" x2="390" y2="250" stroke="#e11d48" strokeWidth="3" strokeDasharray="8 6" /></CoordinateAxes>
+  if (variant === 'point-translation') return <CoordinateAxes><polyline points="165,70 390,70 390,205" fill="none" stroke="#e11d48" strokeWidth="6" strokeLinejoin="round" /><DiagramPoint at={[165, 70]} label="P(-3,2)" dx={-38} dy={-12} tone="primary" /><DiagramPoint at={[390, 70]} label="右移5" dx={0} dy={-16} tone="accent" /><DiagramPoint at={[390, 205]} label="下移3" dx={40} dy={10} tone="proof" /></CoordinateAxes>
+  return <CoordinateAxes><polygon points="345,115 480,70 390,25" fill="#dbeafe" fillOpacity="0.55" stroke="#2563eb" strokeWidth="5" /><rect x="345" y="25" width="135" height="90" fill="none" stroke="#7c3aed" strokeWidth="3" strokeDasharray="9 6" /><line x1="345" y1="115" x2="480" y2="115" stroke="#e11d48" strokeWidth="3" strokeDasharray="8 6" /><DiagramPoint at={[345, 115]} label="A" dx={-12} dy={18} /><DiagramPoint at={[480, 70]} label="B" dx={14} dy={2} /><DiagramPoint at={[390, 25]} label="C" dx={0} dy={18} /><DiagramLabel at={[425, 135]} text="包围矩形−三个角" tone="proof" size={14} /></CoordinateAxes>
+}
+
+function FunctionMapping() {
+  return <g><rect x="70" y="45" width="180" height="230" rx="18" fill="#eff6ff" stroke="#2563eb" strokeWidth="4" /><rect x="350" y="45" width="180" height="230" rx="18" fill="#fff1f2" stroke="#e11d48" strokeWidth="4" /><DiagramLabel at={[160, 70]} text="输入 x" tone="primary" /><DiagramLabel at={[440, 70]} text="输出 y" tone="accent" /><DiagramPoint at={[145, 120]} label="x₁" tone="primary" /><DiagramPoint at={[145, 190]} label="x₂" tone="primary" /><DiagramPoint at={[425, 120]} label="y₁" tone="accent" /><DiagramPoint at={[425, 190]} label="y₂" tone="accent" /><line x1="165" y1="120" x2="405" y2="120" stroke="#7c3aed" strokeWidth="5" /><line x1="165" y1="190" x2="405" y2="190" stroke="#7c3aed" strokeWidth="5" /><path d="M405 120 l-14 -8 v16z M405 190 l-14 -8 v16z" fill="#7c3aed" /><DiagramLabel at={[300, 245]} text="一个输入 → 一个确定输出" tone="proof" size={16} /></g>
+}
+
+function DomainRestrictions() {
+  return <g><DiagramLabel at={[70, 60]} text="① 分母≠0" tone="primary" anchor="start" /><line x1="80" y1="105" x2="520" y2="105" stroke="#334155" strokeWidth="4" /><circle cx="330" cy="105" r="9" fill="#fff" stroke="#e11d48" strokeWidth="4" /><DiagramLabel at={[330, 132]} text="x=1排除" tone="accent" size={15} /><DiagramLabel at={[70, 180]} text="② 根号内≥0" tone="primary" anchor="start" /><line x1="80" y1="225" x2="520" y2="225" stroke="#334155" strokeWidth="4" /><line x1="300" y1="225" x2="520" y2="225" stroke="#7c3aed" strokeWidth="9" /><circle cx="300" cy="225" r="8" fill="#7c3aed" /><DiagramLabel at={[300, 255]} text="从允许点向右" tone="proof" size={15} /></g>
+}
+
+function FunctionPlot({ variant = 'intersection' }: { variant?: 'parabola' | 'absolute' | 'inverse' | 'parallel-lines' | 'decreasing' | 'negative-intercept' | 'compare' | 'intercept-triangle' | 'through-points' | 'intersection' | 'plans' }) {
+  const line = (x1: number, y1: number, x2: number, y2: number, color: string, dashed = false) => <line x1={300 + x1 * 45} y1={160 - y1 * 35} x2={300 + x2 * 45} y2={160 - y2 * 35} stroke={color} strokeWidth="5" strokeDasharray={dashed ? '9 7' : undefined} strokeLinecap="round" />
+  if (variant === 'parabola') return <CoordinateAxes><path d="M 120 20 Q 300 300 480 20" fill="none" stroke="#2563eb" strokeWidth="6" /><circle cx="165" cy="20" r="5" fill="#e11d48" /><circle cx="210" cy="90" r="5" fill="#e11d48" /><circle cx="255" cy="140" r="5" fill="#e11d48" /><circle cx="300" cy="160" r="5" fill="#e11d48" /><circle cx="345" cy="140" r="5" fill="#e11d48" /><circle cx="390" cy="90" r="5" fill="#e11d48" /><circle cx="435" cy="20" r="5" fill="#e11d48" /><DiagramLabel at={[450, 45]} text="y=x²" tone="primary" size={16} /></CoordinateAxes>
+  if (variant === 'absolute') return <CoordinateAxes><polyline points="120,20 300,160 480,20" fill="none" stroke="#2563eb" strokeWidth="6" strokeLinejoin="round" /><DiagramPoint at={[300,160]} label="O" dx={18} dy={18} tone="accent" /><DiagramLabel at={[450,50]} text="y=|x|" tone="primary" /></CoordinateAxes>
+  if (variant === 'inverse') return <CoordinateAxes><path d="M315 295 C325 230 360 190 520 170 M285 25 C275 90 240 130 80 150" fill="none" stroke="#2563eb" strokeWidth="6" /><DiagramLabel at={[445,205]} text="y=k/x" tone="primary" /><circle cx="390" cy="195" r="6" fill="#e11d48" /></CoordinateAxes>
+  if (variant === 'parallel-lines') return <CoordinateAxes>{line(-4,-6,4,6,'#2563eb')}{line(-4,-4,4,8,'#e11d48')}{line(-4,-8,4,4,'#7c3aed')}<DiagramLabel at={[465,55]} text="同斜率→平行" tone="proof" size={15} /></CoordinateAxes>
+  if (variant === 'decreasing') return <CoordinateAxes>{line(-4, 5, 4, 1, '#2563eb')}<DiagramPoint at={[300, 55]} label="(0,3)" dx={38} dy={-10} tone="accent" /><DiagramPoint at={[525, 143]} label="(5,0.5)" dx={-35} dy={20} tone="proof" /><DiagramLabel at={[430, 75]} text="y=-½x+3" tone="primary" size={15} /></CoordinateAxes>
+  if (variant === 'negative-intercept') return <CoordinateAxes>{line(-4, 3, 4, -5, '#e11d48')}<DiagramPoint at={[300, 230]} label="b<0" dx={34} dy={12} tone="accent" /><DiagramLabel at={[180, 70]} text="k<0" tone="primary" /></CoordinateAxes>
+  if (variant === 'compare') return <CoordinateAxes>{line(-4, 5, 4, -5, '#2563eb')}<line x1="255" y1="20" x2="255" y2="195" stroke="#e11d48" strokeWidth="3" strokeDasharray="8 6" /><line x1="390" y1="20" x2="390" y2="260" stroke="#7c3aed" strokeWidth="3" strokeDasharray="8 6" /><DiagramLabel at={[255, 285]} text="x₁" tone="accent" /><DiagramLabel at={[390, 285]} text="x₂" tone="proof" /><DiagramLabel at={[445, 90]} text="x增大，y减小" tone="primary" size={15} /></CoordinateAxes>
+  if (variant === 'intercept-triangle') return <CoordinateAxes>{line(-1, -6, 5, 6, '#2563eb')}<polygon points="300,160 390,160 300,300" fill="#fee2e2" fillOpacity="0.75" stroke="#e11d48" strokeWidth="4" /><DiagramPoint at={[390, 160]} label="(2,0)" dx={0} dy={20} tone="accent" /><DiagramPoint at={[300, 300]} label="(0,-4)" dx={42} dy={-12} tone="accent" /></CoordinateAxes>
+  if (variant === 'through-points') return <CoordinateAxes>{line(-4, -7, 4, 9, '#2563eb')}<DiagramPoint at={[390, -15]} label="A(2,5)" dx={-35} dy={18} tone="accent" /><DiagramPoint at={[255, 300]} label="B(-1,-4)" dx={45} dy={-12} tone="proof" /></CoordinateAxes>
+  if (variant === 'plans') return <CoordinateAxes>{line(-5, 0.5, 5, 5.5, '#2563eb')}{line(-5, -2.5, 5, 7.5, '#e11d48')}<DiagramPoint at={[390, 55]} label="分界点" dx={42} dy={-10} tone="proof" /><DiagramLabel at={[450, 115]} text="A" tone="primary" /><DiagramLabel at={[420, 35]} text="B" tone="accent" /></CoordinateAxes>
+  return <CoordinateAxes>{line(-5, -5, 5, 5, '#2563eb')}{line(-5, 5, 5, -5, '#e11d48')}<DiagramPoint at={[300, 160]} label="P" dx={18} dy={-14} tone="proof" /><DiagramLabel at={[440, 55]} text="l₁" tone="primary" /><DiagramLabel at={[440, 260]} text="l₂" tone="accent" /></CoordinateAxes>
+}
+
+function CoordinateRightTriangle() { return <CoordinateAxes><polygon points="300,160 480,160 300,55" fill="#dbeafe" fillOpacity="0.7" stroke="#2563eb" strokeWidth="5" /><DiagramPoint at={[300, 160]} label="A(0,0)" dx={-40} dy={18} /><DiagramPoint at={[480, 160]} label="B(4,0)" dx={30} dy={18} /><DiagramPoint at={[300, 55]} label="C(0,3)" dx={36} dy={-10} /><DiagramLabel at={[390, 185]} text="4" tone="accent" /><DiagramLabel at={[275, 105]} text="3" tone="accent" /><DiagramLabel at={[400, 95]} text="BC=?" tone="proof" /></CoordinateAxes> }
+
+function NumberLineAB() { return <g><line x1="65" y1="160" x2="540" y2="160" stroke="#334155" strokeWidth="5" /><path d="M540 160 l-14 -8 v16z" fill="#334155" />{[-2,-1,0,1,2].map((n,i)=><g key={n}><line x1={140+i*85} y1="145" x2={140+i*85} y2="175" stroke="#334155" strokeWidth="3" /><DiagramLabel at={[140+i*85,190]} text={String(n)} size={15} /></g>)}<DiagramPoint at={[180,160]} label="b" dx={0} dy={-20} tone="accent" /><DiagramPoint at={[430,160]} label="a" dx={0} dy={-20} tone="primary" /><DiagramLabel at={[180,110]} text="-2<b<-1" tone="accent" /><DiagramLabel at={[430,110]} text="0<a<1" tone="primary" /></g> }
+
+function SquareCutout() { return <g><rect x="135" y="35" width="300" height="250" fill="#dbeafe" stroke="#2563eb" strokeWidth="6" /><rect x="335" y="185" width="100" height="100" fill="#fff" stroke="#e11d48" strokeWidth="5" strokeDasharray="9 6" /><DiagramLabel at={[285,310]} text="a" tone="primary" /><DiagramLabel at={[455,235]} text="b" tone="accent" /><DiagramLabel at={[250,145]} text="剩余面积 = a²-b²" tone="proof" size={18} /></g> }
+
+function functionAnswerScene(problem: string): Scene {
+  if (/x\^?2|x²/.test(problem)) return { title: '描点得到二次曲线', description: '列表中的每一组(x,y)对应图上一个点，描点后用平滑曲线连接。', extra: <FunctionPlot variant="parabola" /> }
+  if (problem.includes('|x|')) return { title: '绝对值函数图像', description: '负半轴部分关于y轴折回，形成以原点为顶点的V形图像。', extra: <FunctionPlot variant="absolute" /> }
+  if (/\\frac\{k\}\{x\}|k\/x/.test(problem)) return { title: '反比例关系图像', description: 'x不能为0，图像分成两支且不与坐标轴相交。', extra: <FunctionPlot variant="inverse" /> }
+  if (/3x\+2|3x-1|2x-3.*2x.*2x\+4/.test(problem)) return { title: '同斜率直线组', description: 'k相同的直线平行，b改变使图像整体上下移动。', extra: <FunctionPlot variant="parallel-lines" /> }
+  if (/套餐|方案|成本|收入|利润|费用|追上|交点/.test(problem)) return { title: '两条函数图像与分界点', description: '交点表示两种关系取值相同；交点两侧通过比较图像高低作决策。', extra: <FunctionPlot variant="plans" /> }
+  if (parseLinearFunctions(problem).length > 0) return { title: '按解析式准确作图', description: '图中直线按题目给出的k、b绘制；标出坐标轴交点，并用交点核对方程或不等式。', extra: <LinearPlotFromProblem problem={problem} /> }
+  if (/两条|l_1|l₁|y_1|y₁/.test(problem)) return { title: '两条直线的交点', description: '交点横、纵坐标同时满足两个解析式，也是对应方程组的解。', extra: <FunctionPlot variant="intersection" /> }
+  if (/经过点|图像过点|待定系数/.test(problem)) return { title: '已知两点确定直线', description: '先描出两个已知点，再连接成直线；两点坐标用于求k、b。', extra: <FunctionPlot variant="through-points" /> }
+  if (/与.*轴|y>0|y<0|不等式/.test(problem)) return { title: '从图像读取零点和正负区间', description: '与x轴交点对应y=0；图像在x轴上方对应y>0，下方对应y<0。', extra: <FunctionPlot variant="intercept-triangle" /> }
+  return { title: '一次函数图像', description: '先列表选点，再描点、连线并向两端延长；同时标出坐标轴交点。', extra: <FunctionPlot variant="decreasing" /> }
+}
+
+function parseLinearFunctions(problem: string) {
+  const normalized = problem.replace(/\s+/g, '').replace(/[−–]/g, '-')
+  const matches = [...normalized.matchAll(/y(?:_[A-Za-z0-9]+|[₀-₉])?=([+-]?(?:\d+(?:\.\d+)?)?)x([+-]\d+(?:\.\d+)?)?/g)]
+  return matches.map((match, index) => {
+    const rawK = match[1]
+    const k = rawK === '' || rawK === '+' ? 1 : rawK === '-' ? -1 : Number(rawK)
+    const b = match[2] ? Number(match[2]) : 0
+    return { k, b, label: match[0], tone: (['primary', 'accent', 'proof'] as Tone[])[index % 3] }
+  }).filter(item => Number.isFinite(item.k) && Number.isFinite(item.b)).slice(0, 3)
+}
+
+function LinearPlotFromProblem({ problem }: { problem: string }) {
+  const functions = parseLinearFunctions(problem)
+  return <CoordinateAxes>{functions.map((fn, index) => {
+    const x1 = -5
+    const x2 = 5
+    const y1 = fn.k * x1 + fn.b
+    const y2 = fn.k * x2 + fn.b
+    const xIntercept = fn.k !== 0 ? -fn.b / fn.k : Number.NaN
+    return <g key={`${fn.label}-${index}`}>
+      <line x1={300 + x1 * 45} y1={160 - y1 * 35} x2={300 + x2 * 45} y2={160 - y2 * 35} stroke={COLORS[fn.tone]} strokeWidth="5" strokeLinecap="round" />
+      {Math.abs(fn.b) <= 4 && <DiagramPoint at={[300, 160 - fn.b * 35]} label={`(0,${fn.b})`} dx={40} dy={fn.b >= 0 ? -10 : 15} tone={fn.tone} />}
+      {Number.isFinite(xIntercept) && Math.abs(xIntercept) <= 5 && <DiagramPoint at={[300 + xIntercept * 45, 160]} label={`(${Number(xIntercept.toFixed(2))},0)`} dx={0} dy={22} tone={fn.tone} />}
+      <DiagramLabel at={[450, 45 + index * 24]} text={fn.label} tone={fn.tone} size={14} />
+    </g>
+  })}</CoordinateAxes>
+}
+
+function statisticsAnswerScene(problem: string): Scene {
+  if (/箱线图|四分位/.test(problem)) return { title: '箱线图', description: '从左到右依次标出最小值、Q₁、中位数、Q₃和最大值。', extra: <StatisticsPlot variant="box" /> }
+  if (/直方图|频数分布/.test(problem)) return { title: '频数分布直方图', description: '相邻组连续，长方形之间不留空隙；横轴为分组，纵轴为频数或频数/组距。', extra: <StatisticsPlot variant="histogram" /> }
+  if (/折线图|变化|趋势/.test(problem)) return { title: '折线图', description: '横轴按时间顺序排列，点的高低表示数值，连线突出变化趋势。', extra: <StatisticsPlot variant="line" /> }
+  if (/扇形图|百分比|占比/.test(problem)) return { title: '扇形图与比例', description: '圆心角=所占百分比×360°；各部分合计必须为100%。', extra: <StatisticsPlot variant="pie" /> }
+  return { title: '条形统计图', description: '柱宽一致、间隔相等，柱高直接表示各类别数量，便于比较大小。', extra: <StatisticsPlot variant="bar" /> }
+}
+
+function FunctionLines({ single = false }: { single?: boolean }) { return <FunctionPlot variant={single ? 'intercept-triangle' : 'intersection'} /> }
+
+function ThreeIntersectingLines({ values }: { values: string[] }) { return <g><line x1="70" y1="245" x2="530" y2="65" stroke="#2563eb" strokeWidth="5" /><line x1="75" y1="55" x2="525" y2="255" stroke="#e11d48" strokeWidth="5" /><line x1="300" y1="25" x2="300" y2="290" stroke="#7c3aed" strokeWidth="5" /><DiagramPoint at={[300,155]} label="O" dx={18} dy={18} /><DiagramLabel at={[255,90]} text={`${values[0] ?? 40}°`} tone="accent" /><DiagramLabel at={[345,90]} text={`${values[1] ?? 60}°`} tone="proof" /><DiagramLabel at={[440,155]} text="3/4/5/6" tone="muted" size={15} /></g> }
+
+function LShapeTranslation() { return <g><path d="M95 85 H185 V175 H275 V265 H95 Z" fill="#dbeafe" stroke="#2563eb" strokeWidth="5" /><path d="M325 45 H385 V105 H445 V165 H325 Z" fill="#ffe4e6" stroke="#e11d48" strokeWidth="5" /><line x1="185" y1="175" x2="385" y2="105" stroke="#7c3aed" strokeWidth="4" strokeDasharray="10 7" /><DiagramLabel at={[285,125]} text="同一平移向量" tone="proof" size={15} /></g> }
+
+function PolygonExteriorAngles() { return <g><polygon points="300,35 500,125 425,285 175,285 100,125" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><path d="M300 35 L380 0 M500 125 L560 85 M425 285 L470 315 M175 285 L125 315 M100 125 L40 85" stroke="#e11d48" strokeWidth="4" fill="none" /><DiagramLabel at={[300,155]} text="沿同方向转一周" tone="proof" /><DiagramLabel at={[300,185]} text="外角和=360°" tone="accent" /></g> }
+
+function RightTrianglePair() { return <g><polygon points="70,250 70,65 260,250" fill="#dbeafe" stroke="#2563eb" strokeWidth="5" /><polygon points="340,250 340,95 535,250" fill="#ffe4e6" stroke="#e11d48" strokeWidth="5" /><path d="M70 230 h20 v20 M340 230 h20 v20" fill="none" stroke="#7c3aed" strokeWidth="4" /><DiagramLabel at={[165,140]} text="斜边" tone="primary" /><DiagramLabel at={[438,150]} text="斜边" tone="accent" /><DiagramLabel at={[300,290]} text="HL：斜边+一条直角边" tone="proof" size={16} /></g> }
+
+function PerpendicularBisector() { return <g><line x1="85" y1="235" x2="515" y2="235" stroke="#2563eb" strokeWidth="6" /><line x1="300" y1="35" x2="300" y2="290" stroke="#7c3aed" strokeWidth="5" strokeDasharray="10 7" /><line x1="300" y1="85" x2="85" y2="235" stroke="#e11d48" strokeWidth="4" /><line x1="300" y1="85" x2="515" y2="235" stroke="#e11d48" strokeWidth="4" /><DiagramPoint at={[85,235]} label="A" dx={0} dy={22} /><DiagramPoint at={[515,235]} label="B" dx={0} dy={22} /><DiagramPoint at={[300,85]} label="P" /><path d="M300 217 h18 v18" fill="none" stroke="#7c3aed" strokeWidth="3" /><DiagramLabel at={[190,145]} text="PA" tone="accent" /><DiagramLabel at={[410,145]} text="PB" tone="accent" /></g> }
+
+function DiagonalReflection() { return <CoordinateAxes><line x1="120" y1="280" x2="500" y2="20" stroke="#2563eb" strokeWidth="5" /><line x1="165" y1="45" x2="435" y2="230" stroke="#7c3aed" strokeWidth="4" strokeDasharray="9 7" /><DiagramPoint at={[165,45]} label="A(1,4)" dx={-35} dy={-10} tone="accent" /><DiagramPoint at={[435,230]} label="A′(4,1)" dx={45} dy={15} tone="proof" /><DiagramLabel at={[450,65]} text="y=x" tone="primary" /></CoordinateAxes> }
+
+function SquareOnHypotenuse() { return <g><polygon points="105,245 105,95 285,245" fill="#dbeafe" stroke="#2563eb" strokeWidth="5" /><polygon points="105,95 285,245 435,65 255,-85" fill="#ffe4e6" fillOpacity="0.7" stroke="#e11d48" strokeWidth="5" /><path d="M105 225 h20 v20" fill="none" stroke="#7c3aed" strokeWidth="3" /><DiagramLabel at={[335,125]} text="面积=AB²" tone="accent" /></g> }
+
+function IsoscelesHeight() { return <g><polygon points="300,35 95,250 505,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="300" y1="35" x2="300" y2="250" stroke="#e11d48" strokeWidth="5" /><path d="M300 232 h18 v18" fill="none" stroke="#e11d48" strokeWidth="3" /><DiagramPoint at={[300,35]} label="A" /><DiagramPoint at={[95,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[505,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dx={0} dy={22} /><DiagramLabel at={[200,150]} text="5" tone="primary" /><DiagramLabel at={[400,150]} text="5" tone="primary" /><DiagramLabel at={[200,270]} text="3" tone="accent" /><DiagramLabel at={[400,270]} text="3" tone="accent" /></g> }
+
+function NestedSquares() { return <g><rect x="115" y="35" width="360" height="250" fill="#eff6ff" stroke="#2563eb" strokeWidth="6" /><polygon points="115,35 475,150 360,285 225,170" fill="#ffe4e6" fillOpacity="0.55" stroke="#e11d48" strokeWidth="5" /><line x1="115" y1="285" x2="360" y2="285" stroke="#7c3aed" strokeWidth="5" /><DiagramPoint at={[115,35]} label="A" /><DiagramPoint at={[475,35]} label="B" /><DiagramPoint at={[475,285]} label="C" dy={22} /><DiagramPoint at={[115,285]} label="D" dy={22} /><DiagramPoint at={[475,150]} label="E" dx={16} dy={0} /><DiagramPoint at={[360,285]} label="G" dy={22} tone="proof" /></g> }
+
+function TriangleShortestPath() { return <g><polygon points="130,55 130,260 500,260" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="130" y1="55" x2="420" y2="260" stroke="#e11d48" strokeWidth="5" /><line x1="420" y1="260" x2="70" y2="120" stroke="#7c3aed" strokeWidth="4" strokeDasharray="10 7" /><DiagramPoint at={[130,55]} label="A" /><DiagramPoint at={[130,260]} label="B" dx={-12} dy={20} /><DiagramPoint at={[500,260]} label="C" dx={12} dy={20} /><DiagramPoint at={[420,260]} label="P" dy={22} tone="accent" /><DiagramPoint at={[70,120]} label="D′" dx={-15} dy={0} tone="proof" /><DiagramLabel at={[270,185]} text="化折为直" tone="proof" /></g> }
+
+function EqualPerpendiculars() { return <g><polygon points="300,35 85,250 515,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="300" y1="250" x2="190" y2="145" stroke="#e11d48" strokeWidth="5" /><line x1="300" y1="250" x2="410" y2="145" stroke="#e11d48" strokeWidth="5" /><DiagramPoint at={[300,35]} label="A" /><DiagramPoint at={[85,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[515,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramPoint at={[190,145]} label="E" dx={-14} dy={0} /><DiagramPoint at={[410,145]} label="F" dx={14} dy={0} /><DiagramLabel at={[245,195]} text="DE" tone="accent" /><DiagramLabel at={[355,195]} text="DF" tone="accent" /></g> }
+
+function SsaAmbiguity() { return <g><line x1="90" y1="250" x2="520" y2="250" stroke="#2563eb" strokeWidth="6" /><line x1="90" y1="250" x2="420" y2="75" stroke="#e11d48" strokeWidth="5" /><line x1="90" y1="250" x2="420" y2="185" stroke="#7c3aed" strokeWidth="5" strokeDasharray="10 7" /><circle cx="420" cy="250" r="175" fill="none" stroke="#64748b" strokeWidth="3" strokeDasharray="7 7" /><DiagramPoint at={[90,250]} label="A" dy={22} /><DiagramPoint at={[420,75]} label="C₁" /><DiagramPoint at={[420,185]} label="C₂" dx={15} dy={0} /><DiagramLabel at={[315,45]} text="相同两边和非夹角" tone="accent" /><DiagramLabel at={[315,285]} text="可得到两个不同三角形" tone="proof" /></g> }
+
+function PythagoreanArea() { return <g><rect x="135" y="25" width="330" height="270" fill="#eff6ff" stroke="#2563eb" strokeWidth="6" /><polygon points="300,85 405,160 300,235 195,160" fill="#ffe4e6" stroke="#e11d48" strokeWidth="5" /><line x1="135" y1="25" x2="405" y2="160" stroke="#7c3aed" strokeWidth="3" /><line x1="465" y1="25" x2="300" y2="235" stroke="#7c3aed" strokeWidth="3" /><line x1="465" y1="295" x2="195" y2="160" stroke="#7c3aed" strokeWidth="3" /><line x1="135" y1="295" x2="300" y2="85" stroke="#7c3aed" strokeWidth="3" /><DiagramLabel at={[300,160]} text="c²" tone="accent" size={24} /><DiagramLabel at={[300,310]} text="(a+b)² = 4×½ab + c²" tone="proof" size={17} /></g> }
+
+function ChartComparison() { return <g><DiagramLabel at={[110,35]} text="条形图" tone="primary" /><rect x="55" y="190" width="35" height="80" fill="#2563eb" /><rect x="105" y="125" width="35" height="145" fill="#60a5fa" /><rect x="155" y="75" width="35" height="195" fill="#93c5fd" /><DiagramLabel at={[300,35]} text="折线图" tone="accent" /><polyline points="230,230 280,150 330,185 380,80" fill="none" stroke="#e11d48" strokeWidth="6" /><circle cx="230" cy="230" r="6" fill="#e11d48" /><circle cx="280" cy="150" r="6" fill="#e11d48" /><circle cx="330" cy="185" r="6" fill="#e11d48" /><circle cx="380" cy="80" r="6" fill="#e11d48" /><DiagramLabel at={[490,35]} text="扇形图" tone="proof" /><circle cx="490" cy="170" r="85" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="4" /><path d="M490 170 L490 85 A85 85 0 0 1 570 195 Z" fill="#fda4af" stroke="#fff" strokeWidth="3" /><DiagramLabel at={[300,300]} text="比大小   ·   看变化   ·   看占比" tone="base" size={16} /></g> }
+
+function StatisticsPlot({ variant }: { variant: 'bar' | 'line' | 'pie' | 'histogram' | 'box' }) {
+  if (variant === 'pie') return <g><circle cx="300" cy="160" r="120" fill="#dbeafe" stroke="#2563eb" strokeWidth="5" /><path d="M300 160 L300 40 A120 120 0 0 1 414 197 Z" fill="#fda4af" stroke="#fff" strokeWidth="4" /><path d="M300 160 L414 197 A120 120 0 0 1 230 258 Z" fill="#c4b5fd" stroke="#fff" strokeWidth="4" /><DiagramLabel at={[355,95]} text="40%" tone="accent" /><DiagramLabel at={[345,225]} text="25%" tone="proof" /><DiagramLabel at={[220,145]} text="35%" tone="primary" /></g>
+  if (variant === 'line') return <g><line x1="70" y1="275" x2="545" y2="275" stroke="#334155" strokeWidth="4" /><line x1="70" y1="275" x2="70" y2="35" stroke="#334155" strokeWidth="4" /><polyline points="100,220 180,150 260,235 340,110 420,70 500,140" fill="none" stroke="#e11d48" strokeWidth="6" />{[[100,220],[180,150],[260,235],[340,110],[420,70],[500,140]].map(([x,y],i)=><circle key={i} cx={x} cy={y} r="7" fill="#e11d48" />)}<DiagramLabel at={[300,305]} text="按时间顺序观察升降" tone="primary" size={16} /></g>
+  if (variant === 'histogram') return <g><line x1="70" y1="275" x2="545" y2="275" stroke="#334155" strokeWidth="4" /><line x1="70" y1="275" x2="70" y2="35" stroke="#334155" strokeWidth="4" /><rect x="110" y="210" width="90" height="65" fill="#93c5fd" stroke="#2563eb" strokeWidth="3" /><rect x="200" y="150" width="90" height="125" fill="#60a5fa" stroke="#2563eb" strokeWidth="3" /><rect x="290" y="70" width="90" height="205" fill="#2563eb" stroke="#1d4ed8" strokeWidth="3" /><rect x="380" y="180" width="90" height="95" fill="#a5b4fc" stroke="#7c3aed" strokeWidth="3" /><DiagramLabel at={[300,305]} text="相邻组连续，不留空隙" tone="accent" size={16} /></g>
+  if (variant === 'box') return <g><line x1="75" y1="160" x2="525" y2="160" stroke="#334155" strokeWidth="4" /><line x1="115" y1="125" x2="115" y2="195" stroke="#2563eb" strokeWidth="5" /><line x1="485" y1="125" x2="485" y2="195" stroke="#2563eb" strokeWidth="5" /><rect x="205" y="105" width="200" height="110" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="5" /><line x1="310" y1="105" x2="310" y2="215" stroke="#e11d48" strokeWidth="6" /><DiagramLabel at={[115,225]} text="最小" tone="primary" size={14} /><DiagramLabel at={[205,240]} text="Q₁" tone="proof" size={14} /><DiagramLabel at={[310,240]} text="中位数" tone="accent" size={14} /><DiagramLabel at={[405,240]} text="Q₃" tone="proof" size={14} /><DiagramLabel at={[485,225]} text="最大" tone="primary" size={14} /></g>
+  return <g><line x1="70" y1="275" x2="545" y2="275" stroke="#334155" strokeWidth="4" /><line x1="70" y1="275" x2="70" y2="35" stroke="#334155" strokeWidth="4" /><rect x="115" y="195" width="60" height="80" fill="#93c5fd" /><rect x="220" y="120" width="60" height="155" fill="#60a5fa" /><rect x="325" y="70" width="60" height="205" fill="#2563eb" /><rect x="430" y="155" width="60" height="120" fill="#7c3aed" /><DiagramLabel at={[145,295]} text="A" size={14} /><DiagramLabel at={[250,295]} text="B" size={14} /><DiagramLabel at={[355,295]} text="C" size={14} /><DiagramLabel at={[460,295]} text="D" size={14} /></g>
+}
+
+function GenericGeometry() { return <g><polygon points="300,40 95,250 505,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="300" y1="40" x2="300" y2="250" stroke="#7c3aed" strokeWidth="4" strokeDasharray="9 7" /><DiagramPoint at={[300,40]} label="A" /><DiagramPoint at={[95,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[505,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramLabel at={[300,285]} text="逐项把题干条件标到图上" tone="proof" size={16} /></g> }

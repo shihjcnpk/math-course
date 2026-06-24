@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import type { OralTask } from '@/types'
 import MathText from '@/components/shared/MathText'
+import GeometryExampleDiagram from '@/components/lecture/GeometryExampleDiagram'
 
-interface Props { task: OralTask }
+interface Props { task: OralTask; lectureId: number }
 
-export default function OralTaskSection({ task }: Props) {
+export default function OralTaskSection({ task, lectureId }: Props) {
   const [revealed, setRevealed] = useState(false)
   if (!task.problem) return null
 
@@ -26,6 +27,7 @@ export default function OralTaskSection({ task }: Props) {
       <div className="bg-white rounded-lg border border-gray-200 p-4">
         <p className="font-medium text-gray-900 mb-2">请把这道题讲出来：</p>
         <p className="text-sm text-gray-700 mb-4 p-3 bg-gray-50 rounded leading-relaxed"><MathText>{task.problem}</MathText></p>
+        <GeometryExampleDiagram lectureId={lectureId} problem={task.problem} context="oral" diagramId="oral-task" />
 
         <div className="flex gap-2 mb-3">
           <button
