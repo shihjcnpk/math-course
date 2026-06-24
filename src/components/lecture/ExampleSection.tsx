@@ -3,24 +3,25 @@ import type { KnowledgeThreadDefinition, TypicalQuestion } from '@/types'
 import MathText from '@/components/shared/MathText'
 import { FIVE_SECOND_BRAKE } from '@/data/adhd-support'
 import QuestionTypeNetwork from '@/components/lecture/QuestionTypeNetwork'
+import GeometryExampleDiagram from '@/components/lecture/GeometryExampleDiagram'
 
-interface Props { questions: TypicalQuestion[]; threads: KnowledgeThreadDefinition[] }
+interface Props { questions: TypicalQuestion[]; threads: KnowledgeThreadDefinition[]; lectureId: number }
 
-export default function ExampleSection({ questions, threads }: Props) {
+export default function ExampleSection({ questions, threads, lectureId }: Props) {
   if (!questions.length) return null
   return (
     <section className="mb-8">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">典型题型精讲</h2>
       <div className="space-y-6">
         {questions.map((q, i) => (
-          <QuestionCard key={i} question={q} threads={threads} />
+          <QuestionCard key={i} question={q} threads={threads} lectureId={lectureId} questionIndex={i} />
         ))}
       </div>
     </section>
   )
 }
 
-function QuestionCard({ question: q, threads }: { question: TypicalQuestion; threads: KnowledgeThreadDefinition[] }) {
+function QuestionCard({ question: q, threads, lectureId, questionIndex }: { question: TypicalQuestion; threads: KnowledgeThreadDefinition[]; lectureId: number; questionIndex: number }) {
   const [showVariations, setShowVariations] = useState(false)
 
   return (
@@ -49,6 +50,7 @@ function QuestionCard({ question: q, threads }: { question: TypicalQuestion; thr
       <div className="mb-3 p-3 bg-green-50 rounded border border-green-100">
         <p className="text-xs font-medium text-green-700 mb-1">例题</p>
         <p className="text-sm text-gray-800 mb-2 leading-relaxed"><MathText>{q.example.problem}</MathText></p>
+        <GeometryExampleDiagram lectureId={lectureId} questionIndex={questionIndex} problem={q.example.problem} />
         <div className="text-sm text-gray-700 space-y-1">
           {q.example.stepByStepAnalysis.map((s, j) => (
             <p key={j} className="leading-relaxed"><MathText>{s}</MathText></p>
