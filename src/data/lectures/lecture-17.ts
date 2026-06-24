@@ -229,7 +229,7 @@ const lecture17: Lecture = {
         {
           problem: '解分式方程：$\\dfrac{3}{2x} + 1 = \\dfrac{5}{x}$',
           hint: '分母 $2x$ 和 $x$，最简公分母 $2x$。每项乘 $2x$：$3 + 2x = 10$。$x = 3.5$。检验：分母不为0 ✅',
-          answer: 'x = \\dfrac{7}{2}',
+          answer: '$x = \\dfrac{7}{2}$',
         },
       ],
       summary: '分母为单项式时最简——去分母、解方程、检验，三步走。检验时逐一代入分母，一个也不能漏。',
@@ -390,7 +390,7 @@ const lecture17: Lecture = {
       {
         id: 'ex-17-basic-1',
         question: '解分式方程：$\\dfrac{3}{x} = 2$',
-        answer: 'x = \\dfrac{3}{2}',
+        answer: '$x = \\dfrac{3}{2}$',
         hint: '两边同乘 $x$：$3 = 2x$ → $x = 1.5$。检验：$x \\neq 0$ ✅',
         difficulty: 'basic',
         flaggedConceptIds: ['fraction-equations'],
@@ -406,7 +406,7 @@ const lecture17: Lecture = {
       {
         id: 'ex-17-basic-3',
         question: '解分式方程：$\\dfrac{1}{x} + \\dfrac{1}{2x} = 1$',
-        answer: 'x = \\dfrac{3}{2}',
+        answer: '$x = \\dfrac{3}{2}$',
         hint: '最简公分母 $2x$。$1 \\times 2 + 1 = 2x$ → $2+1=2x$ → $x=1.5$。检验：分母不为0 ✅',
         difficulty: 'basic',
         flaggedConceptIds: ['fraction-equations'],
