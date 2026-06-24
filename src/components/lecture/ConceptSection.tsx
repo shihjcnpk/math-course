@@ -1,10 +1,14 @@
 import type { ConceptExplanation } from '@/types'
 import KaTeXRenderer from '@/components/shared/KaTeXRenderer'
 import MathText from '@/components/shared/MathText'
+import GeometryExampleDiagram from '@/components/lecture/GeometryExampleDiagram'
 
-interface Props { concepts: ConceptExplanation[] }
+interface Props {
+  concepts: ConceptExplanation[]
+  lectureId: number
+}
 
-export default function ConceptSection({ concepts }: Props) {
+export default function ConceptSection({ concepts, lectureId }: Props) {
   if (!concepts.length) return null
   return (
     <section className="mb-8">
@@ -33,6 +37,12 @@ export default function ConceptSection({ concepts }: Props) {
                 )}
               </div>
             </div>
+            <GeometryExampleDiagram
+              lectureId={lectureId}
+              problem={c.formalDefinition}
+              context="exercise"
+              diagramId={`concept-${i}`}
+            />
             {c.associationReminders.length > 0 && (
               <div className="mt-3 space-y-2">
                 {c.associationReminders.map((r, j) => (

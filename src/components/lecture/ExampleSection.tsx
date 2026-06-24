@@ -10,7 +10,7 @@ interface Props { questions: TypicalQuestion[]; threads: KnowledgeThreadDefiniti
 export default function ExampleSection({ questions, threads, lectureId }: Props) {
   if (!questions.length) return null
   return (
-    <section className="mb-8">
+    <section className="mb-8" data-example-section>
       <h2 className="text-lg font-semibold text-gray-800 mb-4">典型题型精讲</h2>
       <div className="space-y-6">
         {questions.map((q, i) => (
@@ -74,10 +74,14 @@ function QuestionCard({ question: q, threads, lectureId, questionIndex }: { ques
           {showVariations && (
             <div className="mt-2 space-y-2">
               {q.variations.map((v, j) => (
-                <div key={j} className="p-2 bg-gray-50 rounded text-sm">
-                  <p className="text-gray-800 leading-relaxed"><MathText>{v.problem}</MathText></p>
+                <div key={j} className="p-2 bg-gray-50 rounded text-sm" data-variation-card>
+                  <p className="text-gray-800 leading-relaxed" data-variation-problem><MathText>{v.problem}</MathText></p>
+                  <GeometryExampleDiagram lectureId={lectureId} problem={v.problem} context="exercise" diagramId={`variation-${questionIndex}-${j}`} />
                   <p className="text-xs text-amber-600 mt-1">提示：<MathText>{v.hint}</MathText></p>
-                  <p className="text-xs text-green-600">答案：<MathText>{v.answer}</MathText></p>
+                  <div className="text-xs text-green-600">
+                    答案：<MathText>{v.answer}</MathText>
+                    <GeometryExampleDiagram lectureId={lectureId} problem={v.problem} context="answer" diagramId={`variation-answer-${questionIndex}-${j}`} />
+                  </div>
                 </div>
               ))}
             </div>

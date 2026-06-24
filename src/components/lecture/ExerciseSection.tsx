@@ -5,6 +5,7 @@ import { useBreakpointDiagnosis } from '@/hooks/useBreakpointDiagnosis'
 import { getNodeById } from '@/data/knowledge-nodes'
 import { ERROR_TYPES } from '@/data/adhd-support'
 import MathText from '@/components/shared/MathText'
+import GeometryExampleDiagram from '@/components/lecture/GeometryExampleDiagram'
 
 interface Props {
   basic: LectureExercise[]
@@ -93,7 +94,7 @@ export default function ExerciseSection({ basic, intermediate, challenge, knowle
   )
 
   return (
-    <section className="mb-8">
+    <section className="mb-8" data-exercise-section>
       <h2 className="text-lg font-semibold text-gray-800 mb-4">分层训练</h2>
 
       {reportFeedback && (
@@ -123,7 +124,7 @@ export default function ExerciseSection({ basic, intermediate, challenge, knowle
 
       <div className="space-y-3">
         {current.map((ex, i) => (
-          <ExerciseCard key={ex.id || i} exercise={ex} index={i} onReportError={(report) => handleReportError(ex, report)} />
+          <ExerciseCard key={ex.id || i} exercise={ex} index={i} lectureId={lectureId} onReportError={(report) => handleReportError(ex, report)} />
         ))}
       </div>
     </section>
@@ -133,10 +134,12 @@ export default function ExerciseSection({ basic, intermediate, challenge, knowle
 function ExerciseCard({
   exercise: ex,
   index,
+  lectureId,
   onReportError,
 }: {
   exercise: LectureExercise
   index: number
+  lectureId: number
   onReportError: (report: ErrorReportPayload) => void
 }) {
   const [showHint, setShowHint] = useState(false)
@@ -158,13 +161,14 @@ function ExerciseCard({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-white rounded-lg border border-gray-200 p-4" data-exercise-card>
       <div className="flex items-start gap-3">
         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 text-primary-700 text-xs font-bold flex items-center justify-center">
           {index + 1}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm text-gray-800 mb-3 leading-relaxed"><MathText>{ex.question}</MathText></p>
+          <p className="text-sm text-gray-800 mb-3 leading-relaxed" data-exercise-question><MathText>{ex.question}</MathText></p>
+          <GeometryExampleDiagram lectureId={lectureId} problem={ex.question} context="exercise" diagramId={`exercise-${ex.id}`} />
           {ex.knowledgeChain && ex.knowledgeChain.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-2">
               {ex.knowledgeChain.map((k, i) => (
@@ -191,7 +195,10 @@ function ExerciseCard({
             <p className="mt-2 text-xs text-amber-700 bg-amber-50 p-2 rounded leading-relaxed"><MathText>{ex.hint}</MathText></p>
           )}
           {showAnswer && (
-            <p className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded leading-relaxed"><MathText>{ex.answer}</MathText></p>
+            <div className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded leading-relaxed">
+              <MathText>{ex.answer}</MathText>
+              <GeometryExampleDiagram lectureId={lectureId} problem={ex.question} context="answer" diagramId={`answer-${ex.id}`} />
+            </div>
           )}
           {showReportForm && (
             <div className="mt-3 space-y-3 rounded-lg border border-red-200 bg-red-50 p-3">

@@ -19,6 +19,7 @@ import ExampleSection from '@/components/lecture/ExampleSection'
 import ExerciseSection from '@/components/lecture/ExerciseSection'
 import ErrorAnalysisSection from '@/components/lecture/ErrorAnalysisSection'
 import OralTaskSection from '@/components/lecture/OralTaskSection'
+import GeometryExampleDiagram from '@/components/lecture/GeometryExampleDiagram'
 import AdhdLessonStart from '@/components/lecture/AdhdLessonStart'
 import AdhdLessonClosure from '@/components/lecture/AdhdLessonClosure'
 import LearningPause from '@/components/lecture/LearningPause'
@@ -212,7 +213,7 @@ export default function LecturePage() {
         {content ? (
           <>
             <ConnectionSection network={content.knowledgeNetwork} />
-            <ConceptSection concepts={content.concepts} />
+            <ConceptSection concepts={content.concepts} lectureId={id} />
             <LearningPause title="暂停一下" prompt="先用一句话说出本讲最重要的概念，再继续学习解题方法。" />
             <MethodSection methods={content.coreMethods} />
             <LearningPause title="想一想" prompt="接下来每道题先说出所属知识主线、题型和第一步，再展开计算或证明。" />
@@ -228,7 +229,7 @@ export default function LecturePage() {
               lectureTitle={displayMeta.title}
             />
             <LearningPause title="说一说" prompt="请用一句话说出本节核心知识，再说出它从哪里来、下一步会用到哪里。" />
-            <OralTaskSection task={content.oralTask} />
+            <OralTaskSection task={content.oralTask} lectureId={id} />
 
             {content.errorCard.fields.errorNumber && (
               <section className="mb-8 p-4 bg-white rounded-lg border border-gray-200">
@@ -241,9 +242,19 @@ export default function LecturePage() {
                     ['正确方法', content.errorCard.fields.correctMethod],
                     ['同类再练', content.errorCard.fields.similarPractice],
                   ].map(([label, value]) => (
-                    <div key={label} className="flex gap-2">
-                      <span className="font-medium text-gray-700 flex-shrink-0">{label}：</span>
-                      <span className="text-gray-600"><MathText>{value}</MathText></span>
+                    <div key={label} className={label === '同类再练' ? 'md:col-span-2' : ''}>
+                      <div className="flex gap-2">
+                        <span className="font-medium text-gray-700 flex-shrink-0">{label}：</span>
+                        <span className="text-gray-600"><MathText>{value}</MathText></span>
+                      </div>
+                      {label === '同类再练' && (
+                        <GeometryExampleDiagram
+                          lectureId={id}
+                          problem={value}
+                          context="exercise"
+                          diagramId="error-card-similar"
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
