@@ -4,6 +4,7 @@ import path from 'path'
 import { copyFileSync } from 'node:fs'
 
 export default defineConfig({
+  base: '/math-course/',
   plugins: [
     react(),
     {
