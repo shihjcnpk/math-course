@@ -553,7 +553,7 @@ export default function GeometryExampleDiagram({ lectureId, questionIndex, probl
   const instanceId = `${lectureId}-${diagramId ?? `${context}-${questionIndex ?? 0}`}`.replace(/[^a-zA-Z0-9_-]/g, '-')
   const titleId = `geometry-diagram-${instanceId}`
   return (
-    <figure className="my-4 overflow-hidden rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 via-white to-violet-50 shadow-sm" data-geometry-example-diagram={context === 'example' || undefined} data-problem-diagram={context}>
+    <figure className="my-4 mx-auto w-full max-w-[520px] overflow-hidden rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 via-white to-violet-50 shadow-sm" data-geometry-example-diagram={context === 'example' || undefined} data-problem-diagram={context}>
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-100 bg-white/80 px-4 py-2">
         <div>
           <p className="text-xs font-semibold tracking-wide text-blue-700">{context === 'answer' ? '答案图示' : '题意示意图'}</p>
