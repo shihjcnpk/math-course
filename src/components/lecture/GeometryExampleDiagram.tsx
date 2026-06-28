@@ -350,6 +350,33 @@ function sceneFor(key: string): Scene | null {
   }
 }
 
+function extractDegreeValues(problem: string): string[] {
+  const plain = [...problem.matchAll(/(\d+(?:\.\d+)?)\s*°/g)].map(match => match[1])
+  const katex = [...problem.matchAll(/(\d+(?:\.\d+)?)\s*\^\{?\\?circ\}?/g)].map(match => match[1])
+  return [...plain, ...katex]
+}
+
+function numberText(value: number | undefined, fallback = '?') {
+  return Number.isFinite(value) ? `${Number(value?.toFixed(2))}` : fallback
+}
+
+function firstNumber(values: string[]) {
+  const value = Number(values[0])
+  return Number.isFinite(value) ? value : undefined
+}
+
+function isSameSideInteriorProblem(problem: string) {
+  return problem.includes('同旁内角')
+}
+
+function isNumberLineProblem(problem: string) {
+  return /(数轴|解集|表示下列各数|在数轴上|点A表示|点B表示|左侧|右侧)/.test(problem)
+}
+
+function isCoordinateTriangleProblem(problem: string) {
+  return /三角形ABC|△ABC/.test(problem) && /\([−-]?\d/.test(problem) && /坐标系|顶点/.test(problem)
+}
+
 function supportingSceneFor(lectureId: number, problem: string, context: 'example' | 'exercise' | 'oral' | 'answer'): Scene | null {
   const explicitlyReferencesFigure = problem.includes('如图') || problem.includes('下图')
   const oralNeedsVisual = context === 'oral' && /(画图|图像|拼图|统计图|知识地图)/.test(problem)
@@ -357,18 +384,23 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   const exampleNeedsVisual = context === 'example' && /(画|作图|描点|补全|图像|数轴|统计图|直方图|箱线图|扇形图|折线图|条形图)/.test(problem)
   if (!explicitlyReferencesFigure && !oralNeedsVisual && !answerNeedsVisual && !exampleNeedsVisual) return null
 
-  const degreeValues = [...problem.matchAll(/(\d+)\s*°/g)].map(match => match[1])
+  const degreeValues = extractDegreeValues(problem)
   const firstAngle = degreeValues[0] ? `${degreeValues[0]}°` : '已知角'
 
-  if (lectureId === 1) return { title: '坐标—三角形—勾股知识链', description: '先从坐标读出两条互相垂直的边，再用勾股定理求斜边。', extra: <CoordinateRightTriangle /> }
-  if (lectureId === 3) return { title: '数轴上的a、b', description: 'b位于-2与-1之间，a位于0与1之间；先据位置判断符号和绝对值。', extra: <NumberLineAB /> }
+  if (lectureId === 1) {
+    if (/一次函数|函数图像|y=/.test(problem)) return functionAnswerScene(problem)
+    if (isCoordinateTriangleProblem(problem)) return { title: '坐标三角形', description: '按题干顶点坐标标出三角形；水平和竖直距离用于后续勾股计算。', extra: <CoordinateTriangleFromProblem problem={problem} /> }
+    if (isNumberLineProblem(problem)) return numberLineScene(problem)
+    return null
+  }
+  if (lectureId === 2 || lectureId === 3 || lectureId === 16) return numberLineScene(problem)
   if (lectureId === 8) return { title: '正方形割补与因式分解', description: '大正方形边长a，角上切去边长b的小正方形；剩余面积可用整体相减或分块相加表示。', extra: <SquareCutout /> }
   if (lectureId === 11) return rightTriangleScene('二次根式与勾股定理', '√2', '√6')
   if (lectureId === 18 || (lectureId >= 33 && lectureId <= 35) || lectureId === 45) return functionAnswerScene(problem)
   if (lectureId >= 36 && lectureId <= 38) return statisticsAnswerScene(problem)
 
   if (lectureId === 19) {
-    if (problem.includes('直线AB与CD') || problem.includes('直线AB和CD')) return intersectingScene(firstAngle)
+    if (problem.includes('直线AB与CD') || problem.includes('直线AB和CD')) return intersectingScene(firstAngle, problem)
     if (problem.includes('平角')) return straightAngleBisectors(firstAngle)
     if (context === 'oral' && problem.includes('向下方')) return oppositeRayAngles(degreeValues)
     return angleBisectorScene(firstAngle)
@@ -379,13 +411,15 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
     if (problem.includes('PO⊥') || problem.includes('垂线段')) return pointToLineScene()
     if (problem.includes('三角形ABC')) return triangleParallelScene()
     if ((problem.includes('∠B') && problem.includes('∠D')) || problem.includes('∠BED')) return zigzagParallelScene(degreeValues)
+    if (isSameSideInteriorProblem(problem)) return sameSideInteriorScene(degreeValues)
     if (problem.includes('c⊥a')) return parallelPerpendicularTriangleScene()
-    if (problem.includes('直线AB和CD') || problem.includes('直线AB与CD')) return intersectingScene(firstAngle)
+    if (problem.includes('直线AB和CD') || problem.includes('直线AB与CD')) return intersectingScene(firstAngle, problem)
     return parallelLines(firstAngle, true)
   }
 
   if (lectureId === 21) {
     if (problem.includes('△ABC') && problem.includes('△DEF')) return twoTriangles('add-condition')
+    if (isSameSideInteriorProblem(problem)) return sameSideInteriorScene(degreeValues)
     return parallelLines(firstAngle, problem.includes('∥'))
   }
 
@@ -422,6 +456,7 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   if (lectureId === 26) {
     if (problem.includes('垂直平分线')) return { title: '垂直平分线上的点', description: '紫色直线垂直且平分AB；线上点P到A、B距离相等。', extra: <PerpendicularBisector /> }
     if (problem.includes('AC⊥BD')) return sceneFor('30-1')
+    if (problem.includes('DE⊥AB') && problem.includes('DF⊥AC')) return { title: '垂足等距结构', description: 'D是底边中点；DE、DF分别垂直两边且等长，图中直接标出直角和等距。', extra: <EqualPerpendiculars /> }
     if (problem.includes('DE⊥AB') || problem.includes('DF⊥AC')) return sceneFor('26-1')
     if (problem.includes('AB=AC')) return isoscelesMedian(false)
     return triangleConditionScene(problem, degreeValues)
@@ -438,7 +473,9 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
     if (problem.includes('∠AOB')) return doubleReflection()
     if (problem.includes('x=8')) return { title: '两条约束直线上的最短路径', description: '分别关于两条动点所在直线作对称，把三段折线展成直线。', extra: <CoordinateDoubleReflection /> }
     if (problem.includes('y=x')) return { title: '关于直线y=x的反射', description: '点(a,b)关于y=x对称为(b,a)，再连接定点确定最优位置。', extra: <DiagonalReflection /> }
-    return reflectionLine(problem.includes('A(0,3)'))
+    if (problem.includes('异侧')) return { title: '异侧两点的最短路径', description: 'A、B在直线l异侧时，直接连接AB，交l于P；不需要再作对称。', extra: <OppositeSideShortestPath /> }
+    if (/\([−-]?\d/.test(problem) && problem.includes('x轴')) return { title: '坐标反射法', description: '把同侧点关于x轴作对称，再连成直线确定最优点P。', extra: <CoordinateReflectionFromProblem problem={problem} /> }
+    return reflectionLine(problem.includes('km'))
   }
 
   if (lectureId === 29) {
@@ -446,6 +483,8 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
     if (problem.includes('网格')) return { title: '网格中的距离', description: '横向格数和纵向格数构成直角边，连接两点得到斜边。', extra: <GridTriangle /> }
     if (problem.includes('以AB为边向外作正方形')) return { title: '斜边上的正方形', description: '先求斜边AB，再用AB²直接得到正方形面积。', extra: <SquareOnHypotenuse /> }
     if (problem.includes('AB=AC')) return { title: '等腰三角形作高', description: '底边上的高同时平分底边，把问题分成两个直角三角形。', extra: <IsoscelesHeight /> }
+    if (problem.includes('AB=13') && problem.includes('BC=15') && problem.includes('AC=14')) return { title: '一般三角形求高', description: '这是13、14、15的一般三角形，不能画成直角三角形；先用面积或海伦公式求高。', extra: <ScaleneTriangleHeight /> }
+    if (!problem.includes('Rt△') && !problem.includes('直角')) return triangleConditionScene(problem, degreeValues)
     return rightTriangleScene('勾股定理与三角形的高', degreeValues[0] ?? 'a', degreeValues[1] ?? 'b')
   }
 
@@ -460,7 +499,7 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   }
 
   if (lectureId === 43) {
-    if (problem.includes('DE⊥AB') && problem.includes('DF⊥AC')) return sceneFor('26-1')
+    if (problem.includes('DE⊥AB') && problem.includes('DF⊥AC')) return { title: '垂足等距证明等腰三角形', description: 'D是BC中点，DE、DF分别垂直AB、AC且相等；图中标出中点、垂足和等距。', extra: <EqualPerpendiculars /> }
     if (problem.includes('AB//CD') && problem.includes('E是BC中点')) return sceneFor('25-4')
     if (problem.includes('平行四边形ABCD')) return sceneFor('30-1')
     if (problem.includes('Rt△')) return triangleConditionScene(problem, degreeValues)
@@ -469,7 +508,7 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   }
 
   if (lectureId === 44) return { title: '动点最短路径', description: '先把需要经过的折线路径用对称展开，再用两点之间线段最短。', extra: <TriangleShortestPath /> }
-  if (lectureId === 47) return { title: '垂足等距证明等腰三角形', description: 'D是BC中点，DE、DF分别垂直两腰且相等；从全等或角平分线判定入手。', extra: <EqualPerpendiculars /> }
+  if (lectureId === 47) return { title: '垂足等距证明等腰三角形', description: 'D是BC中点，DE、DF分别垂直两边且相等；从全等或角平分线判定入手。', extra: <EqualPerpendiculars /> }
 
   if (context === 'oral' && lectureId === 23) return triangleParallelScene()
   if (context === 'oral' && lectureId === 24) return { title: 'SSA不能唯一确定三角形', description: '固定两边和一个非夹角时，第三个顶点可能有两个位置，得到两个不同三角形。', extra: <SsaAmbiguity /> }
@@ -480,8 +519,31 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   return { title: '题目条件结构图', description: '图中只标出题干给出的对象和关系；请结合文字逐项核对已知条件。', extra: <GenericGeometry /> }
 }
 
-function intersectingScene(angle: string): Scene {
-  return { title: '相交线中的对顶角与邻补角', description: '两条不同颜色的直线交于O；先锁定已知角，再找对顶角和邻补角。', segments: [S([70, 245], [530, 65], 'primary', false, 5), S([75, 55], [525, 255], 'accent', false, 5)], points: [P([75, 55], 'A'), P([525, 255], 'B', 12, 18), P([530, 65], 'C'), P([70, 245], 'D', -12, 18), P([300, 155], 'O', 0, 23)], labels: [L([300, 95], angle, 'accent')] }
+function numberLineScene(problem: string): Scene {
+  return {
+    title: '按题干标出的数轴',
+    description: '图中只标出题干给出的数、点或解集方向，避免用固定示意点替代真实条件。',
+    extra: <NumberLineFromProblem problem={problem} />,
+  }
+}
+
+function sameSideInteriorScene(values: string[]): Scene {
+  const alpha = firstNumber(values)
+  const beta = alpha === undefined ? undefined : 180 - alpha
+  return {
+    title: '同旁内角互补',
+    description: '两条平行线被截，同旁内角和为180°；图中第二个角按互补值标出。',
+    segments: [S([70, 65], [530, 65], 'primary'), S([70, 245], [530, 245], 'primary'), S([190, 30], [410, 280], 'accent', false, 5)],
+    labels: [L([245, 105], `${numberText(alpha)}°`, 'accent'), L([360, 215], `${numberText(beta)}°`, 'proof'), L([480, 55], '∥', 'primary', 22), L([480, 235], '∥', 'primary', 22), L([315, 160], '和为180°', 'proof', 15)],
+  }
+}
+
+function intersectingScene(angle: string, problem: string): Scene {
+  const labelAt: Point = problem.includes('∠AOD') ? [205, 175]
+    : problem.includes('∠BOD') ? [300, 220]
+      : problem.includes('∠BOC') ? [395, 175]
+        : [300, 95]
+  return { title: '相交线中的对顶角与邻补角', description: '两条不同颜色的直线交于O；角度标签放在题干指定的角上。', segments: [S([70, 245], [530, 65], 'primary', false, 5), S([75, 55], [525, 255], 'accent', false, 5)], points: [P([75, 55], 'A'), P([525, 255], 'B', 12, 18), P([530, 65], 'C'), P([70, 245], 'D', -12, 18), P([300, 155], 'O', 0, 23)], labels: [L(labelAt, angle, 'accent')] }
 }
 
 function angleBisectorScene(angle: string): Scene {
@@ -723,9 +785,113 @@ function FunctionPlot({ variant = 'intersection' }: { variant?: 'parabola' | 'ab
   return <CoordinateAxes>{line(-5, -5, 5, 5, '#2563eb')}{line(-5, 5, 5, -5, '#e11d48')}<DiagramPoint at={[300, 160]} label="P" dx={18} dy={-14} tone="proof" /><DiagramLabel at={[440, 55]} text="l₁" tone="primary" /><DiagramLabel at={[440, 260]} text="l₂" tone="accent" /></CoordinateAxes>
 }
 
-function CoordinateRightTriangle() { return <CoordinateAxes><polygon points="300,160 480,160 300,55" fill="#dbeafe" fillOpacity="0.7" stroke="#2563eb" strokeWidth="3.5" /><DiagramPoint at={[300, 160]} label="A(0,0)" dx={-40} dy={18} /><DiagramPoint at={[480, 160]} label="B(4,0)" dx={30} dy={18} /><DiagramPoint at={[300, 55]} label="C(0,3)" dx={36} dy={-10} /><DiagramLabel at={[390, 185]} text="4" tone="accent" /><DiagramLabel at={[275, 105]} text="3" tone="accent" /><DiagramLabel at={[400, 95]} text="BC=?" tone="proof" /></CoordinateAxes> }
+function normalizeMinus(value: string) {
+  return value.replace(/−/g, '-')
+}
 
-function NumberLineAB() { return <g><line x1="65" y1="160" x2="540" y2="160" stroke="#334155" strokeWidth="3.5" /><path d="M540 160 l-14 -8 v16z" fill="#334155" />{[-2,-1,0,1,2].map((n,i)=><g key={n}><line x1={140+i*85} y1="145" x2={140+i*85} y2="175" stroke="#334155" strokeWidth="3" /><DiagramLabel at={[140+i*85,190]} text={String(n)} size={15} /></g>)}<DiagramPoint at={[180,160]} label="b" dx={0} dy={-20} tone="accent" /><DiagramPoint at={[430,160]} label="a" dx={0} dy={-20} tone="primary" /><DiagramLabel at={[180,110]} text="-2<b<-1" tone="accent" /><DiagramLabel at={[430,110]} text="0<a<1" tone="primary" /></g> }
+function extractCoordinatePoints(problem: string) {
+  return [...problem.matchAll(/([A-Z])\s*\(\s*([−-]?\d+(?:\.\d+)?)\s*,\s*([−-]?\d+(?:\.\d+)?)\s*\)/g)]
+    .map(match => ({ label: match[1], x: Number(normalizeMinus(match[2])), y: Number(normalizeMinus(match[3])) }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y))
+}
+
+function toCanvasPoint(x: number, y: number): Point {
+  return [300 + x * 45, 160 - y * 35]
+}
+
+function CoordinateTriangleFromProblem({ problem }: { problem: string }) {
+  const points = extractCoordinatePoints(problem)
+  const a = points.find(point => point.label === 'A') ?? { label: 'A', x: 0, y: 0 }
+  const b = points.find(point => point.label === 'B') ?? { label: 'B', x: 4, y: 0 }
+  const c = points.find(point => point.label === 'C') ?? { label: 'C', x: 0, y: 3 }
+  const pa = toCanvasPoint(a.x, a.y)
+  const pb = toCanvasPoint(b.x, b.y)
+  const pc = toCanvasPoint(c.x, c.y)
+  return <CoordinateAxes>
+    <polygon points={[pa, pb, pc].map(point => point.join(',')).join(' ')} fill="#dbeafe" fillOpacity="0.7" stroke="#2563eb" strokeWidth="3.5" />
+    <line x1={pb[0]} y1={pb[1]} x2={pa[0]} y2={pa[1]} stroke="#e11d48" strokeWidth="3.5" strokeDasharray="8 6" />
+    <line x1={pc[0]} y1={pc[1]} x2={pa[0]} y2={pa[1]} stroke="#e11d48" strokeWidth="3.5" strokeDasharray="8 6" />
+    <DiagramPoint at={pa} label={`A(${a.x},${a.y})`} dx={-42} dy={18} />
+    <DiagramPoint at={pb} label={`B(${b.x},${b.y})`} dx={38} dy={18} />
+    <DiagramPoint at={pc} label={`C(${c.x},${c.y})`} dx={40} dy={-10} />
+    <DiagramLabel at={[(pb[0] + pc[0]) / 2 + 18, (pb[1] + pc[1]) / 2 - 10]} text="待求距离" tone="proof" size={15} />
+  </CoordinateAxes>
+}
+
+function CoordinateLineFromPoints({ problem }: { problem: string }) {
+  const points = extractCoordinatePoints(problem).slice(0, 2)
+  if (points.length < 2) return <FunctionPlot variant="through-points" />
+  const [a, b] = points
+  const pa = toCanvasPoint(a.x, a.y)
+  const pb = toCanvasPoint(b.x, b.y)
+  const dx = b.x - a.x || 1
+  const dy = b.y - a.y
+  const x1 = Math.max(-5, Math.min(a.x, b.x) - 2)
+  const x2 = Math.min(5, Math.max(a.x, b.x) + 2)
+  const y1 = a.y + dy / dx * (x1 - a.x)
+  const y2 = a.y + dy / dx * (x2 - a.x)
+  return <CoordinateAxes>
+    <line x1={300 + x1 * 45} y1={160 - y1 * 35} x2={300 + x2 * 45} y2={160 - y2 * 35} stroke="#2563eb" strokeWidth="3.5" strokeLinecap="round" />
+    <DiagramPoint at={pa} label={`${a.label}(${a.x},${a.y})`} dx={a.x <= 0 ? -42 : 42} dy={a.y >= 0 ? -10 : 18} tone="accent" />
+    <DiagramPoint at={pb} label={`${b.label}(${b.x},${b.y})`} dx={b.x <= 0 ? -42 : 42} dy={b.y >= 0 ? -10 : 18} tone="proof" />
+    <DiagramLabel at={[425, 55]} text="由题干两点确定" tone="primary" size={15} />
+  </CoordinateAxes>
+}
+
+function NumberLineFromProblem({ problem }: { problem: string }) {
+  const pointMarks: { label: string; value: number; tone: Tone }[] = []
+  const intervalLabels: string[] = []
+
+  for (const match of problem.matchAll(/([a-zA-Z])(?:在|位于)(原点|[−-]?\d+(?:\.\d+)?)和([−-]?\d+(?:\.\d+)?)之间/g)) {
+    const left = match[2] === '原点' ? 0 : Number(normalizeMinus(match[2]))
+    const right = Number(normalizeMinus(match[3]))
+    if (Number.isFinite(left) && Number.isFinite(right)) {
+      pointMarks.push({ label: match[1], value: (left + right) / 2, tone: match[1].toLowerCase() === 'a' ? 'primary' : 'accent' })
+      intervalLabels.push(`${match[1]}在${left}和${right}之间`)
+    }
+  }
+
+  for (const match of problem.matchAll(/点([A-Z])表示([−-]?\d+(?:\.\d+)?)/g)) {
+    const value = Number(normalizeMinus(match[2]))
+    if (Number.isFinite(value)) pointMarks.push({ label: match[1], value, tone: 'accent' })
+  }
+
+  for (const match of problem.matchAll(/点([A-Z])在原点(左|右)侧(\d+(?:\.\d+)?)个单位/g)) {
+    const value = Number(match[3]) * (match[2] === '左' ? -1 : 1)
+    pointMarks.push({ label: match[1], value, tone: 'accent' })
+  }
+
+  const rawNumbers = [...problem.matchAll(/[−-]?\d+(?:\.\d+)?/g)]
+    .map(match => Number(normalizeMinus(match[0])))
+    .filter(value => Number.isFinite(value) && Math.abs(value) <= 20)
+
+  if (!pointMarks.length) {
+    rawNumbers.slice(0, 8).forEach((value, index) => pointMarks.push({ label: `${value}`, value, tone: index % 2 ? 'accent' : 'primary' }))
+  }
+
+  const values = pointMarks.map(point => point.value)
+  const min = Math.floor(Math.min(-1, ...values) - 1)
+  const max = Math.ceil(Math.max(1, ...values) + 1)
+  const span = Math.max(1, max - min)
+  const xFor = (value: number) => 80 + (value - min) / span * 450
+  const tickValues = Array.from({ length: span + 1 }, (_, index) => min + index).filter((_, index) => span <= 12 || index % Math.ceil(span / 10) === 0)
+
+  return <g>
+    <line x1="70" y1="170" x2="545" y2="170" stroke="#334155" strokeWidth="3.5" />
+    <path d="M545 170 l-14 -8 v16z" fill="#334155" />
+    {tickValues.map(value => <g key={value}>
+      <line x1={xFor(value)} y1="153" x2={xFor(value)} y2="187" stroke="#334155" strokeWidth="2.5" />
+      <DiagramLabel at={[xFor(value), 207]} text={String(value)} size={13} />
+    </g>)}
+    {pointMarks.map((point, index) => <g key={`${point.label}-${index}`}>
+      <circle cx={xFor(point.value)} cy="170" r="7" fill="#fff" stroke={COLORS[point.tone]} strokeWidth="3" />
+      <DiagramLabel at={[xFor(point.value), 132 - (index % 2) * 28]} text={point.label} tone={point.tone} size={16} />
+      <line x1={xFor(point.value)} y1="142" x2={xFor(point.value)} y2="165" stroke={COLORS[point.tone]} strokeWidth="2.5" strokeDasharray="6 5" />
+    </g>)}
+    {intervalLabels.slice(0, 2).map((label, index) => <DiagramLabel key={label} at={[85, 65 + index * 24]} text={label} tone={index ? 'accent' : 'primary'} size={15} anchor="start" />)}
+    {!intervalLabels.length && <DiagramLabel at={[85, 65]} text="按题干数字逐点定位" tone="proof" size={15} anchor="start" />}
+  </g>
+}
 
 function SquareCutout() { return <g><rect x="135" y="35" width="300" height="250" fill="#dbeafe" stroke="#2563eb" strokeWidth="4" /><rect x="335" y="185" width="100" height="100" fill="#fff" stroke="#e11d48" strokeWidth="3.5" strokeDasharray="9 6" /><DiagramLabel at={[285,310]} text="a" tone="primary" /><DiagramLabel at={[455,235]} text="b" tone="accent" /><DiagramLabel at={[250,145]} text="剩余面积 = a²-b²" tone="proof" size={18} /></g> }
 
@@ -737,7 +903,7 @@ function functionAnswerScene(problem: string): Scene {
   if (/套餐|方案|成本|收入|利润|费用|追上|交点/.test(problem)) return { title: '两条函数图像与分界点', description: '交点表示两种关系取值相同；交点两侧通过比较图像高低作决策。', extra: <FunctionPlot variant="plans" /> }
   if (parseLinearFunctions(problem).length > 0) return { title: '按解析式准确作图', description: '图中直线按题目给出的k、b绘制；标出坐标轴交点，并用交点核对方程或不等式。', extra: <LinearPlotFromProblem problem={problem} /> }
   if (/两条|l_1|l₁|y_1|y₁/.test(problem)) return { title: '两条直线的交点', description: '交点横、纵坐标同时满足两个解析式，也是对应方程组的解。', extra: <FunctionPlot variant="intersection" /> }
-  if (/经过点|图像过点|待定系数/.test(problem)) return { title: '已知两点确定直线', description: '先描出两个已知点，再连接成直线；两点坐标用于求k、b。', extra: <FunctionPlot variant="through-points" /> }
+  if (/经过点|图像过点|图像经过|待定系数/.test(problem)) return { title: '已知两点确定直线', description: '先描出题干给出的两个点，再连接成直线；两点坐标用于求k、b。', extra: <CoordinateLineFromPoints problem={problem} /> }
   if (/与.*轴|y>0|y<0|不等式/.test(problem)) return { title: '从图像读取零点和正负区间', description: '与x轴交点对应y=0；图像在x轴上方对应y>0，下方对应y<0。', extra: <FunctionPlot variant="intercept-triangle" /> }
   return { title: '一次函数图像', description: '先列表选点，再描点、连线并向两端延长；同时标出坐标轴交点。', extra: <FunctionPlot variant="decreasing" /> }
 }
@@ -772,10 +938,10 @@ function LinearPlotFromProblem({ problem }: { problem: string }) {
 
 function statisticsAnswerScene(problem: string): Scene {
   if (/箱线图|四分位/.test(problem)) return { title: '箱线图', description: '从左到右依次标出最小值、Q₁、中位数、Q₃和最大值。', extra: <StatisticsPlot variant="box" /> }
-  if (/直方图|频数分布/.test(problem)) return { title: '频数分布直方图', description: '相邻组连续，长方形之间不留空隙；横轴为分组，纵轴为频数或频数/组距。', extra: <StatisticsPlot variant="histogram" /> }
-  if (/折线图|变化|趋势/.test(problem)) return { title: '折线图', description: '横轴按时间顺序排列，点的高低表示数值，连线突出变化趋势。', extra: <StatisticsPlot variant="line" /> }
-  if (/扇形图|百分比|占比/.test(problem)) return { title: '扇形图与比例', description: '圆心角=所占百分比×360°；各部分合计必须为100%。', extra: <StatisticsPlot variant="pie" /> }
-  return { title: '条形统计图', description: '柱宽一致、间隔相等，柱高直接表示各类别数量，便于比较大小。', extra: <StatisticsPlot variant="bar" /> }
+  if (/直方图|频数分布/.test(problem)) return { title: '频数分布直方图', description: '按题干区间和频数示意；相邻组连续，长方形之间不留空隙。', extra: <StatisticsPlotFromProblem problem={problem} variant="histogram" /> }
+  if (/折线图|变化|趋势|水位|PM2\.5|气温/.test(problem)) return { title: '折线图', description: '按题干给出的顺序和数值连线，直接检查升降变化。', extra: <StatisticsPlotFromProblem problem={problem} variant="line" /> }
+  if (/扇形图|百分比|占比|%/.test(problem)) return { title: '扇形图与比例', description: '按题干百分比示意扇区，并提醒圆心角=百分比×360°。', extra: <StatisticsPlotFromProblem problem={problem} variant="pie" /> }
+  return { title: '条形统计图', description: '按题干类别和数量画柱，柱高用于比较大小。', extra: <StatisticsPlotFromProblem problem={problem} variant="bar" /> }
 }
 
 function FunctionLines({ single = false }: { single?: boolean }) { return <FunctionPlot variant={single ? 'intercept-triangle' : 'intersection'} /> }
@@ -800,7 +966,7 @@ function NestedSquares() { return <g><rect x="115" y="35" width="360" height="25
 
 function TriangleShortestPath() { return <g><polygon points="130,55 130,260 500,260" fill="#eff6ff" stroke="#2563eb" strokeWidth="3.5" /><line x1="130" y1="55" x2="420" y2="260" stroke="#e11d48" strokeWidth="3.5" /><line x1="420" y1="260" x2="70" y2="120" stroke="#7c3aed" strokeWidth="4" strokeDasharray="10 7" /><DiagramPoint at={[130,55]} label="A" /><DiagramPoint at={[130,260]} label="B" dx={-12} dy={20} /><DiagramPoint at={[500,260]} label="C" dx={12} dy={20} /><DiagramPoint at={[420,260]} label="P" dy={22} tone="accent" /><DiagramPoint at={[70,120]} label="D′" dx={-15} dy={0} tone="proof" /><DiagramLabel at={[270,185]} text="化折为直" tone="proof" /></g> }
 
-function EqualPerpendiculars() { return <g><polygon points="300,35 85,250 515,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="3.5" /><line x1="300" y1="250" x2="190" y2="145" stroke="#e11d48" strokeWidth="3.5" /><line x1="300" y1="250" x2="410" y2="145" stroke="#e11d48" strokeWidth="3.5" /><DiagramPoint at={[300,35]} label="A" /><DiagramPoint at={[85,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[515,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramPoint at={[190,145]} label="E" dx={-14} dy={0} /><DiagramPoint at={[410,145]} label="F" dx={14} dy={0} /><DiagramLabel at={[245,195]} text="DE" tone="accent" /><DiagramLabel at={[355,195]} text="DF" tone="accent" /></g> }
+function EqualPerpendiculars() { return <g><polygon points="300,35 85,250 515,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="3.5" /><line x1="300" y1="250" x2="190" y2="145" stroke="#e11d48" strokeWidth="3.5" /><line x1="300" y1="250" x2="410" y2="145" stroke="#e11d48" strokeWidth="3.5" /><Tick a={[85,250]} b={[300,250]} tone="primary" /><Tick a={[300,250]} b={[515,250]} tone="primary" /><Tick a={[300,250]} b={[190,145]} count={2} tone="accent" /><Tick a={[300,250]} b={[410,145]} count={2} tone="accent" /><DiagramPoint at={[300,35]} label="A" /><DiagramPoint at={[85,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[515,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramPoint at={[190,145]} label="E" dx={-14} dy={0} /><DiagramPoint at={[410,145]} label="F" dx={14} dy={0} /><DiagramLabel at={[232,188]} text="90°" tone="accent" size={13} /><DiagramLabel at={[368,188]} text="90°" tone="accent" size={13} /><DiagramLabel at={[245,205]} text="DE" tone="accent" /><DiagramLabel at={[355,205]} text="DF" tone="accent" /><DiagramLabel at={[300,275]} text="BD=DC" tone="primary" size={15} /></g> }
 
 function SsaAmbiguity() { return <g><line x1="90" y1="250" x2="520" y2="250" stroke="#2563eb" strokeWidth="4" /><line x1="90" y1="250" x2="420" y2="75" stroke="#e11d48" strokeWidth="3.5" /><line x1="90" y1="250" x2="420" y2="185" stroke="#7c3aed" strokeWidth="3.5" strokeDasharray="10 7" /><circle cx="420" cy="250" r="175" fill="none" stroke="#64748b" strokeWidth="3" strokeDasharray="7 7" /><DiagramPoint at={[90,250]} label="A" dy={22} /><DiagramPoint at={[420,75]} label="C₁" /><DiagramPoint at={[420,185]} label="C₂" dx={15} dy={0} /><DiagramLabel at={[315,45]} text="相同两边和非夹角" tone="accent" /><DiagramLabel at={[315,285]} text="可得到两个不同三角形" tone="proof" /></g> }
 
@@ -814,6 +980,84 @@ function StatisticsPlot({ variant }: { variant: 'bar' | 'line' | 'pie' | 'histog
   if (variant === 'histogram') return <g><line x1="70" y1="275" x2="545" y2="275" stroke="#334155" strokeWidth="4" /><line x1="70" y1="275" x2="70" y2="35" stroke="#334155" strokeWidth="4" /><rect x="110" y="210" width="90" height="65" fill="#93c5fd" stroke="#2563eb" strokeWidth="3" /><rect x="200" y="150" width="90" height="125" fill="#60a5fa" stroke="#2563eb" strokeWidth="3" /><rect x="290" y="70" width="90" height="205" fill="#2563eb" stroke="#1d4ed8" strokeWidth="3" /><rect x="380" y="180" width="90" height="95" fill="#a5b4fc" stroke="#7c3aed" strokeWidth="3" /><DiagramLabel at={[300,305]} text="相邻组连续，不留空隙" tone="accent" size={16} /></g>
   if (variant === 'box') return <g><line x1="75" y1="160" x2="525" y2="160" stroke="#334155" strokeWidth="4" /><line x1="115" y1="125" x2="115" y2="195" stroke="#2563eb" strokeWidth="3.5" /><line x1="485" y1="125" x2="485" y2="195" stroke="#2563eb" strokeWidth="3.5" /><rect x="205" y="105" width="200" height="110" fill="#ddd6fe" stroke="#7c3aed" strokeWidth="3.5" /><line x1="310" y1="105" x2="310" y2="215" stroke="#e11d48" strokeWidth="4" /><DiagramLabel at={[115,225]} text="最小" tone="primary" size={14} /><DiagramLabel at={[205,240]} text="Q₁" tone="proof" size={14} /><DiagramLabel at={[310,240]} text="中位数" tone="accent" size={14} /><DiagramLabel at={[405,240]} text="Q₃" tone="proof" size={14} /><DiagramLabel at={[485,225]} text="最大" tone="primary" size={14} /></g>
   return <g><line x1="70" y1="275" x2="545" y2="275" stroke="#334155" strokeWidth="4" /><line x1="70" y1="275" x2="70" y2="35" stroke="#334155" strokeWidth="4" /><rect x="115" y="195" width="60" height="80" fill="#93c5fd" /><rect x="220" y="120" width="60" height="155" fill="#60a5fa" /><rect x="325" y="70" width="60" height="205" fill="#2563eb" /><rect x="430" y="155" width="60" height="120" fill="#7c3aed" /><DiagramLabel at={[145,295]} text="A" size={14} /><DiagramLabel at={[250,295]} text="B" size={14} /><DiagramLabel at={[355,295]} text="C" size={14} /><DiagramLabel at={[460,295]} text="D" size={14} /></g>
+}
+
+function StatisticsPlotFromProblem({ problem, variant }: { problem: string; variant: 'bar' | 'line' | 'pie' | 'histogram' }) {
+  const axis = <><line x1="70" y1="275" x2="545" y2="275" stroke="#334155" strokeWidth="4" /><line x1="70" y1="275" x2="70" y2="35" stroke="#334155" strokeWidth="4" /></>
+
+  if (variant === 'pie') {
+    const matches = [...problem.matchAll(/([\u4e00-\u9fa5A-Za-z]+)\s*(?:占)?\s*(\d+(?:\.\d+)?)%/g)]
+      .map(match => ({ label: match[1].slice(-3), value: Number(match[2]) }))
+      .filter(item => Number.isFinite(item.value) && item.value > 0)
+    const parts = matches.length ? matches.slice(0, 4) : [{ label: 'A', value: 40 }, { label: 'B', value: 25 }, { label: 'C', value: 35 }]
+    let start = -90
+    const colors = ['#60a5fa', '#fda4af', '#c4b5fd', '#fcd34d']
+    const sector = (part: { label: string; value: number }, index: number) => {
+      const angle = part.value / 100 * 360
+      const end = start + angle
+      const r = 112
+      const sx = 300 + r * Math.cos(start * Math.PI / 180)
+      const sy = 155 + r * Math.sin(start * Math.PI / 180)
+      const ex = 300 + r * Math.cos(end * Math.PI / 180)
+      const ey = 155 + r * Math.sin(end * Math.PI / 180)
+      const mid = (start + end) / 2
+      const lx = 300 + 70 * Math.cos(mid * Math.PI / 180)
+      const ly = 155 + 70 * Math.sin(mid * Math.PI / 180)
+      start = end
+      return <g key={`${part.label}-${index}`}>
+        <path d={`M300 155 L${sx} ${sy} A${r} ${r} 0 ${angle > 180 ? 1 : 0} 1 ${ex} ${ey} Z`} fill={colors[index % colors.length]} stroke="#fff" strokeWidth="3" />
+        <DiagramLabel at={[lx, ly]} text={`${part.value}%`} size={14} tone="base" />
+      </g>
+    }
+    return <g><circle cx="300" cy="155" r="112" fill="#eff6ff" stroke="#2563eb" strokeWidth="3" />{parts.map(sector)}<DiagramLabel at={[300, 300]} text="圆心角=百分比×360°" tone="proof" size={15} /></g>
+  }
+
+  const linePairs = [...problem.matchAll(/(?:第\s*)?(\d+)\s*(?:月|天)\s*([−-]?\d+(?:\.\d+)?)/g)]
+    .map(match => ({ label: match[1], value: Number(normalizeMinus(match[2])) }))
+    .filter(item => Number.isFinite(item.value))
+  if (variant === 'line' && linePairs.length >= 2) {
+    const max = Math.max(...linePairs.map(item => item.value))
+    const min = Math.min(...linePairs.map(item => item.value))
+    const span = Math.max(1, max - min)
+    const points = linePairs.slice(0, 8).map((item, index, all) => [95 + index * (400 / Math.max(1, all.length - 1)), 250 - (item.value - min) / span * 180] as Point)
+    return <g>{axis}<polyline points={points.map(point => point.join(',')).join(' ')} fill="none" stroke="#e11d48" strokeWidth="4" />{points.map((point, index) => <g key={index}><circle cx={point[0]} cy={point[1]} r="5" fill="#e11d48" /><DiagramLabel at={[point[0], 295]} text={linePairs[index].label} size={13} /><DiagramLabel at={[point[0], point[1] - 18]} text={numberText(linePairs[index].value)} tone="accent" size={13} /></g>)}</g>
+  }
+
+  const barPairs = [...problem.matchAll(/([\u4e00-\u9fa5A-Za-z]+)\s*(\d+(?:\.\d+)?)\s*人/g)]
+    .map(match => ({ label: match[1].slice(-3), value: Number(match[2]) }))
+    .filter(item => Number.isFinite(item.value))
+  const bars = barPairs.length ? barPairs.slice(0, 6) : [{ label: 'A', value: 30 }, { label: 'B', value: 50 }, { label: 'C', value: 20 }]
+  const max = Math.max(1, ...bars.map(item => item.value))
+  return <g>{axis}{bars.map((bar, index) => {
+    const h = bar.value / max * 200
+    const x = 110 + index * 70
+    return <g key={`${bar.label}-${index}`}><rect x={x} y={275 - h} width="45" height={h} fill={index % 2 ? '#60a5fa' : '#2563eb'} /><DiagramLabel at={[x + 22, 295]} text={bar.label} size={12} /><DiagramLabel at={[x + 22, 260 - h]} text={numberText(bar.value)} tone="accent" size={13} /></g>
+  })}</g>
+}
+
+function OppositeSideShortestPath() {
+  return <g><line x1="70" y1="170" x2="535" y2="170" stroke="#2563eb" strokeWidth="4" /><DiagramLabel at={[510, 155]} text="l" tone="primary" /><DiagramPoint at={[140, 75]} label="A" tone="accent" /><DiagramPoint at={[480, 260]} label="B" tone="accent" /><line x1="140" y1="75" x2="480" y2="260" stroke="#e11d48" strokeWidth="4" /><DiagramPoint at={[315,170]} label="P" dy={22} tone="proof" /><DiagramLabel at={[300, 55]} text="异侧：直接连AB" tone="proof" size={16} /></g>
+}
+
+function CoordinateReflectionFromProblem({ problem }: { problem: string }) {
+  const points = extractCoordinatePoints(problem)
+  const a = points.find(point => point.label === 'A') ?? { label: 'A', x: 0, y: 3 }
+  const b = points.find(point => point.label === 'B') ?? { label: 'B', x: 4, y: 1 }
+  const pa = toCanvasPoint(a.x, a.y)
+  const pb = toCanvasPoint(b.x, b.y)
+  const reflectedA = toCanvasPoint(a.x, -a.y)
+  return <CoordinateAxes>
+    <line x1={pa[0]} y1={pa[1]} x2={reflectedA[0]} y2={reflectedA[1]} stroke="#7c3aed" strokeWidth="3" strokeDasharray="8 6" />
+    <line x1={reflectedA[0]} y1={reflectedA[1]} x2={pb[0]} y2={pb[1]} stroke="#e11d48" strokeWidth="4" />
+    <DiagramPoint at={pa} label={`A(${a.x},${a.y})`} dx={-42} dy={-10} tone="accent" />
+    <DiagramPoint at={reflectedA} label={`A′(${a.x},${-a.y})`} dx={-48} dy={18} tone="proof" />
+    <DiagramPoint at={pb} label={`B(${b.x},${b.y})`} dx={42} dy={-10} tone="primary" />
+    <DiagramLabel at={[410, 180]} text="与x轴交点为P" tone="proof" size={15} />
+  </CoordinateAxes>
+}
+
+function ScaleneTriangleHeight() {
+  return <g><polygon points="95,250 515,250 312,72" fill="#eff6ff" stroke="#2563eb" strokeWidth="3.5" /><line x1="312" y1="72" x2="312" y2="250" stroke="#e11d48" strokeWidth="4" strokeDasharray="9 7" /><path d="M312 232 h18 v18" fill="none" stroke="#e11d48" strokeWidth="3" /><DiagramPoint at={[312,72]} label="A" /><DiagramPoint at={[95,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[515,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[312,250]} label="H" dy={22} tone="accent" /><DiagramLabel at={[200,145]} text="13" tone="primary" /><DiagramLabel at={[418,145]} text="14" tone="primary" /><DiagramLabel at={[305,275]} text="BC=15" tone="accent" /><DiagramLabel at={[352,185]} text="高AH" tone="proof" size={15} /></g>
 }
 
 function GenericGeometry() { return <g><polygon points="300,40 95,250 505,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="3.5" /><line x1="300" y1="40" x2="300" y2="250" stroke="#7c3aed" strokeWidth="4" strokeDasharray="9 7" /><DiagramPoint at={[300,40]} label="A" /><DiagramPoint at={[95,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[505,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramLabel at={[300,285]} text="逐项把题干条件标到图上" tone="proof" size={16} /></g> }
