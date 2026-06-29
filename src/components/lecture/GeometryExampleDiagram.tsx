@@ -356,13 +356,28 @@ function extractDegreeValues(problem: string): string[] {
   return [...plain, ...katex]
 }
 
+function angleNumber(value: string | undefined) {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
+function reflexDegreeValue(values: string[]) {
+  return values.find(value => {
+    const angle = angleNumber(value)
+    return angle !== undefined && angle > 180 && angle < 360
+  })
+}
+
+function hasAngleWording(problem: string) {
+  return /∠|角/.test(problem)
+}
+
 function numberText(value: number | undefined, fallback = '?') {
   return Number.isFinite(value) ? `${Number(value?.toFixed(2))}` : fallback
 }
 
 function firstNumber(values: string[]) {
-  const value = Number(values[0])
-  return Number.isFinite(value) ? value : undefined
+  return angleNumber(values[0])
 }
 
 function isSameSideInteriorProblem(problem: string) {
@@ -378,14 +393,20 @@ function isCoordinateTriangleProblem(problem: string) {
 }
 
 function supportingSceneFor(lectureId: number, problem: string, context: 'example' | 'exercise' | 'oral' | 'answer'): Scene | null {
+  const degreeValues = extractDegreeValues(problem)
+  const reflexAngle = reflexDegreeValue(degreeValues)
+  const reflexNeedsVisual = Boolean(reflexAngle && hasAngleWording(problem))
   const explicitlyReferencesFigure = problem.includes('如图') || problem.includes('下图')
   const oralNeedsVisual = context === 'oral' && /(画图|图像|拼图|统计图|知识地图)/.test(problem)
   const answerNeedsVisual = context === 'answer' && /(画|作图|描点|补全|图像|数轴|统计图|直方图|箱线图|扇形图|折线图|条形图|坐标系中表示)/.test(problem)
   const exampleNeedsVisual = context === 'example' && /(画|作图|描点|补全|图像|数轴|统计图|直方图|箱线图|扇形图|折线图|条形图)/.test(problem)
-  if (!explicitlyReferencesFigure && !oralNeedsVisual && !answerNeedsVisual && !exampleNeedsVisual) return null
+  if (!explicitlyReferencesFigure && !oralNeedsVisual && !answerNeedsVisual && !exampleNeedsVisual && !reflexNeedsVisual) return null
 
-  const degreeValues = extractDegreeValues(problem)
   const firstAngle = degreeValues[0] ? `${degreeValues[0]}°` : '已知角'
+  if (reflexAngle && reflexNeedsVisual) {
+    const angle = angleNumber(reflexAngle)
+    return reflexAngleScene(`${numberText(angle, reflexAngle)}°`, angle)
+  }
 
   if (lectureId === 1) {
     if (/一次函数|函数图像|y=/.test(problem)) return functionAnswerScene(problem)
@@ -544,6 +565,31 @@ function intersectingScene(angle: string, problem: string): Scene {
       : problem.includes('∠BOC') ? [395, 175]
         : [300, 95]
   return { title: '相交线中的对顶角与邻补角', description: '两条不同颜色的直线交于O；角度标签放在题干指定的角上。', segments: [S([70, 245], [530, 65], 'primary', false, 5), S([75, 55], [525, 255], 'accent', false, 5)], points: [P([75, 55], 'A'), P([525, 255], 'B', 12, 18), P([530, 65], 'C'), P([70, 245], 'D', -12, 18), P([300, 155], 'O', 0, 23)], labels: [L(labelAt, angle, 'accent')] }
+}
+
+function reflexAngleScene(angle: string, rawAngle?: number): Scene {
+  return {
+    title: '大于180°的角',
+    description: '题干给出的是反角/优角，红色弧线绕外侧标出大于180°的范围，避免画成锐角或直角。',
+    extra: <ReflexAngleDiagram angle={angle} smallAngle={rawAngle === undefined ? undefined : 360 - rawAngle} />,
+  }
+}
+
+function ReflexAngleDiagram({ angle, smallAngle }: { angle: string; smallAngle?: number }) {
+  return (
+    <g>
+      <line x1="300" y1="160" x2="505" y2="160" stroke="#334155" strokeWidth="4" strokeLinecap="round" />
+      <line x1="300" y1="160" x2="300" y2="45" stroke="#334155" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 382 160 A 82 82 0 1 1 300 78" fill="none" stroke="#e11d48" strokeWidth="5" strokeLinecap="round" />
+      <path d="M 346 160 A 46 46 0 0 0 300 114" fill="none" stroke="#64748b" strokeWidth="3" strokeDasharray="6 5" />
+      <DiagramPoint at={[505, 160]} label="A" dx={14} dy={5} />
+      <DiagramPoint at={[300, 160]} label="B" dx={-14} dy={22} />
+      <DiagramPoint at={[300, 45]} label="C" dx={0} dy={-14} />
+      <DiagramLabel at={[205, 238]} text={angle} tone="accent" size={23} />
+      <DiagramLabel at={[382, 117]} text={`另一侧 ${numberText(smallAngle)}°`} tone="muted" size={14} />
+      <DiagramLabel at={[300, 292]} text="红弧表示绕外侧量得的大角" tone="proof" size={15} />
+    </g>
+  )
 }
 
 function angleBisectorScene(angle: string): Scene {

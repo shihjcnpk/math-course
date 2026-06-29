@@ -22,6 +22,11 @@ const checks = [
     detail: '∠AOD、∠AOC 等标签位置必须区分。',
   },
   {
+    name: '大于180度的角不用锐角模板',
+    ok: source.includes('reflexDegreeValue') && source.includes('reflexAngleScene') && source.includes('A 82 82 0 1 1'),
+    detail: '题干给出270°等反角/优角时，必须画外侧大弧，不能落入普通锐角角平分线模板。',
+  },
+  {
     name: '第1讲不再固定成坐标直角三角形',
     ok: !source.includes("if (lectureId === 1) return { title: '坐标—三角形—勾股知识链'"),
     detail: '第1讲自动图应按函数、坐标三角形、数轴等题型分发。',
