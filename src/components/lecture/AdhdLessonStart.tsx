@@ -1,13 +1,12 @@
-import type { KnowledgeNetwork, KnowledgeThreadDefinition, ResolvedLessonSupport } from '@/types'
+import type { KnowledgeThreadDefinition, ResolvedLessonSupport } from '@/types'
 import MathText from '@/components/shared/MathText'
 
 interface Props {
   support: ResolvedLessonSupport
   threads: KnowledgeThreadDefinition[]
-  network?: KnowledgeNetwork
 }
 
-export default function AdhdLessonStart({ support, threads, network }: Props) {
+export default function AdhdLessonStart({ support, threads }: Props) {
   return (
     <section className="mb-8 space-y-4" aria-labelledby="lesson-start-title">
       <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4">
@@ -25,8 +24,6 @@ export default function AdhdLessonStart({ support, threads, network }: Props) {
           <span>{support.textbook_chapters.join('；')}</span>
         </div>
         <dl className="mt-4 grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
-          <div><dt className="font-medium text-indigo-800">前置知识</dt><dd className="text-gray-700">{network?.fromWhere.slice(0, 2).map((item) => <span key={item} className="block"><MathText>{item}</MathText></span>) || '加载课程知识网络'}</dd></div>
-          <div><dt className="font-medium text-indigo-800">后续关联</dt><dd className="text-gray-700">{network?.toWhere.slice(0, 2).map((item) => <span key={item} className="block"><MathText>{item}</MathText></span>) || '加载课程知识网络'}</dd></div>
           <div><dt className="font-medium text-indigo-800">本节核心问题</dt><dd className="text-indigo-950"><MathText>{support.core_question}</MathText></dd></div>
           <div><dt className="font-medium text-indigo-800">容易混淆或误用</dt><dd className="text-gray-700"><MathText>{support.attention_anchor.common_trap}</MathText></dd></div>
         </dl>

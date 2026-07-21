@@ -76,7 +76,7 @@ const architectureChecks = [
   ['口头讲题图示入口', oralSource.includes('context="oral"')],
   ['概念定义图示入口', conceptSource.includes('GeometryExampleDiagram') && conceptSource.includes('c.formalDefinition')],
   ['错题卡同类再练图示入口', lecturePageSource.includes('diagramId="error-card-similar"')],
-  ['响应式SVG', componentSource.includes('viewBox="0 0 600 320"') && componentSource.includes('w-full')],
+  ['响应式SVG', /viewBox="0 0 (?:600 320|640 380)"/.test(componentSource) && componentSource.includes('w-full')],
   ['题图与答案图分离', componentSource.includes("context === 'answer' ? '答案图示' : '题意示意图'")],
 ]
 

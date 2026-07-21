@@ -4,6 +4,8 @@ import os from 'node:os'
 import path from 'node:path'
 
 const root = process.cwd()
+const localSite = 'http://127.0.0.1:5173/math-course/#'
+const lectureUrl = lectureId => `${localSite}/lectures/${lectureId}`
 const chromeCandidates = [
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
@@ -118,9 +120,10 @@ async function evaluate(client, expression) {
 }
 
 async function navigate(client, url) {
-  const loaded = client.once('Page.loadEventFired')
-  await client.send('Page.navigate', { url })
-  await loaded
+  const loaded = client.once('Page.loadEventFired', 3000).catch(() => null)
+  const navigation = await client.send('Page.navigate', { url })
+  if (navigation.loaderId) await loaded
+  await sleep(100)
   for (let attempt = 0; attempt < 80; attempt += 1) {
     const ready = await evaluate(client, `(() => {
       const text = document.body?.innerText ?? ''
@@ -184,11 +187,11 @@ try {
   await client.send('Log.enable')
   client.on('Runtime.exceptionThrown', event => pageErrors.push(event.exceptionDetails?.text ?? '未说明的脚本异常'))
   client.on('Log.entryAdded', event => {
-    if (event.entry.level === 'error') pageErrors.push(event.entry.text)
+    if (event.entry.level === 'error') pageErrors.push(`${event.entry.text}${event.entry.url ? ` (${event.entry.url})` : ''}`)
   })
 
   for (let lectureId = 1; lectureId <= 48; lectureId += 1) {
-    await navigate(client, `http://127.0.0.1:5173/lectures/${lectureId}`)
+    await navigate(client, lectureUrl(lectureId))
     const base = await evaluate(client, `(() => {
       const text = document.body.innerText
       const figures = [...document.querySelectorAll('figure[data-problem-diagram]')]
@@ -291,7 +294,7 @@ try {
     rows.push({ lectureId, ...base, ...finalState, prompt: lecturePromptCount, answer: lectureAnswerCount, variations: variationState.count, missingPrompt: lectureMissingPrompt, missingAnswer: lectureMissingAnswer, missingVariation: variationState.missingPrompt + variationState.missingAnswer })
   }
 
-  await navigate(client, 'http://127.0.0.1:5173/lectures/33')
+  await navigate(client, lectureUrl(33))
   const motionResult = await evaluate(client, `(async () => {
     const button = [...document.querySelectorAll('button')].find(item => (item.textContent ?? '').includes('演示'))
     if (!button) return { button: false, starts: false, stops: false }
@@ -306,7 +309,7 @@ try {
   const mobileRows = []
   await client.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true })
   for (const lectureId of [24, 33, 36, 44]) {
-    await navigate(client, `http://127.0.0.1:5173/lectures/${lectureId}`)
+    await navigate(client, lectureUrl(lectureId))
     const mobile = await evaluate(client, `(() => {
       const figures = [...document.querySelectorAll('figure[data-problem-diagram]')]
       return {
@@ -329,7 +332,7 @@ try {
   }
 
   await client.send('Emulation.clearDeviceMetricsOverride')
-  await navigate(client, 'http://127.0.0.1:5173/lectures/24')
+  await navigate(client, lectureUrl(24))
   await captureElement(client, 'figure[data-problem-diagram]', 'lecture-24-desktop.png')
 
   const failedRows = rows.filter(row => row.blank || row.loadError || row.replacementCharacter || row.formalQuantifiers || row.invalidFigures || row.duplicateSvgIds || row.missingPrompt || row.missingAnswer || row.missingVariation)

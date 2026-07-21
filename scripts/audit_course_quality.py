@@ -187,7 +187,7 @@ def main_audit() -> tuple[str, bool]:
     )
     shared_network_position_ok = all(
         marker in start_source
-        for marker in ("所属知识主线", "前置知识", "后续关联", "容易混淆或误用", "本节只解决一个关键问题")
+        for marker in ("所属知识主线", "本节核心问题", "容易混淆或误用", "本节只解决一个关键问题")
     )
     shared_question_network_ok = all(
         marker in question_network_source

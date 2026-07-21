@@ -136,7 +136,7 @@ export default function LecturePage() {
         ))}
       </div>
 
-      {lessonSupport && <AdhdLessonStart support={lessonSupport} threads={knowledgeThreads} network={content?.knowledgeNetwork} />}
+      {lessonSupport && <AdhdLessonStart support={lessonSupport} threads={knowledgeThreads} />}
 
       <section className="mb-8 p-4 bg-white rounded-lg border border-gray-200">
         <h2 className="font-semibold text-gray-800 mb-3">讲次链路</h2>
