@@ -202,30 +202,30 @@ const lecture21: Lecture = {
       ],
       example: {
         problem:
-          '如图，AB ∥ CD，EF截AB于E、CD于F，$\\angle AEF = 50^\\circ$。求$\\angle EFD$的度数。',
+          '如图，AB ∥ CD，EF截AB于E、CD于F，$\\angle AEF = 62^\\circ$。求$\\angle EFD$的度数。',
         stepByStepAnalysis: [
           '观察∠AEF和∠EFD的位置：EF是截线，两个角在AB和CD之间，在EF的两侧 → 它们是内错角',
           '已知AB ∥ CD，根据性质定理：两直线平行，内错角相等',
-          '所以∠EFD = ∠AEF = 50°',
+          '所以∠EFD = ∠AEF = 62°',
         ],
         answer:
-          '∠EFD = 50°。\n理由：∵ AB ∥ CD\n∴ ∠EFD = ∠AEF = 50°（两直线平行，内错角相等）',
+          '∠EFD = 62°。\n理由：∵ AB ∥ CD\n∴ ∠EFD = ∠AEF = 62°（两直线平行，内错角相等）',
         commonMistake: '如果∠AEF和∠EFD是一对同位角而非内错角，或者把同旁内角也当成相等来处理——必须先准确识别角的类型',
       },
       variations: [
         {
           problem:
-            '如图，a ∥ b，直线c截a和b，$\\angle 1 = 70^\\circ$。求$\\angle 2$的度数。（∠1和∠2是同位角）',
-          hint: '同位角相等：∠2 = ∠1 = 70°',
+            '如图，a ∥ b，直线c截a和b，$\\angle 1 = 80^\\circ$。求$\\angle 2$的度数。（∠1和∠2是同位角）',
+          hint: '同位角相等：∠2 = ∠1 = 80°',
           answer:
-            '∠2 = 70°。\n理由：∵ a ∥ b\n∴ ∠2 = ∠1 = 70°（两直线平行，同位角相等）',
+            '∠2 = 80°。\n理由：∵ a ∥ b\n∴ ∠2 = ∠1 = 80°（两直线平行，同位角相等）',
         },
         {
           problem:
-            '如图，l₁ ∥ l₂，$\\angle \\alpha = 55^\\circ$。求$\\angle \\beta$的度数。（∠α和∠β是同旁内角）',
-          hint: '同旁内角互补：∠β = 180° - 55° = 125°',
+            '如图，l₁ ∥ l₂，$\\angle \\alpha = 65^\\circ$。求$\\angle \\beta$的度数。（∠α和∠β是同旁内角）',
+          hint: '同旁内角互补：∠β = 180° - 65° = 115°',
           answer:
-            '∠β = 125°。\n理由：∵ l₁ ∥ l₂，∠α和∠β是同旁内角\n∴ ∠α + ∠β = 180°\n∴ ∠β = 180° - 55° = 125°',
+            '∠β = 115°。\n理由：∵ l₁ ∥ l₂，∠α和∠β是同旁内角\n∴ ∠α + ∠β = 180°\n∴ ∠β = 180° - 65° = 115°',
         },
       ],
       summary:
@@ -490,10 +490,10 @@ const lecture21: Lecture = {
       {
         id: 'ex-21-inter-2',
         question:
-          '如图，AD ∥ BC，$\\angle B = 70^\\circ$，$\\angle C = 110^\\circ$。问AD和BC是否平行？请证明。',
+          '如图，直线AD、BC被直线AB所截，$\\angle DAB = 70^\\circ$，$\\angle ABC = 110^\\circ$。问AD和BC是否平行？请证明。',
         answer:
-          '∠B和∠C不是直接与AD、BC相关的角，需要找关系。\n\n观察图形：∠B和∠C与哪条截线有关——如果它们和AD、BC构成同旁内角关系：\n\n∠B + ∠C = 70° + 110° = 180°\n若∠B和∠C是AD和BC被某直线所截形成的同旁内角\n则AD ∥ BC（同旁内角互补，两直线平行）',
-        hint: '∠B + ∠C = 180°，如果它们是同旁内角，就可以用判定定理。',
+          '∠DAB和∠ABC是直线AD、BC被截线AB所截形成的同旁内角。\n∵∠DAB+∠ABC=70°+110°=180°\n∴AD∥BC（同旁内角互补，两直线平行）。',
+        hint: '先明确截线是AB，再识别同旁内角。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['parallel-lines-proof'],
       },
@@ -540,10 +540,10 @@ const lecture21: Lecture = {
       {
         id: 'ex-21-challenge-2',
         question:
-          '如图，已知$\\angle A + \\angle B + \\angle C = 360^\\circ$。求证：图中必有两组平行线。',
+          '如图，直线a、b被直线c所截，∠1与∠2是同旁内角，且∠1=65°，∠2=115°。求证：a∥b。',
         answer:
-          '这是一个探究性问题，思路如下：\n\n如果三个角之和为360°，且它们分布在两个"拐点"之间，当回折两次后总旋转量为360°时，起始方向和最终方向相同，所以起始边平行于终止边。\n\n具体证明需要借助"过拐点作平行线"的辅助线方法：\n过每个拐点作已知方向的平行线，利用平行线的角关系逐段推导。',
-        hint: '思考拐角（折线）问题中角度的累积效应——当光线经过两次反射后方向不变时，入射光线平行于出射光线。这和"平行线的传递性"有关。',
+          '证明：∵∠1=65°，∠2=115°，\n∴∠1+∠2=180°。\n又∠1与∠2是直线a、b被直线c所截形成的同旁内角，\n∴a∥b（同旁内角互补，两直线平行）。',
+        hint: '把角度相加，再使用平行线判定定理。',
         difficulty: 'challenge',
         flaggedConceptIds: [
           'parallel-lines-proof',
@@ -605,13 +605,13 @@ const lecture21: Lecture = {
       {
         id: 'ex-21-transfer-3',
         question:
-          '（关联全等三角形证明）\n如图，已知AB ∥ DE，BC ∥ EF，∠A = ∠D。\n如果要证明△ABC ≅ △DEF，需要用到哪些平行线的性质来提供角相等的条件？',
+          '（关联全等三角形证明）\n如图，已知AB ∥ DE，BC ∥ EF，∠A = ∠D，且AB=DE。证明△ABC ≅ △DEF。',
         answer:
           '分析：\n' +
           '- AB ∥ DE → ∠B = ∠E（两直线平行，同位角或内错角相等——取决于截线是谁）\n' +
           '- BC ∥ EF → ∠C = ∠F（同理）\n' +
           '- 已知∠A = ∠D\n' +
-          '- 有了两对角相等（∠A=∠D, ∠B=∠E），可用ASA或AAS判定全等。\n\n' +
+          '- 又有AB=DE，且AB、DE分别是上述两组角的夹边。\n- 因此△ABC≅△DEF（ASA）。\n\n' +
           '这也说明了为什么Lecture 21是Lecture 24-25（全等三角形）的前置——平行线提供的角相等关系是全等判定的重要条件来源。',
         hint: '平行线性质在全等三角形证明中的角色是"提供角相等条件"——很多全等证明的第一步就是从平行推角等。',
         difficulty: 'transfer',

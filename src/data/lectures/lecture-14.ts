@@ -79,12 +79,12 @@ const lecture14: Lecture = {
       everydayAnalogy:
         '假设你和朋友一起买东西：你知道买了苹果和橘子一共花了15元，还知道苹果比橘子贵3元。这里有两个"不知道"——苹果单价和橘子单价，但你有两个"知道"——总价关系和差价关系。每一个"知道"就是一个方程，两个方程放在一起就是方程组。',
       formalDefinition:
-        '含有两个未知数，并且含有未知数的项的次数都是1的整式方程，叫做**二元一次方程**。一般形式：$ax+by=c$（$a,b,c$ 为常数，$a \\neq 0$ 且 $b \\neq 0$）。\n\n' +
+        '含有两个未知数，并且含有未知数的项的次数都是1的整式方程，叫做**二元一次方程**。一般形式：$ax+by=c$（$a,b,c$ 为常数，且 $a,b$ 不同时为0）。\n\n' +
         '两个二元一次方程合在一起，用大括号连接，就组成了**二元一次方程组**：\n' +
         '$$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$$\n' +
         '注意：大括号里的 $x$ 和 $y$ 在第一个方程和第二个方程中代表的是同一个数——两个方程说的是同一组 $x$ 和 $y$ 必须同时满足的两个条件。',
       formula:
-        '\\text{二元一次方程的一般形式：} ax + by = c \\quad (a \\neq 0,\\ b \\neq 0)',
+        '\\text{二元一次方程的一般形式：} ax + by = c \\quad (a,b\\text{不同时为}0)',
       associationReminders: [
         '关联提醒：二元一次方程和一元一次方程的区别只有一点——多了一个未知数。正因如此，一个方程无法唯一确定两个未知数的值（比如 $x+y=10$，有无数组解），必须再给一个方程来"约束"。',
         '联系型提醒：方程组用的大括号 `{` 在数学中总是表示"同时满足"——这和不等式组、函数的分段定义用的是同一个逻辑。',
@@ -375,7 +375,7 @@ const lecture14: Lecture = {
           problem:
             '方程组 $\\begin{cases} 2x + ky = 10 \\\\ kx + 3y = 13 \\end{cases}$ 的解中 $x$ 与 $y$ 互为相反数，求 $k$ 的值。',
           hint: '"$x$与$y$互为相反数"意味着 $y=-x$。把 $y=-x$ 代入两个方程，得到只含 $x$ 和 $k$ 的方程，再消元。',
-          answer: 'k = 4',
+          answer: '$k=\\dfrac{56}{23}$',
         },
       ],
       summary: '含参方程组的关键是"代入已知，求未知"——已知的解是用来替换变量、暴露参数之间关系的工具。',
@@ -429,7 +429,7 @@ const lecture14: Lecture = {
           problem:
             '$$\\begin{cases} \\dfrac{x}{2} + \\dfrac{y}{3} = 2 \\\\ 0.2x + 0.3y = 2.8 \\end{cases}$$',
           hint: '第一个方程去分母（两边同乘6），第二个方程把小数的系数化为整数（两边同乘10），然后再消元。',
-          answer: '\\begin{cases} x = 8 \\\\ y = -6 \\end{cases}',
+          answer: '\\begin{cases} x = -4 \\\\ y = 12 \\end{cases}',
         },
       ],
       summary: '化简是消元前的"准备工作"——不先化简就看不清系数关系，选不对方法。每一个方程独立化简，化简到标准形式再一起判断。',
@@ -555,7 +555,7 @@ const lecture14: Lecture = {
         question:
           '解方程组：\n' +
           '$$\\begin{cases} \\dfrac{x}{2} + \\dfrac{y}{3} = 3 \\\\ \\dfrac{x}{3} - \\dfrac{y}{4} = 1 \\end{cases}$$',
-        answer: '\\begin{cases} x = 6 \\\\ y = 0 \\end{cases}',
+        answer: '\\begin{cases} x = \\dfrac{78}{17} \\\\ y = \\dfrac{36}{17} \\end{cases}',
         hint: '含分母——先去分母！两边同乘最小公倍数，把每个方程先化为标准形式。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-systems', 'linear-equation'],
@@ -565,7 +565,7 @@ const lecture14: Lecture = {
         question:
           '解方程组：\n' +
           '$$\\begin{cases} 2(x + y) - 3(x - y) = 1 \\\\ 3(x + y) + 2(x - y) = 21 \\end{cases}$$',
-        answer: '\\begin{cases} x = 3 \\\\ y = 2 \\end{cases}',
+        answer: '\\begin{cases} x = 4 \\\\ y = 1 \\end{cases}',
         hint: '含括号——先去括号再整理。注意：$-3(x-y)$ 展开时 $-3 \\times (-y) = +3y$。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-systems', 'bracket-removal'],
@@ -586,7 +586,7 @@ const lecture14: Lecture = {
         question:
           '解方程组：\n' +
           '$$\\begin{cases} \\dfrac{1}{x} + \\dfrac{2}{y} = 1 \\\\ \\dfrac{2}{x} - \\dfrac{1}{y} = \\dfrac{1}{2} \\end{cases}$$（提示：设 $u = \\dfrac{1}{x}$，$v = \\dfrac{1}{y}$）',
-        answer: '\\begin{cases} x = \\frac{5}{2} \\\\ y = 5 \\end{cases}',
+        answer: '\\begin{cases} x = \\frac{5}{2} \\\\ y = \\frac{10}{3} \\end{cases}',
         hint: '令 $u = \\frac{1}{x}$，$v = \\frac{1}{y}$，则方程组变为关于 $u$ 和 $v$ 的二元一次方程组 $\\begin{cases} u + 2v = 1 \\\\ 2u - v = \\frac{1}{2} \\end{cases}$。解出 $u$、$v$ 后再还原。注意：$x \\neq 0$，$y \\neq 0$。',
         difficulty: 'challenge',
         flaggedConceptIds: ['linear-systems'],
@@ -602,7 +602,7 @@ const lecture14: Lecture = {
         id: 'ex-14-cha-2',
         question:
           '关于 $x$、$y$ 的方程组 $\\begin{cases} 3x - y = 5 \\\\ 4ax + 5by = -22 \\end{cases}$ 与 $\\begin{cases} 2x + 3y = -4 \\\\ ax - by = 8 \\end{cases}$ 有相同的解，求 $a$ 和 $b$ 的值。',
-        answer: '\\begin{cases} a = 2 \\\\ b = -3 \\end{cases}',
+        answer: '\\begin{cases} a = 2 \\\\ b = 3 \\end{cases}',
         hint: '"有相同的解"意味着存在一组 $(x,y)$ 同时满足所有四个方程。先从前两个方程组中不含参数的两个方程（$3x-y=5$ 和 $2x+3y=-4$）解出公共的 $x$ 和 $y$，再代入含参数的方程求 $a$ 和 $b$。',
         difficulty: 'challenge',
         flaggedConceptIds: ['linear-systems'],
@@ -626,7 +626,7 @@ const lecture14: Lecture = {
         answer:
           '(1) 交点坐标为 $(2, 5)$。\n' +
           '(2) 交点坐标恰好是方程组的解——代数中的"解方程组"在几何中就是"求两条直线的交点"。每一个二元一次方程组的解 $(x,y)$ 都对应坐标系中两条直线的交点。\n' +
-          '(3) $b = 3$。',
+          '(3) $b = 1$。',
         hint: '(1) 联立两个解析式就是二元一次方程组，用代入消元（第一个已经是 $y=$ 的形式了！）直接解。(2) 反过来想：方程组的解是什么？交点的坐标是什么？它们是一回事。(3) 把 $x=2$ 分别代入两个解析式，此时 $y$ 应该相等。',
         difficulty: 'transfer',
         flaggedConceptIds: ['linear-systems', 'function-equation-connection'],
@@ -641,26 +641,15 @@ const lecture14: Lecture = {
       {
         id: 'ex-14-trans-2',
         question:
-          '**（联系实际选择）** 两种手机套餐：\n' +
-          'A套餐：月租20元，每分钟通话0.1元 → 月费 $y_A = 20 + 0.1x$\n' +
-          'B套餐：月租0元，每分钟通话0.3元 → 月费 $y_B = 0.3x$\n\n' +
-          '(1) 列方程组求出两种套餐费用相等时的通话分钟数 $x$ 和对应的费用 $y$。\n' +
-          '(2) 通话多少分钟时选A更合算？多少分钟时选B更合算？\n' +
-          '(3) 这个"分界点"在图像上对应什么？在方程组中又对应什么？',
+          '**（联系实际·分配问题）** 用铁皮做罐头盒，每张可做盒身16个或盒底43个，一个盒身配两个盒底。现有铁皮150张，用多少张做盒身、多少张做盒底才能刚好配套？',
         answer:
-          '(1) 解 $\\begin{cases} y = 20 + 0.1x \\\\ y = 0.3x \\end{cases}$，\n' +
-          '代入：$20 + 0.1x = 0.3x$，$20 = 0.2x$，$x = 100$，$y = 30$。\n' +
-          '通话100分钟时，两种套餐费用都是30元。\n\n' +
-          '(2) 当 $x < 100$ 时 $y_B < y_A$，选B合算；当 $x > 100$ 时 $y_A < y_B$，选A合算。\n\n' +
-          '(3) 分界点 $(100, 30)$ 在图像上是两条直线的交点，在方程组中就是方程组的解。方程组的解在方案选择问题中有明确的实际含义——它是"两种方案成本相同"的临界点。',
-        hint: '(1) 两个解析式联立直接求解。(2) 画草图或比较解析式。(3) 回想第18讲要学的内容——方程组的解和交点是同一事物的两种描述。',
+          '设盒身 $x$ 张，盒底 $y$ 张。由总数 $x + y = 150$。由配套：1个盒身配2个盒底，盒底数 = 2 × 盒身数 = 2 × 16x = 32x，即 $43y = 32x$。解方程组 $\\begin{cases} x + y = 150 \\\\ 43y = 32x \\end{cases}$：由① $y = 150 - x$，代入② $43(150-x) = 32x$，$6450 - 43x = 32x$，$75x = 6450$，$x = 86$，$y = 64$。用86张做盒身、64张做盒底。',
+        hint: '配套关系：盒底数是盒身数的2倍。先把“每张产量×张数=总产量”列清楚，再列方程组。',
         difficulty: 'transfer',
-        flaggedConceptIds: ['linear-systems', 'function-equation-connection', 'linear-systems-word-problems'],
+        flaggedConceptIds: ['linear-systems', 'linear-systems-word-problems'],
         knowledgeChain: [
-          '实际问题 → 两个一次函数模型',
-          '费用相等 → 联立方程组 → 消元求解',
-          '比较哪种方案更合算 → 解不等式 或 结合图像判断',
-          '临界点 → 方程组的解 = 两条直线的交点 = 决策分界线',
+          '实际问题 -> 两个未知数',
+          '配套关系 -> 第二个方程 -> 联立求解',
         ],
       },
     ],

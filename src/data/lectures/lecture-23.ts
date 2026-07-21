@@ -433,7 +433,7 @@ const lecture23: Lecture = {
       {
         id: 'ex-23-transfer-1',
         question: '（连接Lecture 24——全等三角形的基础）\n如图，在△ABC中，D是BC的中点，AD=BD。\n(1)△ABD是什么特殊三角形？\n(2)如果∠B=35°，求∠BAD、∠ADC和∠C。\n(3)你能判断AD和BC的位置关系吗？',
-        answer: '(1)D是BC中点→BD=DC。又AD=BD（已知）→AD=BD=DC。所以△ABD是等腰三角形（BD=AD），△ADC也是等腰三角形（AD=DC）。\n\n(2)△ABD中BD=AD→∠BAD=∠B=35°\n∠ADB=180°−35°−35°=110°\n∠ADC=180°−∠ADB=70°（邻补角）\n△ADC中AD=DC→∠C=∠DAC\n∠ADC=70°→∠C=∠DAC=(180°−70°)÷2=55°\n\n(3)∠ADB=110°≠90°→AD不垂直于BC。但如果AD=BD=DC（D是斜边中点），这正是直角三角形斜边中线的性质——但本题的△ABC不是直角三角形。',
+        answer: '(1)D是BC中点→BD=DC。又AD=BD（已知）→AD=BD=DC。所以△ABD是等腰三角形（BD=AD），△ADC也是等腰三角形（AD=DC）。\n\n(2)△ABD中BD=AD→∠BAD=∠B=35°\n∠ADB=180°−35°−35°=110°\n∠ADC=180°−∠ADB=70°（邻补角）\n△ADC中AD=DC→∠C=∠DAC\n∠ADC=70°→∠C=∠DAC=(180°−70°)÷2=55°\n\n(3)∠ADB=110°≠90°，所以AD不垂直于BC。由∠A=35°+55°=90°可知△ABC是以A为直角顶点的直角三角形；D是斜边BC的中点，且AD=BD=CD。',
         hint: '这是一个"中点+等线段"的组合——AD=BD=DC。虽然不涉及全等证明，但BD=DC是中点条件，AD=BD是等腰条件——这种条件组合在全等证明中很常见。',
         difficulty: 'transfer',
         flaggedConceptIds: ['triangle-basics', 'congruent-triangles'],

@@ -172,7 +172,7 @@ function sceneFor(key: string): Scene | null {
       points: [P([250, 70], 'E', -14, -12), P([250, 245], 'F', -14, 22), P([390, 205], 'G', 15, 4)], rightAngles: [{ at: [250, 70], x: 1, y: 1, tone: 'accent' }, { at: [250, 245], x: 1, y: -1, tone: 'accent' }], labels: [L([90, 55], 'A'), L([510, 55], 'B'), L([90, 268], 'C'), L([510, 268], 'D'), L([330, 120], '角平分线', 'proof', 15)],
     }
     case '21-1': return parallelLines('65°', false)
-    case '21-2': return parallelLines('50°', true)
+    case '21-2': return parallelLines('62°', true)
     case '21-3': return {
       title: '由平行传角，再判定平行', description: 'AB∥CD提供一组角关系；红色等角用于继续判定BE∥CF。',
       segments: [S([70, 65], [530, 65], 'primary'), S([70, 245], [530, 245], 'primary'), S([170, 65], [330, 245], 'accent'), S([310, 65], [470, 245], 'proof')],
@@ -278,8 +278,8 @@ function sceneFor(key: string): Scene | null {
       points: [P([105, 65], 'A', -13, -10), P([505, 245], 'B', 13, 20), P([105, 245], 'C', -13, 20)], rightAngles: [{ at: [105, 245], x: 1, y: -1, tone: 'accent' }], labels: [L([78, 155], '6', 'primary'), L([300, 270], '8', 'accent'), L([325, 135], 'AB = ?', 'proof', 17)],
     }
     case '29-2': return {
-      title: '勾股逆定理', description: '把最长边15放在对面，比较9²+12²与15²。',
-      segments: [S([100, 245], [100, 75], 'primary', false, 6), S([100, 245], [505, 245], 'accent', false, 6), S([100, 75], [505, 245], 'proof', false, 6)], rightAngles: [{ at: [100, 245], x: 1, y: -1, tone: 'muted' }], labels: [L([72, 160], '9', 'primary'), L([300, 270], '12', 'accent'), L([330, 130], '15', 'proof')],
+      title: '勾股逆定理', description: '先把最长边15放在对面，比较9²+12²与15²；直角是计算后得到的结论。',
+      segments: [S([100, 245], [100, 75], 'primary', false, 6), S([100, 245], [505, 245], 'accent', false, 6), S([100, 75], [505, 245], 'proof', false, 6)], labels: [L([72, 160], '9', 'primary'), L([300, 270], '12', 'accent'), L([330, 130], '15', 'proof')],
     }
     case '29-3': return { title: '网格中的勾股定理', description: '蓝色、橙色直角边分别跨3格、4格；紫色AC是斜边。', extra: <GridTriangle /> }
     case '29-4': return { title: '梯子滑动模型', description: '同一根梯子长度不变；实线为原位置，虚线为梯脚外移2米后的位置。', motionPath: 'M 365 275 L 455 275', motionLabel: '演示梯脚外移', extra: <Ladder /> }
@@ -308,7 +308,7 @@ function sceneFor(key: string): Scene | null {
     case '32-3': return { title: '坐标三角形的割补法', description: '先用虚线包围成矩形，再减去周围三个直角三角形。', extra: <CoordinateLessonPlot variant="area" /> }
     case '33-1': return { title: '函数的“输入—唯一输出”', description: '每个输入x只能沿一条箭头到达一个输出y；同一个x连向两个y就不是函数。', extra: <FunctionMapping /> }
     case '33-2': return { title: '自变量取值范围', description: '分母不能为0、偶次根号内不能为负；数轴上排除不允许的点或区间。', extra: <DomainRestrictions /> }
-    case '33-3': return { title: '列表描点画y=x²', description: '先列表得到成对坐标，再描点并用平滑曲线连接；图像关于y轴对称。', motionPath: 'M 120 20 Q 300 300 480 20', motionLabel: '演示点随x变化', extra: <FunctionPlot variant="parabola" /> }
+    case '33-3': return { title: '路程随时间变化', description: '以时间为横轴、路程为纵轴，描出(0,0)和(2,120)，并用线段表示两小时内的匀速运动。', motionPath: 'M 120 260 L 480 50', motionLabel: '演示路程随时间增加', extra: <LinearPlotFromProblem problem="y=60x" /> }
     case '34-1': return { title: '两点法画一次函数', description: '取两个容易计算的点，描点后用直线连接并向两端延长。', motionPath: 'M 120 20 L 480 300', motionLabel: '演示点沿直线变化', extra: <FunctionPlot variant="decreasing" /> }
     case '34-2': return { title: '由图像经过的象限判断k、b', description: '直线从左上向右下降说明k<0，与y轴交在负半轴说明b<0。', extra: <FunctionPlot variant="negative-intercept" /> }
     case '34-3': return { title: '用图像比较函数值', description: 'k<0时直线从左上向右下；x越大，对应点越低，y越小。', extra: <FunctionPlot variant="compare" /> }
@@ -327,11 +327,7 @@ function sceneFor(key: string): Scene | null {
       segments: [S([120, 55], [480, 55], 'base'), S([480, 55], [480, 250], 'base'), S([480, 250], [120, 250], 'base'), S([120, 250], [120, 55], 'base'), S([120, 55], [480, 250], 'proof', true, 5), S([120, 55], [345, 205], 'accent', false, 5), S([345, 205], [480, 250], 'accent')],
       points: [P([120, 55], 'A', -13, -10), P([480, 55], 'B', 13, -10), P([480, 250], 'C', 13, 20), P([120, 250], 'D', -13, 20), P([345, 205], 'E', -15, 2), P([405, 250], 'F', 0, 22)], labels: [L([270, 117], '折痕 AC', 'proof', 15)],
     }
-    case '43-1': return {
-      title: '共线点中的SSS全等', description: 'B、E、C、F依次共线；相同颜色和刻痕表示对应边相等。',
-      segments: [S([55, 235], [545, 235], 'base'), S([80, 235], [175, 55], 'primary'), S([175, 55], [350, 235], 'accent'), S([255, 235], [420, 55], 'primary'), S([420, 55], [525, 235], 'accent')],
-      points: [P([80, 235], 'B', 0, 22), P([255, 235], 'E', 0, 22), P([350, 235], 'C', 0, 22), P([525, 235], 'F', 0, 22), P([175, 55], 'A'), P([420, 55], 'D')], ticks: [{ a: [80, 235], b: [175, 55], tone: 'primary' }, { a: [255, 235], b: [420, 55], tone: 'primary' }, { a: [175, 55], b: [350, 235], count: 2, tone: 'accent' }, { a: [420, 55], b: [525, 235], count: 2, tone: 'accent' }, { a: [80, 235], b: [255, 235], count: 3, tone: 'proof' }, { a: [350, 235], b: [525, 235], count: 3, tone: 'proof' }],
-    }
+    case '43-1': return sceneFor('43-2')
     case '43-2': return {
       title: '倍长中线构造', description: 'AD是中线；延长AD到E使DE=AD，连接BE，把不等式转为三角形三边关系。',
       segments: [S([295, 35], [80, 235], 'primary'), S([295, 35], [475, 235], 'primary'), S([80, 235], [475, 235], 'base'), S([295, 35], [300, 235], 'accent'), S([300, 235], [305, 300], 'accent', true), S([80, 235], [305, 300], 'proof')],
@@ -361,8 +357,20 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   const firstAngle = degreeValues[0] ? `${degreeValues[0]}°` : '已知角'
 
   if (lectureId === 1) return { title: '坐标—三角形—勾股知识链', description: '先从坐标读出两条互相垂直的边，再用勾股定理求斜边。', extra: <CoordinateRightTriangle /> }
-  if (lectureId === 3) return { title: '数轴上的a、b', description: 'b位于-2与-1之间，a位于0与1之间；先据位置判断符号和绝对值。', extra: <NumberLineAB /> }
+  if (lectureId === 2) {
+    if (/数轴/.test(problem)) return { title: '数轴标点', description: '红色点为题目要求标出的数；从左到右即从小到大。', extra: <NumberLinePlot problem={problem} /> }
+  }
+  if (lectureId === 3) {
+    if (/b\s*<\s*a\s*<\s*0\s*<\s*c/.test(problem)) return { title: '数轴上的a、b、c', description: '只按题干给出的相对位置示意：b在a左侧，a<0<c；点间距离不代表具体数值。', extra: <NumberLineBAC /> }
+    const hasNumbers = /-?\d/.test(problem)
+    if (hasNumbers && /数轴|标出|表示|画/.test(problem) && !/[a-cA-C]/.test(problem)) return { title: '数轴标点', description: '红色点为题目要求标出的数；从左到右即从小到大。', extra: <NumberLinePlot problem={problem} /> }
+    return { title: '数轴上的a、b', description: 'a位于-2与-1之间，b位于1与2之间；先据位置判断符号和绝对值。', extra: <NumberLineAB /> }
+  }
   if (lectureId === 8) return { title: '正方形割补与因式分解', description: '大正方形边长a，角上切去边长b的小正方形；剩余面积可用整体相减或分块相加表示。', extra: <SquareCutout /> }
+  if (lectureId === 10) {
+    if (/数轴/.test(problem) && /√5|\\sqrt\{5\}/.test(problem)) return { title: '数轴上表示√5', description: '√5≈2.236，在2与3之间；用单位正方形对角线可精确作图。', extra: <NumberLineSqrt5 /> }
+    if (/数轴/.test(problem)) return { title: '数轴标点', description: '红色点为题目要求标出的数。', extra: <NumberLinePlot problem={problem} /> }
+  }
   if (lectureId === 11) return rightTriangleScene('二次根式与勾股定理', '√2', '√6')
   if (lectureId === 18 || (lectureId >= 33 && lectureId <= 35) || lectureId === 45) return functionAnswerScene(problem)
   if (lectureId >= 36 && lectureId <= 38) return statisticsAnswerScene(problem)
@@ -454,6 +462,7 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
     : quadrilateralConditionScene(problem)
 
   if (lectureId === 42) {
+    if (problem.includes('折叠') && problem.includes('C点') && problem.includes('A点')) return { title: '把C折到A', description: '折痕EF是线段AC的垂直平分线，因此折痕上的E、F到A、C距离分别相等。', extra: <FoldCToA /> }
     if (problem.includes('折叠')) return rectangleFold()
     if (problem.includes('∠BED')) return zigzagParallelScene(degreeValues)
     return parallelLines(firstAngle, true)
@@ -461,7 +470,8 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
 
   if (lectureId === 43) {
     if (problem.includes('DE⊥AB') && problem.includes('DF⊥AC')) return sceneFor('26-1')
-    if (problem.includes('AB//CD') && problem.includes('E是BC中点')) return sceneFor('25-4')
+    if (problem.includes('AB//CD') && problem.includes('E是BC中点')) return { title: '平行线与中点构造全等', description: 'AB∥CF，B、E、C共线，A、E、F共线；E是BC中点，比较△ABE与△FCE。', extra: <MidpointParallelExtension /> }
+    if ((problem.includes('AD为中线') || problem.includes('AD是BC边上的中线') || problem.includes('D是BC中点')) && problem.includes('延长AD')) return sceneFor('43-2')
     if (problem.includes('平行四边形ABCD')) return sceneFor('30-1')
     if (problem.includes('Rt△')) return triangleConditionScene(problem, degreeValues)
     if (problem.includes('四边形')) return quadrilateralConditionScene(problem)
@@ -469,7 +479,14 @@ function supportingSceneFor(lectureId: number, problem: string, context: 'exampl
   }
 
   if (lectureId === 44) return { title: '动点最短路径', description: '先把需要经过的折线路径用对称展开，再用两点之间线段最短。', extra: <TriangleShortestPath /> }
-  if (lectureId === 47) return { title: '垂足等距证明等腰三角形', description: 'D是BC中点，DE、DF分别垂直两腰且相等；从全等或角平分线判定入手。', extra: <EqualPerpendiculars /> }
+  if (lectureId === 47 && problem.includes('AB=AC') && problem.includes('AE=AF') && problem.includes('D是BC的中点')) return { title: '等腰三角形中的对称全等', description: 'AB=AC、AE=AF推出BE=CF；再结合BD=CD和两底角相等，用SAS证明△BDE≅△CDF。', extra: <EqualPerpendiculars /> }
+  if (lectureId === 16) {
+    if (/数轴/.test(problem)) return { title: '不等式解集在数轴上', description: '实心点表示含等号(取到)，空心圈表示不含等号(取不到)；射线方向即解集方向。', extra: <NumberLineInequality problem={problem} /> }
+  }
+  if (lectureId === 47) {
+    if (/数轴/.test(problem)) return { title: '不等式解集在数轴上', description: '实心点表示含等号(取到)，空心圈表示不含等号(取不到)；射线方向即解集方向。', extra: <NumberLineInequality problem={problem} /> }
+    return { title: '垂足等距证明等腰三角形', description: 'D是BC中点，DE、DF分别垂直两腰且相等；从全等或角平分线判定入手。', extra: <EqualPerpendiculars /> }
+  }
 
   if (context === 'oral' && lectureId === 23) return triangleParallelScene()
   if (context === 'oral' && lectureId === 24) return { title: 'SSA不能唯一确定三角形', description: '固定两边和一个非夹角时，第三个顶点可能有两个位置，得到两个不同三角形。', extra: <SsaAmbiguity /> }
@@ -725,7 +742,124 @@ function FunctionPlot({ variant = 'intersection' }: { variant?: 'parabola' | 'ab
 
 function CoordinateRightTriangle() { return <CoordinateAxes><polygon points="300,160 480,160 300,55" fill="#dbeafe" fillOpacity="0.7" stroke="#2563eb" strokeWidth="5" /><DiagramPoint at={[300, 160]} label="A(0,0)" dx={-40} dy={18} /><DiagramPoint at={[480, 160]} label="B(4,0)" dx={30} dy={18} /><DiagramPoint at={[300, 55]} label="C(0,3)" dx={36} dy={-10} /><DiagramLabel at={[390, 185]} text="4" tone="accent" /><DiagramLabel at={[275, 105]} text="3" tone="accent" /><DiagramLabel at={[400, 95]} text="BC=?" tone="proof" /></CoordinateAxes> }
 
-function NumberLineAB() { return <g><line x1="65" y1="160" x2="540" y2="160" stroke="#334155" strokeWidth="5" /><path d="M540 160 l-14 -8 v16z" fill="#334155" />{[-2,-1,0,1,2].map((n,i)=><g key={n}><line x1={140+i*85} y1="145" x2={140+i*85} y2="175" stroke="#334155" strokeWidth="3" /><DiagramLabel at={[140+i*85,190]} text={String(n)} size={15} /></g>)}<DiagramPoint at={[180,160]} label="b" dx={0} dy={-20} tone="accent" /><DiagramPoint at={[430,160]} label="a" dx={0} dy={-20} tone="primary" /><DiagramLabel at={[180,110]} text="-2<b<-1" tone="accent" /><DiagramLabel at={[430,110]} text="0<a<1" tone="primary" /></g> }
+function NumberLineAB() { return <g><line x1="65" y1="160" x2="540" y2="160" stroke="#334155" strokeWidth="5" /><path d="M540 160 l-14 -8 v16z" fill="#334155" />{[-2,-1,0,1,2].map((n,i)=><g key={n}><line x1={140+i*85} y1="145" x2={140+i*85} y2="175" stroke="#334155" strokeWidth="3" /><DiagramLabel at={[140+i*85,190]} text={String(n)} size={15} /></g>)}<DiagramPoint at={[180,160]} label="a" dx={0} dy={-20} tone="primary" /><DiagramPoint at={[430,160]} label="b" dx={0} dy={-20} tone="accent" /><DiagramLabel at={[180,110]} text="-2<a<-1" tone="primary" /><DiagramLabel at={[430,110]} text="1<b<2" tone="accent" /></g> }
+
+function NumberLineBAC() { return <g><line x1="65" y1="160" x2="540" y2="160" stroke="#334155" strokeWidth="5" /><path d="M540 160 l-14 -8 v16z" fill="#334155" /><line x1="300" y1="145" x2="300" y2="175" stroke="#334155" strokeWidth="3" /><DiagramLabel at={[300,193]} text="0" size={15} /><DiagramPoint at={[125,160]} label="b" dx={0} dy={-22} tone="accent" /><DiagramPoint at={[225,160]} label="a" dx={0} dy={-22} tone="primary" /><DiagramPoint at={[445,160]} label="c" dx={0} dy={-22} tone="proof" /><DiagramLabel at={[300,105]} text="b < a < 0 < c" tone="base" /><DiagramLabel at={[300,235]} text="仅表示相对位置，不表示具体数值" tone="muted" size={15} /></g> }
+
+function evalNumberExpr(expr: string): number | null {
+  let s = expr.trim().replace(/\\\s/g, '').replace(/\s/g, '')
+  if (s === '') return null
+  while (/\|[^|]+\|/.test(s)) {
+    s = s.replace(/\|([^|]+)\|/g, 'abs($1)')
+  }
+  if (!/^[\d.+\-*/()abs]+$/.test(s)) return null
+  try {
+    const val = Function('abs', `return (${s})`)(Math.abs)
+    return typeof val === 'number' && Number.isFinite(val) ? val : null
+  } catch { return null }
+}
+
+function NumberLinePlot({ problem }: { problem: string }) {
+  const normalized = problem.replace(/[−–]/g, '-')
+  const latexBlocks = [...normalized.matchAll(/\$([^$]+)\$/g)].map(m => m[1])
+  const nums: number[] = []
+  for (const block of latexBlocks) {
+    const items = block.replace(/\\,/g, ',').split(/[,，]/).map(s => s.trim()).filter(Boolean)
+    if (items.length > 1) {
+      for (const item of items) {
+        const v = evalNumberExpr(item)
+        if (v !== null) nums.push(v)
+      }
+    } else {
+      const ns = [...block.matchAll(/-?\d+(?:\.\d+)?/g)].map(m => Number(m[0]))
+      nums.push(...ns)
+    }
+  }
+  const allNums = nums.length > 0 ? nums : [...normalized.matchAll(/-?\d+(?:\.\d+)?/g)].map(m => Number(m[0])).filter((n: number) => Math.abs(n) <= 50)
+  const unique = Array.from(new Set(allNums)).filter((n: number) => Number.isFinite(n) && Math.abs(n) <= 100)
+  if (unique.length === 0) return <GenericGeometry />
+  const min = Math.min(...unique, 0)
+  const max = Math.max(...unique, 0)
+  const lo = Math.floor(min) - 1
+  const hi = Math.ceil(max) + 1
+  const range = hi - lo
+  const xStart = 80, xEnd = 540, y = 170
+  const toX = (n: number) => xStart + (n - lo) / range * (xEnd - xStart)
+  const step = range <= 12 ? 1 : range <= 30 ? 2 : 5
+  const ticks: number[] = []
+  for (let i = lo; i <= hi; i += step) ticks.push(i)
+  return (
+    <g>
+      <line x1={xStart - 15} y1={y} x2={xEnd + 20} y2={y} stroke="#334155" strokeWidth={5} />
+      <path d={`M${xEnd + 20} ${y} l-14 -8 v16z`} fill="#334155" />
+      {ticks.map(n => (
+        <g key={n}>
+          <line x1={toX(n)} y1={y - 15} x2={toX(n)} y2={y + 15} stroke="#334155" strokeWidth={3} />
+          <DiagramLabel at={[toX(n), y + 32]} text={String(n)} size={15} />
+        </g>
+      ))}
+      {unique.map((n, i) => (
+        <g key={`p-${i}`}>
+          <circle cx={toX(n)} cy={y} r={8} fill="#e11d48" stroke="#fff" strokeWidth={2} />
+          <DiagramLabel at={[toX(n), y - 28]} text={String(n)} tone="accent" size={15} />
+        </g>
+      ))}
+    </g>
+  )
+}
+
+function NumberLineInequality({ problem }: { problem: string }) {
+  const normalized = problem.replace(/[−–]/g, '-').replace(/≤/g, '<=').replace(/≥/g, '>=').replace(/\\leq/g, '<=').replace(/\\geq/g, '>=')
+  const xStart = 80, xEnd = 540, y = 170
+  const interval = /(-?\d+(?:\.\d+)?)\s*(<=|<)\s*x\s*(<=|<)\s*(-?\d+(?:\.\d+)?)/.exec(normalized)
+  let bounds: { lo: number; hi: number; loClosed: boolean; hiClosed: boolean; mode: 'interval' | 'left' | 'right' }
+  if (interval) {
+    bounds = { lo: Number(interval[1]), hi: Number(interval[4]), loClosed: interval[2] === '<=', hiClosed: interval[3] === '<=', mode: 'interval' }
+  } else {
+    const le = /x\s*(<=|<)\s*(-?\d+(?:\.\d+)?)/.exec(normalized)
+    const ge = /x\s*(>=|>)\s*(-?\d+(?:\.\d+)?)/.exec(normalized)
+    if (le) { const endpoint = Number(le[2]); bounds = { lo: endpoint, hi: endpoint, loClosed: le[1] === '<=', hiClosed: false, mode: 'left' } }
+    else if (ge) { const endpoint = Number(ge[2]); bounds = { lo: endpoint, hi: endpoint, loClosed: ge[1] === '>=', hiClosed: false, mode: 'right' } }
+    else return <NumberLinePlot problem={problem} />
+  }
+  const { lo, hi, loClosed, hiClosed, mode } = bounds
+  const axisLo = Math.floor(lo - 1)
+  const axisHi = Math.ceil((mode === 'interval' ? hi : lo) + 1)
+  const range = axisHi - axisLo
+  const toX = (n: number) => xStart + (n - axisLo) / range * (xEnd - xStart)
+  const step = range <= 12 ? 1 : 2
+  const ticks: number[] = []
+  for (let i = axisLo; i <= axisHi; i += step) ticks.push(i)
+  const endpoint = (at: number, closed: boolean) => closed
+    ? <circle cx={toX(at)} cy={y} r={8} fill="#e11d48" />
+    : <circle cx={toX(at)} cy={y} r={8} fill="#fff" stroke="#e11d48" strokeWidth={4} />
+  return (
+    <g>
+      <line x1={xStart - 15} y1={y} x2={xEnd + 20} y2={y} stroke="#334155" strokeWidth={5} />
+      <path d={`M${xEnd + 20} ${y} l-14 -8 v16z`} fill="#334155" />
+      {ticks.map(n => <g key={n}><line x1={toX(n)} y1={y - 15} x2={toX(n)} y2={y + 15} stroke="#334155" strokeWidth={3} /><DiagramLabel at={[toX(n), y + 32]} text={String(n)} size={15} /></g>)}
+      {mode === 'interval' && <line x1={toX(lo)} y1={y} x2={toX(hi)} y2={y} stroke="#e11d48" strokeWidth={7} />}
+      {mode === 'left' && <line x1={xStart - 10} y1={y} x2={toX(lo)} y2={y} stroke="#e11d48" strokeWidth={7} />}
+      {mode === 'right' && <line x1={toX(lo)} y1={y} x2={xEnd + 15} y2={y} stroke="#e11d48" strokeWidth={7} />}
+      {endpoint(lo, loClosed)}
+      {mode === 'interval' && endpoint(hi, hiClosed)}
+    </g>
+  )
+}
+
+function NumberLineSqrt5() {
+  const xStart = 80, xEnd = 540, y = 170
+  const toX = (n: number) => xStart + n / 3 * (xEnd - xStart)
+  return (
+    <g>
+      <line x1={xStart - 15} y1={y} x2={xEnd + 20} y2={y} stroke="#334155" strokeWidth={5} />
+      <path d={`M${xEnd + 20} ${y} l-14 -8 v16z`} fill="#334155" />
+      {[0, 1, 2, 3].map(n => <g key={n}><line x1={toX(n)} y1={y - 15} x2={toX(n)} y2={y + 15} stroke="#334155" strokeWidth={3} /><DiagramLabel at={[toX(n), y + 32]} text={String(n)} size={15} /></g>)}
+      <circle cx={toX(Math.sqrt(5))} cy={y} r={8} fill="#e11d48" stroke="#fff" strokeWidth={2} />
+      <DiagramLabel at={[toX(Math.sqrt(5)), y - 28]} text="√5" tone="accent" size={16} />
+    </g>
+  )
+}
 
 function SquareCutout() { return <g><rect x="135" y="35" width="300" height="250" fill="#dbeafe" stroke="#2563eb" strokeWidth="6" /><rect x="335" y="185" width="100" height="100" fill="#fff" stroke="#e11d48" strokeWidth="5" strokeDasharray="9 6" /><DiagramLabel at={[285,310]} text="a" tone="primary" /><DiagramLabel at={[455,235]} text="b" tone="accent" /><DiagramLabel at={[250,145]} text="剩余面积 = a²-b²" tone="proof" size={18} /></g> }
 
@@ -800,7 +934,11 @@ function NestedSquares() { return <g><rect x="115" y="35" width="360" height="25
 
 function TriangleShortestPath() { return <g><polygon points="130,55 130,260 500,260" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="130" y1="55" x2="420" y2="260" stroke="#e11d48" strokeWidth="5" /><line x1="420" y1="260" x2="70" y2="120" stroke="#7c3aed" strokeWidth="4" strokeDasharray="10 7" /><DiagramPoint at={[130,55]} label="A" /><DiagramPoint at={[130,260]} label="B" dx={-12} dy={20} /><DiagramPoint at={[500,260]} label="C" dx={12} dy={20} /><DiagramPoint at={[420,260]} label="P" dy={22} tone="accent" /><DiagramPoint at={[70,120]} label="D′" dx={-15} dy={0} tone="proof" /><DiagramLabel at={[270,185]} text="化折为直" tone="proof" /></g> }
 
-function EqualPerpendiculars() { return <g><polygon points="300,35 85,250 515,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="300" y1="250" x2="190" y2="145" stroke="#e11d48" strokeWidth="5" /><line x1="300" y1="250" x2="410" y2="145" stroke="#e11d48" strokeWidth="5" /><DiagramPoint at={[300,35]} label="A" /><DiagramPoint at={[85,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[515,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramPoint at={[190,145]} label="E" dx={-14} dy={0} /><DiagramPoint at={[410,145]} label="F" dx={14} dy={0} /><DiagramLabel at={[245,195]} text="DE" tone="accent" /><DiagramLabel at={[355,195]} text="DF" tone="accent" /></g> }
+function FoldCToA() { return <g><rect x="150" y="50" width="240" height="200" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="150" y1="250" x2="390" y2="50" stroke="#64748b" strokeWidth="3" strokeDasharray="8 7" /><line x1="150" y1="94" x2="390" y2="206" stroke="#e11d48" strokeWidth="6" /><path d="M365 65 Q300 125 175 230" fill="none" stroke="#7c3aed" strokeWidth="4" strokeDasharray="8 6" /><DiagramPoint at={[150,250]} label="A" dx={-14} dy={20} /><DiagramPoint at={[390,250]} label="B" dx={14} dy={20} /><DiagramPoint at={[390,50]} label="C" dx={14} dy={-8} /><DiagramPoint at={[150,50]} label="D" dx={-14} dy={-8} /><DiagramPoint at={[150,94]} label="E" dx={-15} dy={0} tone="accent" /><DiagramPoint at={[390,206]} label="F" dx={15} dy={0} tone="accent" /><DiagramLabel at={[270,165]} text="折痕 EF" tone="accent" /><DiagramLabel at={[320,95]} text="C→A" tone="proof" size={16} /></g> }
+
+function MidpointParallelExtension() { return <g><line x1="115" y1="70" x2="260" y2="70" stroke="#2563eb" strokeWidth="6" /><line x1="340" y1="240" x2="500" y2="240" stroke="#2563eb" strokeWidth="6" /><line x1="260" y1="70" x2="340" y2="240" stroke="#334155" strokeWidth="5" /><line x1="115" y1="70" x2="500" y2="240" stroke="#e11d48" strokeWidth="5" /><DiagramPoint at={[115,70]} label="A" /><DiagramPoint at={[260,70]} label="B" /><DiagramPoint at={[340,240]} label="C" dy={22} /><DiagramPoint at={[500,240]} label="F" dy={22} /><DiagramPoint at={[300,155]} label="E" dx={14} dy={0} tone="accent" /><DiagramLabel at={[185,54]} text="AB" tone="primary" size={15} /><DiagramLabel at={[420,224]} text="CF" tone="primary" size={15} /><DiagramLabel at={[470,55]} text="AB∥CF" tone="proof" size={16} /></g> }
+
+function EqualPerpendiculars() { return <g><polygon points="300,35 85,250 515,250" fill="#eff6ff" stroke="#2563eb" strokeWidth="5" /><line x1="300" y1="250" x2="190" y2="145" stroke="#e11d48" strokeWidth="5" /><line x1="300" y1="250" x2="410" y2="145" stroke="#e11d48" strokeWidth="5" /><DiagramPoint at={[300,35]} label="A" /><DiagramPoint at={[85,250]} label="B" dx={-12} dy={20} /><DiagramPoint at={[515,250]} label="C" dx={12} dy={20} /><DiagramPoint at={[300,250]} label="D" dy={22} /><DiagramPoint at={[190,145]} label="E" dx={-14} dy={0} /><DiagramPoint at={[410,145]} label="F" dx={14} dy={0} /><DiagramLabel at={[245,195]} text="DE" tone="accent" /><DiagramLabel at={[355,195]} text="DF" tone="accent" /><DiagramLabel at={[220,80]} text="AE=AF" tone="proof" size={15} /><DiagramLabel at={[300,282]} text="BD=CD" tone="primary" size={15} /></g> }
 
 function SsaAmbiguity() { return <g><line x1="90" y1="250" x2="520" y2="250" stroke="#2563eb" strokeWidth="6" /><line x1="90" y1="250" x2="420" y2="75" stroke="#e11d48" strokeWidth="5" /><line x1="90" y1="250" x2="420" y2="185" stroke="#7c3aed" strokeWidth="5" strokeDasharray="10 7" /><circle cx="420" cy="250" r="175" fill="none" stroke="#64748b" strokeWidth="3" strokeDasharray="7 7" /><DiagramPoint at={[90,250]} label="A" dy={22} /><DiagramPoint at={[420,75]} label="C₁" /><DiagramPoint at={[420,185]} label="C₂" dx={15} dy={0} /><DiagramLabel at={[315,45]} text="相同两边和非夹角" tone="accent" /><DiagramLabel at={[315,285]} text="可得到两个不同三角形" tone="proof" /></g> }
 

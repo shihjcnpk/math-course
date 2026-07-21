@@ -548,13 +548,9 @@ const lecture27: Lecture = {
       {
         id: 'ex-27-transfer-1',
         question:
-          '（预习Lecture 28：将军饮马）\n如图，在∠AOB的内部有一点P。在OA上找一点M，在OB上找一点N，使得PM+MN最小。\n提示：利用轴对称——反射法。',
+          '（预习Lecture 28：将军饮马）\n点P、Q在直线l的同侧。在l上找一点M，使PM+MQ最小。\n提示：利用轴对称——反射法。',
         answer:
-          '作法：\n' +
-          '作P关于OA的对称点P\'，作P\'关于OB的对称点P\'\'\n' +
-          '连接P\'\'与……\n' +
-          '（核心思想：两次反射——利用轴对称将折线转化为直线。PM+MN的最小值就是P\'到M再到N再到目标点的最短路径。通过两次对称，最终把三段折线变成一条直线段。）\n\n' +
-          '这个题是将军饮马问题的变式——在Lecture 28中会详细讲解。',
+          '作P关于直线l的对称点P′，连接P′Q，交l于M。因为PM=P′M，所以PM+MQ=P′M+MQ=P′Q。对l上其他点N，有PN+NQ=P′N+NQ≥P′Q，因此M使路径最短，最小值为P′Q。',
         hint: '轴对称=反射法的理论基础。关于直线的对称点→对应点连线被对称轴垂直平分。',
         difficulty: 'transfer',
         flaggedConceptIds: ['axis-symmetry', 'isosceles-triangle', 'shortest-path'],

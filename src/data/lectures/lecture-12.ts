@@ -450,7 +450,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-int-1',
         question: '解方程：$\\dfrac{3x+1}{2} - \\dfrac{2x-2}{3} = x - 1$\n（北京西城七上期末题型）',
-        answer: 'x = 11',
+        answer: 'x = 13',
         hint: '最简公分母是6。右边 $x-1$ 也要乘6变成 $6x-6$。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-equation'],
@@ -458,7 +458,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-int-2',
         question: '当 $k$ 取何值时，方程 $2(x - k) = 3x + 1$ 的解为 $x = -3$？',
-        answer: 'k = -1',
+        answer: 'k = 1',
         hint: '已知解求参数——把 $x=-3$ 代入方程，得到关于 $k$ 的一元一次方程，解出 $k$。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-equation', 'equation-concept'],
@@ -466,7 +466,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-int-3',
         question: '解方程：$\\dfrac{0.1x}{0.03} - \\dfrac{0.2 - 0.1x}{0.06} = 1$',
-        answer: '$x = \\dfrac{2}{9}$',
+        answer: '$x = \\dfrac{13}{15}$',
         hint: '先分子分母同乘100：$\\dfrac{10x}{3} - \\dfrac{20-10x}{6} = 1$。再通分去分母。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-equation'],
@@ -474,7 +474,7 @@ const lecture12: Lecture = {
       {
         id: 'ex-12-int-4',
         question: '关于 $x$ 的方程 $3x - 2m = 5x + m$ 的解与方程 $2(x - 3) = 4$ 的解相同，求 $m$ 的值。',
-        answer: 'm = -5',
+        answer: '$m = -\\dfrac{10}{3}$',
         hint: '先从第二个方程解出 $x$，这个 $x$ 也是第一个方程的解，代入第一个方程求 $m$。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-equation'],

@@ -401,17 +401,17 @@ const lecture25: Lecture = {
       },
       {
         id: 'ex-25-basic-3',
-        question: '如图，C是AB的中点，CD=CE，∠ACD=∠BCE。求证：AD=BE。',
+        question: '如图，AB=AC，AD=AE，∠BAC=∠DAE。求证：△ABD ≅ △ACE。',
         answer:
           '证明：\n' +
-          '∵ C是AB的中点（已知）\n' +
-          '∴ AC = BC（中点定义）\n' +
-          '在△ACD和△BCE中\n' +
-          '∵ AC = BC（已证）\n' +
-          '∠ACD = ∠BCE（已知）\n' +
-          'CD = CE（已知）\n' +
-          '∴ △ACD ≅ △BCE（SAS）\n' +
-          '∴ AD = BE（全等三角形对应边相等）',
+          '∵ ∠BAC = ∠DAE（已知）\n' +
+          '∴ ∠BAC - ∠DAC = ∠DAE - ∠DAC\n' +
+          '即 ∠BAD = ∠CAE\n' +
+          '在△ABD和△ACE中\n' +
+          '∵ AB = AC（已知）\n' +
+          '∠BAD = ∠CAE（已证）\n' +
+          'AD = AE（已知）\n' +
+          '∴ △ABD ≅ △ACE（SAS）',
         difficulty: 'basic',
         flaggedConceptIds: ['congruent-triangles'],
       },
@@ -423,23 +423,22 @@ const lecture25: Lecture = {
           '在Rt△ABC和Rt△DCB中（∠ABC=∠DCB=90°）\n' +
           '∵ AB = DC（已知）\n' +
           'BC = CB（公共边）\n' +
-          '∴ Rt△ABC ≅ Rt△DCB（HL）\n' +
+          '∴ △ABC ≅ △DCB（SAS）\n' +
           '∴ AC = DB（全等三角形对应边相等）',
-        hint: '两个直角三角形→HL！垂直条件给出∠ABC=∠DCB=90°。',
+        hint: '两组直角边AB=DC、BC=CB及其夹角均为90°，使用SAS；这里未给斜边相等，不能用HL。',
         difficulty: 'basic',
         flaggedConceptIds: ['congruent-triangles'],
       },
       {
         id: 'ex-25-basic-5',
-        question: '如图，∠A=∠D，∠B=∠E，BC=EF。求证：△ABC≅△DEF。',
+        question: '如图，∠A=∠D，∠C=∠F，AC=DF。求证：△ABC≅△DEF。',
         answer:
           '证明：\n' +
           '在△ABC和△DEF中\n' +
           '∵ ∠A = ∠D（已知）\n' +
-          '∠B = ∠E（已知）\n' +
-          'BC = EF（已知）\n' +
-          '∴ △ABC ≅ △DEF（AAS）\n' +
-          '（BC是∠A的对边，符合AAS）',
+          '∠C = ∠F（已知）\n' +
+          'AC = DF（已知）\n' +
+          '∴ △ABC ≅ △DEF（ASA）',
         difficulty: 'basic',
         flaggedConceptIds: ['congruent-triangles'],
       },
@@ -491,30 +490,19 @@ const lecture25: Lecture = {
     challenge: [
       {
         id: 'ex-25-challenge-1',
-        question: '（2023北京中考第23题改编）\n如图，在△ABC中，AB=AC。D是BC上一点，以AD为边向△ABC外侧作等边三角形ADE。连接BE、CD。求证：BE=CD。',
+        question: '如图，在△ABC中，AB=AC，D是BC的中点。点E、F分别在AB、AC上，且BE=CF。求证：DE=DF。',
         answer:
-          '证明：\n' +
-          '∵ △ADE是等边三角形（已知）\n' +
-          '∴ AD = AE = DE，∠DAE = 60°\n\n' +
-          '在△ABE和△ACD中\n' +
-          '∵ AB = AC（已知）\n' +
-          'AE = AD（等边三角形）\n' +
-          '∠BAE = ∠CAD + 60°（分析：∠BAE = ∠BAC + ∠CAE = ？需具体图形）\n\n' +
-          '关键思路：通过AB=AC（等腰）和AD=AE（等边）以及等角来证△ABE≅△ACD→BE=CD。具体角度分析依赖图形中D在BC的位置。\n\n' +
-          '这是一道综合全等+等腰+等边三角形的典型压轴小题——证明线段等的手段依然是全等。',
-        hint: '先看有没有现成的全等条件：AB=AC（等腰）、AD=AE（等边）→两组边已齐。缺什么？夹角！∠BAE和∠CAD是否相等？利用等边三角形的角性质。',
+          '证明：D是BC的中点，所以BD=CD。又AB=AC，AD=AD，故△ABD≅△ACD（SSS），从而∠BAD=∠CAD。由AB=AC且BE=CF，得AE=AF。在△ADE和△ADF中，AE=AF，AD=AD，∠EAD=∠DAF，所以△ADE≅△ADF（SAS），故DE=DF。',
+        hint: '先用SSS证明AD是顶角平分线，再由线段差得到AE=AF，完成第二次全等。',
         difficulty: 'challenge',
         flaggedConceptIds: ['congruent-triangles'],
       },
       {
         id: 'ex-25-challenge-2',
-        question: '如图，△ABC中，AD⊥BC于D，E是AD的中点。连接BE并延长，过C作CF∥BE，交AD的延长线于F。求证：AD=DF。',
+        question: '如图，在△ABC中，AB=AC，D是BC的中点，点P在线段AD上。求证：PB=PC。',
         answer:
-          '分析：要证AD=DF→即证D是AF的中点。（已知E是AD的中点，给了个中点条件。）\n\n' +
-          '思路：E是AD的中点→AE=ED。CF∥BE→∠AEB=∠F（或∠DBE=∠DCF等，依具体关系）。\n\n' +
-          '考虑△ABE和△什么全等？BE所在三角形和CF有关——利用"CF∥BE"得到角相等。\n\n' +
-          '具体证明过程取决于图形细节。核心工具依然是：平行→等角；中点→等边→全等→结论。',
-        hint: '利用"CF∥BE"把等角关系建立起来。E是AD的中点→AE=ED。结合AD⊥BC这个垂直条件看能否构造直角三角形的全等（HL）。',
+          '证明：D是BC的中点，所以BD=CD。又AB=AC，AD=AD，故△ABD≅△ACD（SSS），于是∠ADB=∠ADC。两角互为邻补角，所以它们都等于90°。在△PDB和△PDC中，PD=PD，BD=CD，∠PDB=∠PDC=90°，故△PDB≅△PDC（SAS），从而PB=PC。',
+        hint: '先证明AD垂直平分BC，再用两边及夹角证明PDB与PDC全等。',
         difficulty: 'challenge',
         flaggedConceptIds: ['congruent-triangles', 'parallel-lines-proof'],
       },
@@ -555,13 +543,13 @@ const lecture25: Lecture = {
   },
 
   oralTask: {
-    problem: '如图，AB∥CD，E是AD的中点。连接BE并延长交CD于F。请口头完整证明BE=EF——从"要证BE=EF"出发分析思路，然后写出完整的规范和证明过程，最后总结全等证明的通用步骤。',
+    problem: '如图，AB=AC，D是BC的中点。请口头完整证明AD⊥BC--从"要证AD⊥BC"出发分析思路，然后写出完整的规范证明过程，最后总结等腰三角形"三线合一"的应用。',
     script: [
-      '第一步：分析结论。要证BE=EF——BE在△ABE中，EF在△DEF中（注意：B、E、F三点共线——这是延长线带来的）。所以需要证△ABE≅△DEF。',
-      '第二步：扫描条件。(1)E是AD的中点→AE=DE（这组边对应上了：AE↔DE）；(2)AB∥CD→能提供什么角相等？AB和CD是平行线，AD是截线→内错角∠A=∠D；(3)观察图形——∠AEB和∠DEF是什么关系？BE延长后与CD交于F，B-E-F共线→所以∠AEB和∠DEF是对顶角→相等！',
-      '第三步：汇总。条件有：AE=DE（边），∠A=∠D（角），∠AEB=∠DEF（角）。这是两组角夹一条边→ASA！',
-      '第四步：写出规范证明。在△ABE和△DFE中：因为∠A=∠D（两直线平行，内错角相等），AE=DE（中点定义），∠AEB=∠DEF（对顶角相等）。所以△ABE≅△DFE（ASA）。所以BE=EF（全等三角形对应边相等）。证毕！',
-      '第五步总结：这道题展示了全等证明的完整流程——(1)从结论出发确定要证哪两个三角形全等；(2)扫选条件并把每个条件转化为等边或等角；(3)对号入座判定方法；(4)写规范证明。这是一个"可复用"的思维模板。',
+      '第一步：分析结论。要证AD⊥BC，即证∠ADB=90°。D是BC中点->BD=CD，∠ADB与∠ADC是邻补角（和为180°）。所以只要证∠ADB=∠ADC，它们就各为90°。',
+      '第二步：扫描条件。(1)AB=AC（已知边）；(2)D是BC中点->BD=CD（边）；(3)AD=AD（公共边）。',
+      '第三步：汇总。AB=AC，BD=CD，AD=AD->三组对应边相等->SSS！可证△ABD≅△ACD，从而∠ADB=∠ADC。',
+      '第四步：写出规范证明。在△ABD和△ACD中：因为AB=AC（已知），BD=CD（中点定义），AD=AD（公共边）。所以△ABD≅△ACD（SSS）。所以∠ADB=∠ADC（全等三角形对应角相等）。又∠ADB+∠ADC=180°（平角），所以∠ADB=∠ADC=90°，即AD⊥BC。证毕！',
+      '第五步总结：这道题体现了等腰三角形"三线合一"--底边中线AD同时是底边上的高和顶角平分线。证明思路：用SSS证全等得角等，再用平角关系推出90°。这是等腰三角形性质证明的通用模板。',
     ],
   },
 

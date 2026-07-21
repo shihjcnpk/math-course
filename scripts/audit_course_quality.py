@@ -109,6 +109,53 @@ def exercise_issues(sources: dict[str, str], node_ids: set[str]) -> list[str]:
     return issues
 
 
+def normalized_question(value: str) -> str:
+    """Normalize presentation-only differences while retaining mathematical content."""
+    value = value.replace(r"\n", " ").replace("$$", "").replace("$", "")
+    value = re.sub(r"【[^】]*】", "", value)
+    value = re.sub(r"（(?:北京中考[^）]*|基础|变式|挑战|迁移)[^）]*）", "", value)
+    value = re.sub(r"\s+", "", value)
+    return value.strip("。；;，,")
+
+
+def duplicate_question_issues(sources: dict[str, str]) -> list[str]:
+    records: list[tuple[str, str, str]] = []
+    pattern = re.compile(
+        r"\bid:\s*['\"](ex[^'\"]+)['\"][\s\S]*?\bquestion:\s*"
+        r"(?:'((?:\\.|[^'\\])*)'|\"((?:\\.|[^\"\\])*)\"|`((?:\\.|[^`\\])*)`)",
+        re.M,
+    )
+    for filename, source in sources.items():
+        for match in pattern.finditer(source):
+            question = next((group for group in match.groups()[1:] if group is not None), "")
+            normalized = normalized_question(question)
+            if len(normalized) >= 18:
+                records.append((normalized, match.group(1), filename))
+
+    groups: dict[str, list[tuple[str, str]]] = {}
+    for normalized, exercise_id, filename in records:
+        groups.setdefault(normalized, []).append((exercise_id, filename))
+    return [
+        "重复题干：" + "、".join(f"{exercise_id}({filename})" for exercise_id, filename in items)
+        for items in groups.values()
+        if len(items) > 1
+    ]
+
+
+def content_regression_issues(sources: dict[str, str]) -> list[str]:
+    combined = "\n".join(sources.values())
+    checks = {
+        "出现错误术语“等边直角三角形”": r"等边直角三角形",
+        "出现未治理的二次方程正式解题": r"(?:question|problem):[^\n]*(?:解一元二次方程|求二次方程.*的根)",
+        "出现空白占位答案": r"answer:\s*['\"]\s*(?:略|待补|TODO|答案略)\s*['\"]",
+    }
+    issues = [message for message, pattern in checks.items() if re.search(pattern, combined)]
+    project = sources.get("lecture-48.ts", "")
+    if "ex48-transfer-2" not in project or "综合与实践·7天小项目" not in project:
+        issues.append("缺少跨统计、函数与几何的综合实践项目")
+    return issues
+
+
 def priority(textbook: list[str], network: list[str], attention: list[str], errors: list[str]) -> str:
     if textbook or network or errors:
         return "高"
@@ -262,6 +309,8 @@ def main_audit() -> tuple[str, bool]:
     graph_issues = invalid_graph_refs(node_source, nodes)
     structural.extend(f"知识图谱无效引用：{item}" for item in graph_issues)
     structural.extend(exercise_issues(sources, nodes))
+    structural.extend(duplicate_question_issues(sources))
+    structural.extend(content_regression_issues(sources))
 
     counts = Counter(row["priority"] for row in rows)
     passed = sum(row["priority"] == "低（通过）" for row in rows)
@@ -290,6 +339,8 @@ def main_audit() -> tuple[str, bool]:
         f"- 七类错因及关联主线：{'通过' if not any('错因' in issue for issue in structural) else '失败'}",
         f"- D0、D1、D3、D7、D14：{'通过' if review_keys == EXPECTED_REVIEW else '失败'}",
         f"- 知识图谱与练习诊断引用：{'通过' if not graph_issues and not exercise_issues(sources, nodes) else '失败'}",
+        f"- 练习题干重复检查：{'通过' if not duplicate_question_issues(sources) else '失败'}",
+        f"- 数学内容回归检查：{'通过' if not content_regression_issues(sources) else '失败'}",
         "",
         "> 本审计按“课程正文 + 支持数据 + 共享组件”合并判断。共享模块无需复制进 48 个课程文件。",
         "",

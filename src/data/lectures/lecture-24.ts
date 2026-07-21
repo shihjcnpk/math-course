@@ -346,15 +346,15 @@ const lecture24: Lecture = {
     basic: [
       {
         id: 'ex-24-basic-1',
-        question: '如图，AB=DE，BC=EF，CA=FD。求证：△ABC ≅ △DEF。',
-        answer: '在△ABC和△DEF中\n∵ AB = DE（已知）\nBC = EF（已知）\nCA = FD（已知）\n∴ △ABC ≅ △DEF（SSS）',
+        question: '如图，在△ABC和△PQR中，AB=PQ，BC=QR，AC=PR。求证：△ABC ≅ △PQR。',
+        answer: '在△ABC和△PQR中\n∵ AB = PQ（已知）\nBC = QR（已知）\nAC = PR（已知）\n∴ △ABC ≅ △PQR（SSS）',
         difficulty: 'basic',
         flaggedConceptIds: ['congruent-triangles'],
       },
       {
         id: 'ex-24-basic-2',
         question: '如图，AB=AC，∠B=∠C=45°。哪个判定方法可直接判断△ABD和△ACD全等？（其中D是BC的中点）',
-        answer: 'AB=AC（已知边），∠B=∠C（已知角），BD=CD（D是中点→另一组边）。AB和BD的夹角是∠B，AC和CD的夹角是∠C→SAS。（或者AB=AC, AD=AD公共边, ∠BAD=∠CAD→SAS）',
+        answer: 'AB=AC（已知边），∠B=∠C（已知角），BD=CD（D是中点）。∠B、∠C分别是两组已知边的夹角，所以△ABD≅△ACD（SAS）。',
         difficulty: 'basic',
         flaggedConceptIds: ['congruent-triangles'],
       },
@@ -399,9 +399,9 @@ const lecture24: Lecture = {
       },
       {
         id: 'ex-24-inter-3',
-        question: '如图，AC∥DF，BC∥EF，AB=DE。问：需要添加什么条件就能判定△ABC≅△DEF？请给出两种不同方案。',
-        answer: '由AC∥DF→∠A=∠D（同位角或内错角，取决于截线）。由BC∥EF→∠B=∠E（同理）。\n\n已有：AB=DE（边），∠A=∠D（角），∠B=∠E（角）。AB是∠C的对边→AAS可以直接判定。\n\n但如果题干要求"添加条件"（且已给的条件不足以凑成完整判定）：\n方案一：加AC=DF→SAS（AB=DE, AC=DF, 夹角∠A=∠D）\n方案二：加∠C=∠F→ASA或AAS',
-        hint: '利用平行线性质把"平行"转化为"角相等"——这是常见技巧。',
+        question: '如图，AC∥DF，BC∥EF，AB=DE。判断是否还需要添加条件才能判定△ABC≅△DEF，并说明理由。',
+        answer: '不需要。由AC∥DF可得∠A=∠D，由BC∥EF可得∠B=∠E；再结合AB=DE，且AB、DE是两组角的夹边，所以△ABC≅△DEF（ASA）。',
+        hint: '先把两组平行关系转化为两组角相等，再观察已知边的位置。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['congruent-triangles', 'parallel-lines-angles'],
       },

@@ -112,6 +112,7 @@ const lecture29: Lecture = {
         '    - 如果a²+b²<c² → 钝角三角形（c的对角>90°）\n\n' +
         '注意：必须先确认c是最大边！否则判断会出错。',
       formula:
+        '\\text{以下比较均约定 }c\\text{ 为最长边：}\\\\' +
         '\\text{若}a^2 + b^2 = c^2 \\Rightarrow \\angle C = 90^\\circ \\\\' +
         '\\text{若}a^2 + b^2 > c^2 \\Rightarrow \\angle C < 90^\\circ\\;(\\text{锐角}) \\\\' +
         '\\text{若}a^2 + b^2 < c^2 \\Rightarrow \\angle C > 90^\\circ\\;(\\text{钝角})',
@@ -503,7 +504,7 @@ const lecture29: Lecture = {
         question:
           '如图，在△ABC中，AB=13，BC=15，AC=14。求△ABC中BC边上的高。',
         answer:
-          '高=12。\n' +
+          '高=11.2。\n' +
           '解法一（海伦公式）：半周长s=(13+14+15)/2=21，S=√[21×8×7×6]=84\n' +
           'S=½·BC·h→84=½·15·h→h=11.2\n\n' +
           '解法二（设高AD=x，BD=y，DC=15-y）：\n' +
@@ -522,8 +523,7 @@ const lecture29: Lecture = {
         question:
           '（关联最短路径/预习Lecture 28应用）\n在将军饮马问题中，A(1,5)和B(7,1)在x轴同侧。\n(1) 求使PA+PB最小的P点坐标。\n(2) 求PA+PB的最小值。',
         answer:
-          '(1) P(4,0)。\n' +
-          '作A(1,5)关于x轴的对称点A\'(1,-5)\n' +
+          '(1) 作A(1,5)关于x轴的对称点A\'(1,-5)\n' +
           'A\'B：k=(1+5)/(7-1)=6/6=1，y+5=x-1→y=x-6\n' +
           '令y=0→x=6→P(6,0)……\n' +
           '验算：A\'B直线经过(1,-5)和(7,1)，斜率=(1+5)/(7-1)=1。\n' +

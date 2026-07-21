@@ -351,7 +351,7 @@ const lecture13: Lecture = {
         {
           problem: '两件商品售价相同，一件赚25%，一件亏25%，总的是赚还是亏？',
           hint: '设售价均为 $x$ 元。赚钱的成本 $= \\frac{x}{1.25} = 0.8x$，亏钱的成本 $= \\frac{x}{0.75} = \\frac{4}{3}x$。总成本 - 总售价 = ？',
-          answer: '总的是亏的（总成本 > 总售价，亏 $\\frac{1}{15}x$）',
+          answer: '总的是亏的。总成本为$\\frac45x+\\frac43x=\\frac{32}{15}x$，总售价为$2x=\\frac{30}{15}x$，所以亏损$\\frac{2}{15}x$。',
         },
       ],
       summary: '销售问题最关键的区分：知道进价求标价→注意利润率是成本的百分比；知道标价求售价→直接用折扣率。',
@@ -476,7 +476,7 @@ const lecture13: Lecture = {
         id: 'ex-13-int-3',
         question:
           '小明从家去学校，先骑一段自行车（速度12 km/h），然后步行一段（速度4 km/h）。全程6 km共用时45分钟。求骑车和步行的距离各是多少？',
-        answer: '骑车 3 km，步行 3 km',
+        answer: '骑车 4.5 km，步行 1.5 km',
         hint: '设骑车距离为 $x$ km，步行距离为 $6-x$ km。时间 = 距离/速度。$\\frac{x}{12} + \\frac{6-x}{4} = \\frac{3}{4}$（45分钟=3/4小时）。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['linear-word-problems'],
@@ -511,8 +511,8 @@ const lecture13: Lecture = {
         id: 'ex-13-cha-2',
         question:
           '甲、乙两车从A、B两地同时出发，相向而行，第一次相遇点距A地70 km。相遇后两车继续前进，到达对方出发地后立即返回，第二次相遇点距B地40 km。求AB两地距离。',
-        answer: '170 km（或变式答案 190 km，取决于方向假设）',
-        hint: '设AB距离为 $S$ km。第一次相遇：甲走70 km，乙走 $S-70$ km。两次相遇之间，甲走了 $(S-70)+40 = S-30$ km，乙走了 $70+(S-40) = S+30$ km。两人时间始终相等。用速度比保持不变求 $S$。',
+        answer: '170 km',
+        hint: '设AB距离为 $S$ km。第一次相遇时速度比为$70:(S-70)$。到第二次相遇，甲累计走$S+40$ km，乙累计走$2S-40$ km，所以$\\frac{70}{S-70}=\\frac{S+40}{2S-40}$，解得$S=170$（舍去$S=0$）。',
         difficulty: 'challenge',
         flaggedConceptIds: ['linear-word-problems'],
         knowledgeChain: [

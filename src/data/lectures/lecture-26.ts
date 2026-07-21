@@ -347,16 +347,9 @@ const lecture26: Lecture = {
       variations: [
         {
           problem:
-            '如图，在△ABC中，∠C=90°，AD平分∠BAC，DE垂直平分AB。求证：△ADC是等腰三角形。',
-          hint: 'AD平分∠BAC→DC=点D到AB的距离。DE垂直平分AB→DA=DB。需结合∠C=90°。',
-          answer:
-            '证明：\n' +
-            '作DF⊥AB于F\n' +
-            '∵ AD平分∠BAC，DC⊥AC，DF⊥AB\n' +
-            '∴ DC = DF（角平分线上的点到两边距离相等）………①\n' +
-            '∵ DE垂直平分AB，D在DE上\n' +
-            '∴ DA = DB（垂直平分线性质）………②\n' +
-            '∴ 在△ADF中……（继续结合图形推导）',
+            '已知直线l是线段AB的垂直平分线，点P、Q都在l上。求证：PA=PB且QA=QB。',
+          hint: '分别对点P、Q使用线段垂直平分线的性质。',
+          answer: '因为直线l是线段AB的垂直平分线，且P、Q都在l上，所以PA=PB，QA=QB（线段垂直平分线上的点到线段两端距离相等）。',
         },
       ],
       summary: '综合题的关键是"先观察后出招"——不要看到角平分线就作垂线，看清全局再定策略。',
@@ -444,12 +437,11 @@ const lecture26: Lecture = {
       {
         id: 'ex-26-basic-4',
         question:
-          '已知线段AB=6cm。(1)用尺规作AB的垂直平分线。(2)在垂直平分线上取点P使PA=5cm，求P到AB的距离。',
+          '已知线段AB=6cm。(1)用尺规作AB的垂直平分线l；(2)在l上任取一点P，比较PA与PB。',
         answer:
-          '(1) 作图略（分别以A、B为圆心，大于3cm的相等半径画弧得交点，连线即为垂直平分线）\n' +
-          '(2) 设垂足为O，则OA=3cm。在Rt△PAO中，PA=5，OA=3，\n' +
-          'PO=√(5²-3²)=√16=4cm。\n答：P到AB的距离为4cm。',
-        hint: '勾股定理——PA是斜边，OA是直角边，PO是要求的另一条直角边。',
+          '(1) 分别以A、B为圆心、取大于3cm的相等半径画弧，得到两个交点；连接两交点所得直线l就是AB的垂直平分线。\n' +
+          '(2) PA=PB，因为线段垂直平分线上的点到线段两端距离相等。',
+        hint: '保留两组圆弧；第(2)问直接使用垂直平分线性质。',
         difficulty: 'basic',
         flaggedConceptIds: ['angle-bisector-properties', 'pythagorean-theorem'],
       },
@@ -502,16 +494,10 @@ const lecture26: Lecture = {
       {
         id: 'ex-26-inter-3',
         question:
-          '如图，在Rt△ABC中，∠C=90°，AD平分∠BAC，DE⊥AB于E。已知AC=6，BC=8，求CD。',
+          '如图，在Rt△ABC中，∠C=90°，AD平分∠BAC，DE⊥AB于E。求证：CD=DE。',
         answer:
-          '解：在Rt△ABC中，AB=√(6²+8²)=10（勾股定理）\n' +
-          '∵ AD平分∠BAC，DC⊥AC，DE⊥AB\n' +
-          '∴ DC=DE（角平分线上的点到两边距离相等）\n' +
-          '设CD=DE=x\n' +
-          'S△ABC = ½·6·8 = 24\n' +
-          '又S△ABC = S△ADC + S△ABD = ½·6·x + ½·10·x = 8x\n' +
-          '∴ 8x = 24 → x = 3\n答：CD=3。',
-        hint: '面积法——△ABC=△ADC+△ABD。DC=DE是关键的等量关系。',
+          '因为∠C=90°，所以DC⊥AC；又DE⊥AB。点D在∠BAC的平分线AD上，因此D到角两边AB、AC的距离相等，即DE=DC。',
+        hint: '先确认DC、DE都是点D到∠BAC两边的垂直距离，再使用角平分线性质。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['angle-bisector-properties', 'pythagorean-theorem'],
       },

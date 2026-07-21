@@ -385,9 +385,9 @@ const lecture06: Lecture = {
       },
       {
         id: 'ex6-inter-3',
-        question: '（2024北京中考真题改编）先化简再求值：$(x+2)(x-2) - x(x-1)$，其中 $x=3$。',
-        answer: '化简：(x²-4)-(x²-x)=x²-4-x²+x=x-4。代入x=3→3-4=-1。',
-        hint: '(x+2)(x-2)=x²-4（平方差公式），x(x-1)=x²-x。减去后x²抵消。',
+        question: '先化简再求值：$(3x^2-2x+1)-(x^2+x-4)$，其中 $x=3$。',
+        answer: '去括号并合并同类项：3x²-2x+1-x²-x+4=2x²-3x+5。代入x=3，得2×9-9+5=14。',
+        hint: '减去一个多项式时，括号内每一项都要变号，再合并同类项。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['integer-expressions', 'bracket-removal'],
       },

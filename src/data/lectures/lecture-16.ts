@@ -251,9 +251,9 @@ const lecture16: Lecture = {
       },
       variations: [
         {
-          problem: '解不等式：$4x - 7 \\geq 2x + 3$',
+          problem: '解不等式：$5x + 1 > 3x + 9$',
           hint: '移项合并后系数为正，直接除。',
-          answer: 'x \\geq 5',
+          answer: '$x>4$',
         },
         {
           problem: '解不等式：$\\dfrac{x}{2} - 3 < \\dfrac{x}{3} + 1$',
@@ -523,7 +523,7 @@ const lecture16: Lecture = {
         id: 'ex-16-int-2',
         question:
           '求不等式组 $\\begin{cases} 2x + 5 > 3 \\\\ \\dfrac{x-1}{2} < 1 \\end{cases}$ 的**整数解**。',
-        answer: '整数解为 $-1, 0, 1, 2$',
+        answer: '整数解为 $0, 1, 2$',
         hint: '① $2x > -2$ → $x > -1$。② $x-1 < 2$ → $x < 3$。解集：$-1 < x < 3$。整数解为 $0, 1, 2$。注意 $-1$ 不在解集中（$-1 > -1$ 不成立），所以从0开始。',
         difficulty: 'intermediate',
         flaggedConceptIds: ['inequality-solving'],

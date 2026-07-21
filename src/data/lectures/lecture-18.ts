@@ -17,8 +17,8 @@ const lecture18: Lecture = {
     durationMinutes: 60,
     oneLineMainIdea: '方程解决"等于"，不等式解决"范围"，函数解决"变化"——三者是同一事物的三个侧面。',
     conceptIds: ['function-equation-connection'],
-    prerequisiteLectureIds: [14, 16, 17, 34],
-    followupLectureIds: [35],
+    prerequisiteLectureIds: [14, 16, 17],
+    followupLectureIds: [33, 34, 35],
     isFullContent: false,
   },
 
@@ -284,7 +284,7 @@ const lecture18: Lecture = {
           problem:
             '两种打车方案：A——起步价10元（含3公里），超出每公里2元；B——起步价8元（含2公里），超出每公里2.5元。求行驶多少公里时两种方案费用相同？',
           hint: '$y_A = \\begin{cases} 10 & x \\leq 3 \\\\ 10 + 2(x-3) & x > 3 \\end{cases}$，$y_B = \\begin{cases} 8 & x \\leq 2 \\\\ 8 + 2.5(x-2) & x > 2 \\end{cases}$。在 $x > 3$ 区域求交点。',
-          answer: '行驶 6 公里时费用相同（都是 16 元）',
+          answer: '行驶2.8公里时费用相同（都是10元）。此时A仍在3公里起步里程内，B费用为$8+2.5(2.8-2)=10$元。',
         },
       ],
       summary: '方案选择 = 画两条线 + 找交点 + 判两侧。函数图像是理解方案选择的"地图"。',
@@ -434,7 +434,7 @@ const lecture18: Lecture = {
         id: 'ex-18-cha-1',
         question:
           '已知一次函数 $y_1 = x + m$ 与 $y_2 = -2x + 6$ 的图像交点在第二象限，求 $m$ 的取值范围。',
-        answer: 'm > 3',
+        answer: 'm > 6',
         hint: '先求交点：$x+m = -2x+6$ → $3x = 6-m$ → $x = \\dfrac{6-m}{3}$，$y = \\dfrac{6-m}{3} + m = \\dfrac{6+2m}{3}$。第二象限要求 $x < 0$ 且 $y > 0$。$\\dfrac{6-m}{3} < 0$ → $m > 6$。$\\dfrac{6+2m}{3} > 0$ → $m > -3$。取交集 $m > 6$。',
         difficulty: 'challenge',
         flaggedConceptIds: ['function-equation-connection'],

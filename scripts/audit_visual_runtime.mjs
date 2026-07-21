@@ -318,7 +318,7 @@ try {
     mobileRows.push(mobile)
     if (lectureId === 33) {
       await captureElement(client, 'figure[data-problem-diagram]', 'lecture-33-mobile.png')
-      await captureFigureContaining(client, '列表描点画y=x²', 'lecture-33-parabola-mobile.png')
+      await captureFigureContaining(client, '路程随时间变化', 'lecture-33-distance-time-mobile.png')
     }
     if (lectureId === 36) {
       await captureElement(client, 'figure[data-problem-diagram]', 'lecture-36-statistics-mobile.png')
@@ -378,7 +378,7 @@ ${uniqueErrors.length ? uniqueErrors.map(error => `* ${error}`).join('\n') : '* 
 
 * \`reports/visual-screenshots/lecture-24-desktop.png\`
 * \`reports/visual-screenshots/lecture-33-mobile.png\`
-* \`reports/visual-screenshots/lecture-33-parabola-mobile.png\`
+* \`reports/visual-screenshots/lecture-33-distance-time-mobile.png\`
 * \`reports/visual-screenshots/lecture-36-statistics-mobile.png\`
 * \`reports/visual-screenshots/lecture-44-fold-mobile.png\`
 `

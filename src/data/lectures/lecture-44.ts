@@ -430,21 +430,21 @@ const lecture44: Lecture = {
       },
       {
         id: 'ex44-basic-5',
-        question: `长方形ABCD中AB=6，BC=8。沿AE折叠使D落在BC边上的F处（E在CD上）。已知AF=8。求BF的长。`,
-        answer: `$2\\sqrt{7}$。`,
-        hint: `折叠后AD=AF=8。在Rt△ABF中，AB=6，AF=8→BF=√(8²-6²)=√28=2√7。`,
+        question: `长方形ABCD中AB=5，BC=13。沿AE折叠使D落在BC边上的F处（E在CD上）。已知AF=13。求BF的长。`,
+        answer: `$12$。`,
+        hint: `折叠后AD=AF=13。在Rt△ABF中，AB=5，AF=13->BF=√(13²-5²)=√144=12。`,
         difficulty: 'basic',
         flaggedConceptIds: ['axis-symmetry', 'pythagorean-theorem'],
         knowledgeChain: [
-          `折叠=轴对称 → 对应边相等：AD=AF=8`,
-          `勾股定理(第29讲) → Rt△ABF中BF=√(AF²-AB²)`,
+          `折叠=轴对称 -> 对应边相等：AD=AF=13`,
+          `勾股定理(第29讲) -> Rt△ABF中BF=√(AF²-AB²)`,
         ],
       },
       {
         id: 'ex44-basic-6',
-        question: `A、B在直线l同侧，A到l的距离为4，B到l的距离为6。若作A关于l的对称点A\'后，A\'B∥l。请问A和B到l的距离关系说明了什么？此时最优的P点在哪里？`,
-        answer: `A\'B∥l说明A\'和B到l的距离相等（都为4），即A和B到l的距离也相等（方向相反）。此时A\'B与l没有交点（平行），可用端点法或取l上任意一点P都有相等的结果（距离对称性）。最优解在l的"端点"处（如果l是线段），或任意P值都等优（如果l是无限直线）。`,
-        hint: `A\'B∥l→A\'B与l无交点。思考：这时PA+PB=A\'P+PB，而A\'与B的连线平行于l。取l上任意点P，三角形A\'PB中两边之和有没有最小值？当P取l上离A\'B最近的点时取最小。`,
+        question: `A、B在直线l的异侧，线段AB与l交于P。证明：对l上任意一点Q，都有QA+QB≥PA+PB，并指出等号何时成立。`,
+        answer: `因为P在线段AB上，所以PA+PB=AB。对l上任意一点Q，由三角形两边之和不小于第三边，QA+QB≥AB=PA+PB。当Q=P时等号成立；若A、Q、B不共线，则严格大于。`,
+        hint: `异侧两点的连线必与直线l相交；直接使用“两点之间线段最短”。`,
         difficulty: 'basic',
         flaggedConceptIds: ['shortest-path', 'axis-symmetry'],
         knowledgeChain: [
@@ -482,16 +482,15 @@ const lecture44: Lecture = {
       },
       {
         id: 'ex44-inter-3',
-        question: `长方形ABCD中，AB=6，AD=8。沿AE折叠，使点D落在BC边上的点F处，E在CD上。求BF和CE的长。`,
-        answer: `由折叠得AF=AD=8。在Rt△ABF中，BF=√(AF²-AB²)=√(64-36)=2√7。设CE=x，则DE=EF=6-x，CF=8-2√7。在Rt△CEF中，x²+(8-2√7)²=(6-x)²，解得x=(8√7-14)/3。因此BF=2√7，CE=(8√7-14)/3。`,
+        question: `长方形ABCD中，AB=8，AD=10。沿AE折叠，使点D落在BC边上的点F处，E在CD上。求BF和CE的长。`,
+        answer: `由折叠得AF=AD=10。在Rt△ABF中，BF=√(AF²-AB²)=√(100-64)=6。设CE=x，则DE=EF=8-x，CF=BC-BF=10-6=4。在Rt△CEF中，x²+4²=(8-x)²，即x²+16=64-16x+x²，解得16x=48，x=3。因此BF=6，CE=3。`,
         hint: `先用折叠性质写出AF=AD、EF=ED；在Rt△ABF中求BF，再在Rt△CEF中设CE=x列勾股方程。`,
         difficulty: 'intermediate',
-        flaggedConceptIds: ['axis-symmetry', 'pythagorean-theorem', 'parallel-lines-angles'],
+        flaggedConceptIds: ['axis-symmetry', 'pythagorean-theorem'],
         knowledgeChain: [
-          `折叠=轴对称 → ∠C\'BD = ∠CBD`,
-          `平行线性质(第20讲) → AD∥BC→内错角等`,
-          `等腰三角形判定 → 等角对等边`,
-          `勾股定理(第29讲) → 在Rt△中列方程`,
+          `折叠=轴对称 -> 对应边相等：AD=AF、DE=EF`,
+          `勾股定理(第29讲) -> Rt△ABF中求BF`,
+          `方程思想 -> 设CE=x在Rt△CEF中列勾股方程`,
         ],
       },
       {
@@ -511,9 +510,9 @@ const lecture44: Lecture = {
     challenge: [
       {
         id: 'ex44-challenge-1',
-        question: `如图，在△ABC中，∠A=60°，∠B=90°，AB=2，∠C=30°。D在AB的延长线上，CD=1且D在AB的"外侧"。P是BC上的动点。求AP+PD的最小值。`,
-        answer: `将A关于BC对称得A\'。在适当的三角形中用勾股定理求A\'D。因为∠B=90°且AB=2，BC=AB×tan60°=2√3（或由30-60-90三角形）。具体最小值为√(13)。`,
-        hint: `以B为原点建坐标系。A(0,2)，C(2√3,0)。BC在x轴上。利用∠A=60°和直角确定三角形。求D的坐标后作对称。`,
+        question: `在平面直角坐标系中，A(0,3)、D(4,2)位于x轴同侧。P是x轴上的动点，求AP+PD的最小值及此时P的坐标。`,
+        answer: `作A关于x轴的对称点A′(0,-3)，则AP=A′P，所以AP+PD=A′P+PD≥A′D。直线A′D的方程为$y+3=\\frac54x$，令y=0得$x=\\frac{12}{5}$，所以$P(\\frac{12}{5},0)$。最小值$A′D=\\sqrt{4^2+5^2}=\\sqrt{41}$。`,
+        hint: `一次反射把折线AP+PD化为直线段A′D，再求连线与x轴的交点。`,
         difficulty: 'challenge',
         flaggedConceptIds: ['shortest-path', 'pythagorean-theorem', 'triangle-basics'],
         knowledgeChain: [

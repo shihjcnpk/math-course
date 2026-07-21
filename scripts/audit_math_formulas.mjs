@@ -47,6 +47,12 @@ function renderFormula(raw, displayMode, context) {
 }
 
 function scanMathText(text, context) {
+  const invalidControl = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\ufffd]/.exec(text)
+  if (invalidControl) {
+    const codePoint = `U+${invalidControl[0].codePointAt(0).toString(16).toUpperCase().padStart(4, '0')}`
+    failures.push(`${context}: 包含疑似由错误转义产生的控制字符 ${codePoint} → ${JSON.stringify(text.slice(Math.max(0, invalidControl.index - 30), invalidControl.index + 60))}`)
+  }
+
   let cursor = 0
   let foundDelimitedMath = false
 

@@ -74,7 +74,7 @@ const lecture19: Lecture = {
       title: '点、线、面、体——图形的组成元素',
       everydayAnalogy: '笔尖移动留下线，刮窗器沿一条线移动扫出面，长方形纸片绕一边旋转形成圆柱体。',
       formalDefinition: '包围着体的是面，面与面相交形成线，线与线相交形成点。点是构成图形的基本元素。运动观点可概括为：点动成线、线动成面、面动成体。面有平面和曲面，线也有直线和曲线。',
-      formula: '\\text{点动成线}\rightarrow\\text{线动成面}\rightarrow\\text{面动成体}',
+      formula: '\\text{点动成线}\\rightarrow\\text{线动成面}\\rightarrow\\text{面动成体}',
       associationReminders: [
         '“面与面相交成线、线与线相交成点”描述的是图形元素之间的关系。',
         '圆柱的侧面是曲面，上、下底面是平面。',
@@ -177,7 +177,7 @@ const lecture19: Lecture = {
         '用线段和差列式，不跳过中间线段。',
         '回到图上检查结果是否满足长度为正、部分不大于整体。',
       ],
-      visualExplanation: '$$A\text{—}M\text{—}B,\\ M\\text{为中点}\\Rightarrow AM=MB=\\frac12AB$$',
+      visualExplanation: '$$A\\text{—}M\\text{—}B,\\ M\\text{为中点}\\Rightarrow AM=MB=\\frac12AB$$',
     },
     {
       name: '角度换算法：度、分、秒之间的转换',

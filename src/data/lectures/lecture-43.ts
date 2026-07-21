@@ -16,7 +16,7 @@ const lecture43: Lecture = {
     ],
     durationMinutes: 60,
     oneLineMainIdea:
-      '证明题的思路：从结论往回想——要证这个，需要先证什么？回溯到已知条件。这就像破案——你知道谁是被害者（结论），沿着线索往回找凶手（条件）。',
+      '证明题的思路：从结论往回想——要证这个，需要先证什么？回溯到已知条件。这就像溯流而上--你站在下游的入海口（结论），逆着水流往上游找源头（已知条件）。',
     conceptIds: [],
     prerequisiteLectureIds: [21, 24, 25, 26, 30],
     followupLectureIds: [],
@@ -144,17 +144,17 @@ const lecture43: Lecture = {
       ],
       example: {
         problem:
-          '（北京中考风格）如图，点B、E、C、F在同一条直线上，AB=DE，AC=DF，BE=CF。求证：(1)△ABC≅△DEF；(2)AB//DE。',
+          '（倍长中线）如图，在△ABC中，D是BC的中点，AD为中线。延长AD到E，使DE=AD，连接CE。求证：(1)△ABD≅△ECD；(2)AB=CE。',
         stepByStepAnalysis: [
-          '第一步（分析已知条件）：AB=DE（一组边等），AC=DF（一组边等），BE=CF（给出的是两段线段的关系，需要先推导出BC=EF）。知识链：全等判定条件收集。',
-          '第二步（推导隐含条件BC=EF）：BE=CF→BE+EC=CF+EC→BC=EF。又得到一组边等。现在有了三组边等：AB=DE，AC=DF，BC=EF→SSS判定！知识链：等量加等量和相等（第12讲等式性质）。',
-          '第三步（第一问证明）：在△ABC和△DEF中，AB=DE，AC=DF，BC=EF→△ABC≅△DEF（SSS）。知识链：全等三角形判定SSS（第24讲）。',
-          '第四步（第二问——利用全等证角等）：由△ABC≅△DEF→∠B=∠E（全等三角形对应角相等）。又因为∠B和∠E是AB和DE被BE截得的同位角→AB//DE（同位角相等→两直线平行）。知识链：全等性质+平行线判定（第21讲）。',
+          '第一步（分析思路）：要证AB=CE，需找AB和CE所在的三角形全等。AB在△ABD中，CE在△ECD中。这两个三角形全等吗？需要什么条件？知识链：逆推法--从结论找全等。',
+          '第二步（辅助线倍长中线）：延长AD到E使DE=AD，这是“倍长中线”辅助线。目的：构造与△ABD全等的三角形。知识链：辅助线--倍长中线（构造全等）。',
+          '第三步（证全等）：在△ABD和△ECD中，BD=CD（D是中点），∠ADB=∠EDC（对顶角相等），AD=ED（作图）。->△ABD≅△ECD（SAS）。知识链：全等判定SAS（第24讲）+对顶角相等。',
+          '第四步（证边等）：由△ABD≅△ECD->AB=CE（对应边相等）。知识链：全等性质--对应边相等。',
         ],
         answer:
-          '(1)△ABC≅△DEF（SSS）；(2)由全等得∠B=∠E，同位角相等→AB//DE。',
+          '(1)△ABD≅△ECD（SAS）；(2)由全等得AB=CE。',
         commonMistake:
-          '典型错误1：直接用BE=CF就说BC=EF——必须写出"∵BE=CF，∴BE+EC=CF+EC，即BC=EF"。不写中间步骤会被扣分。典型错误2：证完全等后忘记写"全等三角形对应角相等"作为∠B=∠E的理由。',
+          '典型错误：不会添加辅助线，直接看着△ABD和孤立的CE发呆。倍长中线是中线问题的“标准动作”--遇到中线就考虑倍长，构造全等三角形转移边角关系。',
       },
       variations: [
         {
@@ -195,11 +195,10 @@ const lecture43: Lecture = {
       variations: [
         {
           problem:
-            '（北京中考风格）如图，在△ABC中，D是BC中点，E是AD中点，连接BE并延长交AC于F。求证：AF=2FC。',
-          hint:
-            '知识链：双重中点→双重倍长。过D作AC的平行线，交BF于G——利用中位线定理。或者：倍长ED（E是AD中点，延长ED到G使DG=ED）→构造平行四边形ADE?。实际上这道题考查中位线定理和相似。在八年级范围内可用面积法或倍长中线+平行线。',
+            '如图，在△ABC中，D是BC中点，延长AD至E，使DE=AD。求证：AB=CE且AB∥CE。',
+          hint: '比较△ADB与△EDC：两组边来自中点和倍长，夹角是一组对顶角。',
           answer:
-            '方法一（中位线+比例）：取BF中点，利用中位线定理和平行线分线段成比例。复杂，核心是"两个中点连续做中位线"的思路。结果是AF:FC=2:1。',
+            'D是BC中点，所以DB=DC；由作法知AD=DE；又∠ADB=∠EDC（对顶角）。因此△ADB≅△EDC（SAS），从而AB=CE，∠ABD=∠ECD。后两角是直线BC截AB、CE所得的内错角，所以AB∥CE。',
         },
       ],
       summary:
@@ -339,7 +338,7 @@ const lecture43: Lecture = {
         question:
           '（北京中考风格·综合）如图，在Rt△ABC中，∠C=90°，AD平分∠BAC交BC于D。过D作AB的垂线，垂足为E。(1)求证：△ACD≅△AED；(2)求证：CD=DE；(3)若AC=6，BC=8，求CD的长。',
         answer:
-          '(1)AD平分∠BAC→∠CAD=∠EAD。AD=AD（公共边），∠C=∠AED=90°→△ACD≅△AED（AAS）。(2)由全等→CD=DE。(3)AB=10（勾股定理6-8-10）。设CD=x，则DE=x，BD=8-x。在Rt△BDE中，∠B满足sinB=AC/AB=6/10=3/5。也可用面积法：△ABC面积=1/2×6×8=24。面积也=1/2(AC·CD+AB·DE)/2? 实际上S△ABC=S△ACD+S△ABD=1/2·6·x+1/2·10·x=8x=24→x=3。CD=3。知识链：角平分线+全等+勾股+面积法。',
+          '(1)AD平分∠BAC，所以∠CAD=∠EAD；AD=AD；∠ACD=∠AED=90°。因此△ACD≅△AED（AAS）。\n(2)由全等三角形对应边相等，得CD=DE。\n(3)由勾股定理，AB=√(6²+8²)=10。设CD=DE=x。△ABC面积为$\\frac12\\times6\\times8=24$；另一方面，以AC、AB为底分割，有$S_{ABC}=S_{ACD}+S_{ABD}=\\frac12\\times6x+\\frac12\\times10x=8x$。所以8x=24，x=3，即CD=3。',
         hint: '知识链：角平分线→角等；AAS全等→边等；勾股定理→斜边；面积法（角平分线到两边距离相等）→列方程求解。第(3)问用面积法最快。',
         difficulty: 'challenge',
         flaggedConceptIds: ['congruent-triangles', 'pythagorean-theorem'],

@@ -200,8 +200,8 @@ const lecture32: Lecture = {
       },
       variations: [
         {
-          problem: '（北京2021·改编）$A(0,0)$，$B(4,0)$，$C(1,3)$，$D(5,3)$。求四边形 $ABCD$ 的面积。',
-          hint: '这是梯形！$AB \\parallel CD$（都在水平方向）。分割为 $\\triangle ABC + \\triangle ACD$，或直接用割补法。$S = \\frac{1}{2}(AB+CD) \\times 高 = \\frac{1}{2}(4+4) \\times 3 = 12$。',
+          problem: '（北京2021·改编）$A(0,0)$，$B(4,0)$，$C(5,3)$，$D(1,3)$。求四边形 $ABCD$ 的面积。',
+          hint: '$AB\\parallel CD$且AB=CD=4，四边形ABCD是平行四边形。底为4，高为3，所以$S=4\\times3=12$。',
           answer: '$S = 12$。',
         },
       ],
@@ -286,7 +286,7 @@ const lecture32: Lecture = {
       {
         id: 'ex32-inter-2',
         question: '已知 $A(2, 0)$、$B(6, 0)$、$C(4, 3)$、$D(2, 3)$。(1) 判断四边形 $ABCD$ 的形状；(2) 求其面积。',
-        answer: '(1) $A(2,0), B(6,0), C(4,3), D(2,3)$。$AB \\parallel CD$ 不成立（$AB$ 在 $y=0$，$CD$ 的 $C$ 和 $D$ 的 $y$ 都是 3 但 $x$ 不同...）。$AD$：$(2,0)$ 到 $(2,3)$，竖直。$BC$：$(6,0)$ 到 $(4,3)$。这是直角梯形：$AD$ 竖直，$AB$ 水平。\n\n面积 = $\\frac{1}{2}(AD+BC) \\times AB = \\frac{1}{2}(3 + \\sqrt{(6-4)^2+(0-3)^2}) \\times 4$。更简单的方法：分割为 $\\triangle ABD + \\triangle BCD$。\n$S_{\\triangle ABD} = \\frac{1}{2} \\times 4 \\times 3 = 6$。$C$ 到 $BD$ 线的距离...还是用割补法更直接。\n\n包围矩形：$x \\in [2,6]$，$y \\in [0,3]$，面积 $= 4 \\times 3 = 12$。减去：左下角无三角形，右下角 $\\triangle$（$B$ 到 $(6,3)$ 无...）。图形是梯形：$AB \\parallel$？\n\n$D(2,3)$ 和 $C(4,3)$ 水平（$y=3$），$A(2,0)$ 和 $B(6,0)$ 水平（$y=0$）。所以 $AB \\parallel DC$，是梯形！\n$S = \\frac{1}{2}(AB + DC) \\times 高 = \\frac{1}{2}(4+2) \\times 3 = 9$。',
+        answer: '(1) AB与DC都平行于x轴，所以AB∥DC；AD竖直，且AD⊥AB。因此四边形ABCD是直角梯形。\n(2) AB=4，DC=2，两平行边间的高为3，所以$S=\\frac12(AB+DC)\\times h=\\frac12(4+2)\\times3=9$。',
         hint: '先看哪些点的 $y$ 坐标相同——它们构成的线段平行于 $x$ 轴！',
         difficulty: 'intermediate',
         flaggedConceptIds: ['coordinate-translation'],
